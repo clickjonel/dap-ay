@@ -61,6 +61,15 @@ return [
             'password' => env('PKP_DB_PASSWORD'),
         ],
 
+        'dohis' => [
+            'driver' => 'mysql',
+            'host' => env('DOHIS_HOST'),
+            'port' => env('DOHIS_PORT'),
+            'database' => env('DOHIS_DATABASE'),
+            'username' => env('DOHIS_USERNAME'),
+            'password' => env('DOHIS_PASSWORD'),
+        ],
+
         // 'mysql' => [
         //     'driver' => 'mysql',
         //     'url' => env('DB_URL'),

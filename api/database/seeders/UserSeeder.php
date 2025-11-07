@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = DB::connection('pkpulse')->table('pkp_user')->get();
+        $users = DB::connection('dohis')->table('dohis_hrh_profile')->where('account_status','Active')->get();
 
         foreach($users as $user){
             User::create([
