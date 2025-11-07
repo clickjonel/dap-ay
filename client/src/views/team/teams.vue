@@ -1,0 +1,83 @@
+<template>
+    <div class="w-full flex flex-col justify-start items-start gap-2">
+
+        <div class="w-full flex justify-between items-center p-2">
+            <InputText v-model="keyword" label="Search Keyword" width="w-[500px]" @change="fetchTeams(current_page)"/>
+            <Button @click="router.push({path:'/team/create'})" label="Create Team" size="small"/>
+        </div>
+
+        <div class="w-full h-full flex flex-col justify-between items-start gap-2">
+
+            <div class="w-full min-h-full h-full flex flex-col justify-start items-start">
+
+                <div class="min-w-full w-full flex justify-start items-start divide-x divide-black border-b uppercase font-semibold bg-teal-100 border z-10">
+                   <span class="w-[20%] p-2">Team Name</span>
+                   <span class="w-[20%] p-2">Province</span>
+                   <span class="w-[20%] p-2">Municipality</span>
+                   <span class="w-[20%] p-2">Barangay</span>
+                   <span class="w-[20%] p-2">Actions</span>
+                </div>
+                
+                <div v-for="team in teams.data" class="w-full flex justify-start items-stretch divide-x divide-black border-b font-light border-x text-sm">
+                    <span class="w-[20%] p-2">{{ team.team_name }}</span>
+                    <span class="w-[20%] p-2">{{ team.barangay?.province?.province_name }}</span>
+                    <span class="w-[20%] p-2">{{ team.barangay?.municipality?.municipality_name }}</span>
+                    <span class="w-[20%] p-2">{{ team.barangay?.barangay_name }}</span>
+                    <span class="w-[20%] p-2 flex justify-start items-center gap-2">
+                        <Button @click="router.push({path:`/team/update/${team.team_id}`})" v-tooltip="'Update Team'" icon="pi pi-user-edit" severity="info" rounded outlined/>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="w-full min-h-[60px] flex justify-between items-center px-4 border">
+                <span class="text-md font-light">Showing rows {{ teams.from }} - {{ teams.to }}</span>
+                <div class="flex justify-between items-center gap-4">
+                    <Button @click="fetchTeams(teams.current_page - 1)" icon="pi pi-angle-left" severity="info" rounded aria-label="Previous" :disabled="teams.current_page === 1"/>
+                    <span class="border rounded-full size-12 text-xs flex justify-center items-center font-medium">{{ teams.current_page }}</span>
+                    <Button @click="fetchTeams(teams.current_page + 1)" icon="pi pi-angle-right" severity="info" rounded aria-label="Next" :disabled="teams.next_page_url === null"/>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script setup>
+    import { ref, onMounted } from 'vue'; 
+    import { Button } from 'primevue';
+    import InputText from '@/components/inputFields/InputText.vue';
+    import axios from '@/utils/axios';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter()
+    const keyword = ref('')
+    const teams = ref([])
+
+    onMounted(()=>{
+        fetchTeams(1)
+    })
+
+    // functions
+    const fetchTeams = (page) => {
+        axios.get(`/team/list/?page=${page}`,{
+            params:{
+                keyword:keyword.value
+            }
+        })
+        .then((response)=>{
+            teams.value = response.data
+            console.log(teams.value)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        .finally(()=>{
+
+        })
+    }
+
+
+</script>
