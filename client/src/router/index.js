@@ -70,6 +70,14 @@ const routes = [
           }
         },
         {
+          path: '/users',
+          name: 'PK Users',
+          component: () => import('@/views/user/users.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/baseline-indicators',
           name: 'PK Baseline Indicators',
           component: () => import('@/views/baselineIndicator/baselineIndicators.vue'),

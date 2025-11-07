@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Indicator;
 use App\Models\User;
+use App\Models\UserIndicator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,9 +17,9 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = DB::connection('dohis')->table('dohis_hrh_profile')->where('account_status','Active')->get();
-
+        $indicators = Indicator::get();
         foreach($users as $user){
-            User::create([
+            $user = User::create([
                 'user_code' => $user->user_code,
                 'username' => $user->nickname,
                 'password' => password_hash('12345',PASSWORD_BCRYPT),
@@ -30,6 +32,13 @@ class UserSeeder extends Seeder
                 'account_status' => 'Active',
                 'user_level' => 5
             ]);
+
+            foreach($indicators as $indicator){
+                UserIndicator::create([
+                    'user_id' => $user->user_id,
+                    'indicator_id' => $indicator['id']
+                ]);
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ class SiteProgram extends Model
         'program_id',
         'profile_id',
         'target_baseline',
-        'priority_order'
+        'priority_order',
     ];
 
     public function program()

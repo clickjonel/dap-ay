@@ -6,7 +6,7 @@
             <div class="w-full flex flex-col justify-start items-start gap-2">
                 <Button @click="handleNavigation('/dashboard')" label="Dashboard" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/programs')" label="Programs" severity="info" class="w-full" />
-                <Button @click="handleNavigation()" label="Users" severity="info" class="w-full" />
+                <Button @click="handleNavigation('/users')" label="Users" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/activities')" label="Activities" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/sites')" label="PK Sites" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/teams')" label="PK Teams" severity="info" class="w-full" />

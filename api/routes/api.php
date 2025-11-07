@@ -112,6 +112,7 @@ Route::group([
         'prefix' => '/user'
     ],function(){
         Route::get('/selection',[UserController::class,'selection']);
+        Route::get('/list',[UserController::class,'list']);
         // Route::post('/update',[TeamController::class,'updateTeam']);
     });
 
@@ -142,7 +143,7 @@ Route::group([
         'prefix' => '/indicator'
     ],function(){
         Route::post('/create',[IndicatorController::class,'create']);
-        
+        Route::get('/list',[IndicatorController::class,'list']);
     });
 
 });

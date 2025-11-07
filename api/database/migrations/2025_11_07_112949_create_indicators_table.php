@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('type');
         });
 
-        Schema::create('user_indicator_targets', function (Blueprint $table) {
+        Schema::create('user_indicators', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('pk_users','user_id');
             $table->foreignId('indicator_id')->constrained('pk_indicators','id');
