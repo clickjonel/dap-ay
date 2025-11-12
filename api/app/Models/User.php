@@ -12,8 +12,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $connection = 'dap-ay';
-    protected $table = 'pk_users';
-    protected $primaryKey = 'user_id';
+    protected $table = 'users';
     protected $appends = ['full_name'];
 
     protected $fillable = [

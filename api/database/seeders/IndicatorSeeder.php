@@ -15,76 +15,112 @@ class IndicatorSeeder extends Seeder
     {
         $indicators = [
             [
-                'name' => 'Total number of household provided with WASH PK services',
-                'type' => 'Target'
-            ],
-            [
                 'name' => 'Total number of household provided with PK services',
-                'type' => 'Target'
+                'type' => 'Priority',
+                'sub_program_id' => 3,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for Nutrition',
-                'type' => 'Target'
+                'name' => 'Total number of individuals provided with PK services',
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for Immunization',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for Nutrition',
+                'type' => 'Priority',
+                'sub_program_id' => 1,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for Maternal Health',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for Immunization',
+                'type' => 'Priority',
+                'sub_program_id' => 2,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for TB',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for Maternal Health',
+                'type' => 'Priority',
+                'sub_program_id' => 7,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for  HIV',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for TB',
+                'type' => 'Priority',
+                'sub_program_id' => 4,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for Road Safety',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for HIV',
+                'type' => 'Priority',
+                'sub_program_id' => 5,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for NCD(Diabetes)',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for Road Safety',
+                'type' => 'Priority',
+                'sub_program_id' => 6,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for NCD(Hypertension)',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for NCDs Diabetes',
+                'type' => 'Priority',
+                'sub_program_id' => 8,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for NCD(Breast Cancer)',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for NCDs Hypertension',
+                'type' => 'Priority',
+                'sub_program_id' => 9,
+                'active' => true
             ],
             [
-                'name' => 'Number of clients reached for NCD(Cervical Cancer)',
-                'type' => 'Target'
+                'name' => 'Number of Clients reached for Breast Cancer',
+                'type' => 'Priority',
+                'sub_program_id' => 10,
+                'active' => true
             ],
             [
-                'name' => 'Number of individuals reached through health promotion',
-                'type' => 'Priority'
+                'name' => 'Number of Clients reached for Cervical Cancer',
+                'type' => 'Priority',
+                'sub_program_id' => 11,
+                'active' => true
             ],
             [
-                'name' => 'Number of individuals provided with first patient encounter',
-                'type' => 'Priority'
+                'name' => 'Number of Individuals Reached through Health Promotion',
+                'type' => 'Priority',
+                'sub_program_id' => 13,
+                'active' => true
             ],
             [
-                'name' => 'Number of individuals registered to philhealth',
-                'type' => 'Priority'
+                'name' => 'Number of Individuals Provided with FPE',
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
             ],
             [
-                'name' => 'Number of individuals provided with advocacies on First Patient Encounters or Philhealth',
-                'type' => 'Target'
+                'name' => 'Number of Individuals registered to Philhealth',
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
             ],
             [
-                'name' => 'Number of individuals reffered to higher health facility',
-                'type' => 'Priority'
+                'name' => 'Number of Individuals provided with advocacies on FPE or Philhealh',
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
+            ],
+            [
+                'name' => 'Number of Individuals Reffered to higher facility',
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
             ],
             [
                 'name' => 'Number of Large Scale Activities Conducted',
-                'type' => 'Priority'
+                'type' => 'Target',
+                'sub_program_id' => null,
+                'active' => true
             ],
 
         ];

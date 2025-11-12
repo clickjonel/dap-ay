@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pk_programs', function (Blueprint $table) {
-            $table->id('program_id');
-            $table->string('program_name');
-            $table->string('program_code')->unique();
-            $table->boolean('program_active');
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->boolean('active');
             $table->timestamps();
         });
 
-        Schema::create('pk_sub_programs', function (Blueprint $table) {
-            $table->id('sub_program_id');
-            $table->foreignId('program_id')->constrained('pk_programs','program_id');
-            $table->string('sub_program_name');
-            $table->string('sub_program_code')->unique();
-            $table->boolean('sub_program_active');
+        Schema::create('sub_programs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained('programs','id');
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->boolean('active');
             $table->timestamps();
         });
     }

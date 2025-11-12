@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pk_indicators', function (Blueprint $table) {
+        Schema::create('indicators', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('sub_program_id')->nullable()->constrained('sub_programs');
             $table->string('type');
+            $table->boolean('active');
         });
 
-        Schema::create('user_indicators', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('pk_users','user_id');
-            $table->foreignId('indicator_id')->constrained('pk_indicators','id');
-        });
     }
 
     /**
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pk_indicators');
+        Schema::dropIfExists('indicators');
     }
 };

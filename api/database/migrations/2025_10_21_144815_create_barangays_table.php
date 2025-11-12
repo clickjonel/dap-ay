@@ -11,13 +11,37 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pk_barangays', function (Blueprint $table) {
-            $table->id('barangay_id');
-            $table->foreignId('province_id')->constrained('pk_provinces','province_id');
-            $table->foreignId('municipality_id')->constrained('pk_municipalities','municipality_id');
-            $table->string('barangay_name');
-            $table->smallInteger('pk_status')->default(1);
+
+        Schema::create('barangays', function (Blueprint $table) {
+            $table->id();
+
+            // details
+            $table->foreignId('province_id')->constrained('provinces','id');
+            $table->foreignId('municipality_id')->constrained('municipalities','id');
+            $table->string('name');
+
+            //pk status
+            $table->string('status');
+
+            //geolocation details
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+
+            //baseline totals
+            $table->integer('total_purok')->nullable();
+            $table->integer('target_purok')->nullable();
+            $table->integer('target_population')->nullable();
+
         });
+
+        Schema::create('barangay_priority_programs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('barangay_id')->constrained('barangays','id');
+            $table->foreignId('sub_program_id')->constrained('sub_programs','id');
+            $table->integer('baseline')->nullable();
+            $table->integer('order');
+        });
+
     }
 
     /**
@@ -25,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pk_barangays');
+        Schema::dropIfExists('barangays');
     }
 };

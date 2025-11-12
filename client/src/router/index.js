@@ -38,14 +38,6 @@ const routes = [
           }
         },
         {
-          path: '/sites',
-          name: 'PK Sites',
-          component: () => import('@/views/site/sites.vue'),
-          meta:{
-            requiresAuth:true
-          }
-        },
-        {
           path: '/teams',
           name: 'PK Teams',
           component: () => import('@/views/team/teams.vue'),
@@ -94,9 +86,15 @@ const routes = [
           }
         },
         {
+<<<<<<< Updated upstream
           path: '/server-logs',
           name: 'Server Logs',
           component: () => import('@/views/serverLogs/serverLogs.vue'),
+=======
+          path: '/barangays',
+          name: 'Barangays',
+          component: () => import('@/views/barangay/barangays.vue'),
+>>>>>>> Stashed changes
           meta:{
             requiresAuth:true
           }
@@ -147,6 +145,26 @@ const routes = [
       path: '/team/update/:team_id',
       name: 'Update Team',
       component: () => import('@/views/team/updateTeam.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
+
+    // program forms
+    {
+      path: '/program/create',
+      name: 'Create Program',
+      component: () => import('@/views/program/createProgram.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
+
+    //barangay forms
+    {
+      path: '/barangay/update/:barangay_id',
+      name: 'Manage Program',
+      component: () => import('@/views/barangay/manageBarangay.vue'),
       meta:{
         requiresAuth:true
       }

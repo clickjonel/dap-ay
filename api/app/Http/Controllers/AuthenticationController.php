@@ -19,7 +19,7 @@ class AuthenticationController extends Controller
         if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']])){
             $user = Auth::user();
 
-            $token = $user->createToken($user->user_id)->plainTextToken;
+            $token = $user->createToken($user->id)->plainTextToken;
 
             return response()->json([
                 'token' => $token,

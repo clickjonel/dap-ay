@@ -11,24 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pk_teams', function (Blueprint $table) {
-            $table->id('team_id');
-            $table->string('team_name');
-            $table->foreignId('barangay_id')->constrained('pk_barangays','barangay_id');
-            $table->boolean('team_active')->default(true);
+       Schema::create('teams', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
         });
 
-        Schema::create('pk_team_members', function (Blueprint $table) {
-            $table->id('team_member_id');
-            $table->string('member_name');
-            $table->string('member_position');
-            $table->boolean('member_oriented');
-            $table->boolean('member_trained');
-            $table->boolean('pk_kit_receipt');
-             $table->string('site_name');
-            $table->foreignId('user_id')->nullable()->constrained('pk_users','user_id');
-            $table->foreignId('team_id')->constrained('pk_teams','team_id');
+        Schema::create('team_members', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('team_id')->constrained('teams','id');
+            $table->foreignId('user_id')->nullable()->constrained('users','id');
+            $table->boolean('doh_deployed');
+            $table->string('name');
+            $table->string('position');
         });
+
+        Schema::create('team_barangays', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('team_id')->constrained('teams','id');
+            $table->foreignId('barangay_id')->constrained('barangays','id');
+        });
+
     }
 
     /**

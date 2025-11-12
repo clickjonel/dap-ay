@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Barangay;
+use App\Models\BarangayPriorityProgram;
 use App\Models\Municipality;
 use App\Models\Province;
 use App\Models\Site;
@@ -51,8 +52,8 @@ class ProvinceSeeder extends Seeder
         ];
 
         foreach($provinces as $province){
-            $provinceID = DB::connection('dap-ay')->table('pk_provinces')->insertGetId([
-                                    'province_name' => $province['province_name'],
+            $provinceID = DB::connection('dap-ay')->table('provinces')->insertGetId([
+                                    'name' => $province['province_name'],
                                 ]);
 
             $municipalities = DB::connection('pkpulse')->table('pkp_municipality')->where('province_id',$province['dohis_province_id'])->get();
@@ -60,53 +61,36 @@ class ProvinceSeeder extends Seeder
             foreach($municipalities as $mun){
                 $municipality = Municipality::create([
                     'province_id' => $provinceID,
-                    'municipality_name'  => $mun->municipality_name,
+                    'name'  => $mun->municipality_name,
                 ]);
 
                 $barangays = DB::connection('pkpulse')->table('pkp_barangay')->where('municipality_id',$mun->municipality_id)->get();
+                $bagiuo_pk_sites = [1049,1121,1122,1052,1051,1172,1087,1108,1105,1056,1060,1165,1080,1054,1117,1152,1123,1115,1103,1078,1085,1061,1089,1162,1109,1156,1082,1109,1155,1077,1110,1097,1132,1066,1111,1114,1136,1073,1170,1070,1071,1102,1053,1161];
 
                 foreach($barangays as $brgy){
                     $barangay = Barangay::create([
                         'province_id' => $provinceID,
-                        'municipality_id' => $municipality->municipality_id,
-                        'barangay_name'  => $brgy->barangay_name,
+                        'municipality_id' => $municipality->id,
+                        'name'  => $brgy->barangay_name,
+                        'status' => 'Implementing PK',
+                        'latitude' => null,
+                        'longitude' => null,
+                        'total_purok' => null,
+                        'target_purok' => null,
+                        'target_population' => null
                     ]);
 
-                    // create team
-                    // $provinceName = Province::find($provinceID)->province_name;
-                    // Team::create([
-                    //     'team_name' => "{$provinceName}-{$municipality->municipality_name}-{$barangay->barangay_name} Purokalusugan Team",
-                    //     'barangay_id' => $barangay->barangay_id,
-                    //     'team_active' => true,
-                    // ]);
+                    if (in_array($barangay->id, $bagiuo_pk_sites)) {
+                        $barangay->update(['status' => 'Implementing PK']);
 
-                    // //create site if present
-                    // $site = DB::connection('pkpulse')->table('pkp_site')->where('barangay_id',$brgy->barangay_id)->first() ?? null;
-                    
-                    // if(!is_null($site)){
-                    //     $siteCreated = Site::create([
-                    //         'barangay_id' => $barangay->barangay_id,
-                    //         'latitude' => $site->latitude,
-                    //         'longitude' => $site->longitude
-                    //     ]);
+                        BarangayPriorityProgram::create([
+                            'barangay_id' => $barangay->id,
+                            'sub_program_id' => 1,
+                            'baseline' => null,
+                            'order' => 1,
+                        ]);
+                    }
 
-                    //     $siteProfile = SiteProfile::create([
-                    //         'site_id' => $siteCreated->site_id,
-                    //         'total_purok' => $site->no_purok,
-                    //         'total_sitio' => $site->no_sitio,
-                    //         'total_target_purok' => $site->target_purok,
-                    //         'total_target_sitio' => $site->target_sitio,
-                    //         'total_target_population' => $site->population
-                    //     ]);
-
-                    //     SiteProgram::create([
-                    //         'program_id' => 1,
-                    //         'profile_id' => $siteProfile->profile_id,
-                    //         'target_baseline' => 1000,
-                    //         'priority_order' => 1
-                    //     ]);
-
-                    // }
                     
                 }
             }

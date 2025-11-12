@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = DB::connection('dohis')->table('dohis_hrh_profile')->where('account_status','Active')->get();
-        $indicators = Indicator::get();
         foreach($users as $user){
             $user = User::create([
                 'user_code' => $user->user_code,
@@ -32,13 +31,6 @@ class UserSeeder extends Seeder
                 'account_status' => 'Active',
                 'user_level' => 5
             ]);
-
-            foreach($indicators as $indicator){
-                UserIndicator::create([
-                    'user_id' => $user->user_id,
-                    'indicator_id' => $indicator['id']
-                ]);
-            }
         }
     }
 }

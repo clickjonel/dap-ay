@@ -3,11 +3,13 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BarangayController;
+use App\Http\Controllers\BarangayPriorityProgramController;
 use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\MunicipalityController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\SubProgramController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServerLogsController;
@@ -36,27 +38,25 @@ Route::group([
     ],function(){
         Route::get('/list',[ProgramController::class,'list']);
         Route::get('/selection',[ProgramController::class,'selection']);
-        Route::get('/selection/sub-programs',[ProgramController::class,'subProgramSelection']);
+        // Route::get('/selection/sub-programs',[ProgramController::class,'subProgramSelection']);
         Route::post('/create',[ProgramController::class,'create']);
-        Route::patch('/update/{program_id}',[ProgramController::class,'update']);
+        Route::post('/update',[ProgramController::class,'update']);
         Route::post('/create/sub-program',[ProgramController::class,'createSubProgram']);
 
         Route::get('/find',[ProgramController::class,'findProgram']);
-        Route::post('/sub-program/create',[ProgramController::class,'createSubProgram']);
-        Route::post('/sub-program/update',[ProgramController::class,'updateSubProgram']);
-        Route::post('/indicator/update',[ProgramController::class,'updateIndicator']);
-        Route::post('/indicator/create',[ProgramController::class,'createIndicator']);
+        // Route::post('/sub-program/create',[ProgramController::class,'createSubProgram']);
+        // Route::post('/sub-program/update',[ProgramController::class,'updateSubProgram']);
+        // Route::post('/indicator/update',[ProgramController::class,'updateIndicator']);
+        // Route::post('/indicator/create',[ProgramController::class,'createIndicator']);
     });
 
-
-    // Sites
+    // Sub Program
     Route::group([
-        'prefix' => '/site'
+        'prefix' => '/sub-program'
     ],function(){
-        Route::get('/list',[SiteController::class,'list']);
-        // Route::post('/create',[ProgramController::class,'create']);
-        // Route::patch('/update/{program_id}',[ProgramController::class,'update']);
-        // Route::post('/create/sub-program',[ProgramController::class,'createSubProgram']);
+       Route::post('/update',[SubProgramController::class,'update']);
+       Route::post('/create',[SubProgramController::class,'create']);
+       Route::get('/selection',[SubProgramController::class,'selection']);
     });
 
      // Provinces
@@ -78,17 +78,17 @@ Route::group([
         'prefix' => '/barangay'
     ],function(){
         Route::get('/selection',[BarangayController::class,'selection']);
+        Route::get('/list',[BarangayController::class,'list']);
+        Route::get('/find',[BarangayController::class,'find']);
+        Route::post('/update',[BarangayController::class,'update']);
     });
 
-    // Site
+    // Barangay Priority Programs
     Route::group([
-        'prefix' => '/site'
+        'prefix' => '/barangay-priority-program'
     ],function(){
-        Route::post('/update/priority_programs',[SiteController::class,'updateSitePrograms']);
-        Route::post('/create',[SiteController::class,'createSiteProfile']);
-        Route::post('/update/{site_id}',[SiteController::class,'updateSite']);
-        Route::post('/update/profile/{site_profile_id}',[SiteController::class,'updateSiteProfile']);
-        
+        Route::post('/update',[BarangayPriorityProgramController::class,'update']);
+        Route::post('/create',[BarangayPriorityProgramController::class,'create']);
     });
 
      // Team
@@ -140,11 +140,13 @@ Route::group([
         Route::get('/report',[ActivityController::class,'getActivityReportData']);
     });
 
+    // indicator
     Route::group([
         'prefix' => '/indicator'
     ],function(){
         Route::post('/create',[IndicatorController::class,'create']);
         Route::get('/list',[IndicatorController::class,'list']);
+        Route::post('/update',[IndicatorController::class,'update']);
     });
 
     Route::group([

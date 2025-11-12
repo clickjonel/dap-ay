@@ -14,6 +14,7 @@ use App\Models\ProgramIndicator;
 use App\Models\SubProgram;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProgramController extends Controller
 {
@@ -23,8 +24,8 @@ class ProgramController extends Controller
     
         $query = Program::query();
         $list = $query->when(isset($keyword), function($query) use ($keyword) {
-                 $query->where('program_name', 'LIKE', "%{$keyword}%")
-                        ->orWhere('program_code', 'LIKE', "%{$keyword}%");
+                 $query->where('name', 'LIKE', "%{$keyword}%")
+                        ->orWhere('code', 'LIKE', "%{$keyword}%");
                 })
                 ->with(['subPrograms'])
                 ->simplePaginate(10);
@@ -34,7 +35,7 @@ class ProgramController extends Controller
 
     public function selection()
     {
-        $programs = Program::where('program_active',1)->get();
+        $programs = Program::where('active',1)->get();
 
         return response()->json($programs);
     }
@@ -51,44 +52,27 @@ class ProgramController extends Controller
         $validated = $request->validated();
         $program = Program::create($validated);
         SubProgram::create([
-            'program_id' => $program->program_id,
-            'sub_program_name' => $program->program_name,
-            'sub_program_code' => $program->program_code,
-            'sub_program_active' => $program->program_active,
+            'program_id' => $program->id,
+            'name' => $program->name,
+            'code' => $program->code,
+            'active' => $program->active,
         ]);
 
-        return response()->json('Program created successfully, add sub programs if applicable',201);
+        return response()->json('Program created successfully.',201);
     }
 
-    public function update($program_id,UpdateProgramRequest $request)
+    public function update(Request $request)
     {
-        $validated = $request->validated();
-
-        $program = Program::findOrFail($program_id);
-
-        if($program) $program->update($validated);
-
-        return response()->json('Program updated successfully.',201);
-    }
-
-    public function createSubProgram(CreateSubProgramRequest $request)
-    {
-        $validated = $request->validated();
-        SubProgram::create($validated);
-
-        return response()->json('Sub Program created successfully and synced to selected program',201);
-    }
-
-    public function updateSubProgram(UpdateSubProgramRequest $request)
-    {
-        $validated = $request->validated();
-        SubProgram::find($validated['sub_program_id'])->update([
-            'sub_program_name' => $validated['sub_program_name'],
-            'sub_program_code' => $validated['sub_program_code'],
-            'sub_program_active' => $validated['sub_program_active']
+        $validated = $request->validate([
+            'id' => 'required|numeric',
+            'name' => 'required|string',
+            'code' => Rule::unique('programs', 'code')->ignore($request->input('id'), 'id'),
+            'active' => 'required|boolean'
         ]);
 
-        return response()->json('Sub Program created successfully and synced to selected program',201);
+        Program::find($validated['id'])->update($validated);
+
+        return response()->json('Updated Program Successfully',201);
     }
 
     public function findProgram(Request $request)

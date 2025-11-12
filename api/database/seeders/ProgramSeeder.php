@@ -18,162 +18,196 @@ class ProgramSeeder extends Seeder
     {
          $programs = [
             [
-                'program_name' => 'Nutrition Program',
-                'program_code' => 'NP',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Immunization Program',
-                'program_code' => 'IP',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Water, Sanitation and Hygiene (WASH) Program',
-                'program_code' => 'WASH',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Tuberculosis (TB) Program',
-                'program_code' => 'TB',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'HIV and AIDS  Program',
-                'program_code' => 'HIV',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Road Safety Program',
-                'program_code' => 'RSP',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Maternal Health Program',
-                'program_code' => 'MHP',
-                'program_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'program_name' => 'Non-Communicable Diseases Program',
-                'program_code' => 'NCD',
-                'program_active' => true,
+                'name' => 'Nutrition Program',
+                'code' => 'NP',
+                'active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
                 'sub_programs' => [
                     [
-                        'sub_program_name' => 'NCD-Cancer',
-                        'sub_program_code' => 'NCD-SUB-CANCER',
-                        'sub_program_active' => true,
+                        'name' => 'Nutrition Program',
+                        'code' => 'NP',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(), 
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Immunization Program',
+                'code' => 'IP',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Immunization Program',
+                        'code' => 'IP',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Water, Sanitation and Hygiene (WASH) Program',
+                'code' => 'WASH',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Water, Sanitation and Hygiene (WASH) Program',
+                        'code' => 'WASH',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Tuberculosis (TB) Program',
+                'code' => 'TB',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Tuberculosis (TB) Program',
+                        'code' => 'TB',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'HIV and AIDS  Program',
+                'code' => 'HIV',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'HIV and AIDS  Program',
+                        'code' => 'HIV',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Road Safety Program',
+                'code' => 'RSP',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Road Safety Program',
+                        'code' => 'RSP',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Maternal Health Program',
+                'code' => 'MHP',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Maternal Health Program',
+                        'code' => 'MHP',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Non-Communicable Diseases Program',
+                'code' => 'NCD',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Diabetes',
+                        'code' => 'NCD-Diabetes',
+                        'active' => true,
                     ],
                     [
-                        'sub_program_name' => 'NCD-Women',
-                        'sub_program_code' => 'NCD-SUB-WOMEN',
-                        'sub_program_active' => true,
+                        'name' => 'Hypertension',
+                        'code' => 'NCD-Hypertension',
+                        'active' => true,
+                    ],
+                    [
+                        'name' => 'Breast Cancer',
+                        'code' => 'NCD-Breast Cancer',
+                        'active' => true,
+                    ],
+                    [
+                        'name' => 'Cervical Cancer',
+                        'code' => 'NCD-Cervical Cancer',
+                        'active' => true,
                     ],
                 ]
             ],
             [
-                'program_name' => 'Mental Health',
-                'program_code' => 'MH',
-                'program_active' => true,
+                'name' => 'Mental Health',
+                'code' => 'MH',
+                'active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Mental Health',
+                        'code' => 'MH',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Health Promotion Program',
+                'code' => 'HPP',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Health Promotion Program',
+                        'code' => 'HPP',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
             ],
         ];
 
-        foreach($programs as $program){
-            $programCreated = Program::create([
-                'program_name' => $program['program_name'],
-                'program_code' => $program['program_code'],
-                'program_active' => $program['program_active'],
-                'created_at' => $program['created_at'],
-                'updated_at' => $program['updated_at'],
+        foreach ($programs as $programData) {
+            // Store sub_programs before creating the program
+            $subPrograms = $programData['sub_programs'];
+            
+            // Create the program
+            $program = Program::create([
+                'name' => $programData['name'],
+                'code' => $programData['code'],
+                'active' => $programData['active']
             ]);
 
-            $subPrograms = $program['sub_programs'] ?? [];
-
-            if(empty($subPrograms)){
-                $subProgramCreated = SubProgram::create([
-                    'program_id' => $programCreated->program_id,
-                    'sub_program_name' => $program['program_name'],
-                    'sub_program_code' => $program['program_code'],
-                    'sub_program_active' => $program['program_active'],
-                ]);
-
-                $indicators = [
-                    'Total Provided Health Promotion Services',
-                    'Total Individuals Reached Through Health Promotion',
-                    "Total Individuals Provided with PK Services ({$subProgramCreated->sub_program_name})",
-                    "Total Households Provided with PK Services ({$subProgramCreated->sub_program_name})",
-                    "Total Individual FPE",
-                    "Total Household FPE",
-                    "Total Individuals Reffered to Higher Health Facility",
-                ];
-
-                foreach($indicators as $index => $indicatorName) {
-                    $indicatorCode = sprintf(
-                        "%s-%s-IND-%03d",
-                        $program['program_code'],
-                        $subProgramCreated->sub_program_code,
-                        $index + 1
-                    );
-                    
-                    ProgramIndicator::create([
-                        'indicator_name' => $indicatorName,
-                        'indicator_code' => $indicatorCode,
-                        'sub_program_id' => $subProgramCreated->sub_program_id,
-                        'indicator_active' => true
-                    ]);
-                }
-            }
-    
-            foreach($subPrograms as $subProgramData){
-                $subProgramCreated = SubProgram::create([
-                    'program_id' => $programCreated->program_id,
-                    'sub_program_name' => $subProgramData['sub_program_name'],
-                    'sub_program_code' => $subProgramData['sub_program_code'],
-                    'sub_program_active' => $subProgramData['sub_program_active'],
-                ]);
-
-                $indicators = [
-                    'Total Provided Health Promotion Services',
-                    'Total Individuals Reached Through Health Promotion',
-                    "Total Individuals Provided with PK Services ({$subProgramCreated->sub_program_name})",
-                    "Total Households Provided with PK Services ({$subProgramCreated->sub_program_name})",
-                    "Total Individual FPE",
-                    "Total Household FPE",
-                    "Total Individuals Reffered to Higher Health Facility",
-                ];
-
-                foreach($indicators as $index => $indicatorName) {
-                    $indicatorCode = sprintf(
-                        "%s-%s-IND-%03d",
-                        $program['program_code'],
-                        $subProgramData['sub_program_code'],
-                        $index + 1
-                    );
-                    
-                    ProgramIndicator::create([
-                        'indicator_name' => $indicatorName,
-                        'indicator_code' => $indicatorCode,
-                        'sub_program_id' => $subProgramCreated->sub_program_id,
-                        'indicator_active' => true
-                    ]);
-                }
-            }
+            // Create the sub-programs
+            $program->subPrograms()->createMany($subPrograms);
         }
+
     }
+
+    
 }

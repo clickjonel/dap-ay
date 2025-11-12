@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pk_program_indicators', function (Blueprint $table) {
-            $table->id('program_indicator_id');
-            $table->string('indicator_code')->unique();
-            $table->string('indicator_name');
-            $table->string('indicator_type')->default('Baseline');
-            $table->boolean('indicator_active')->default(true);
-            $table->foreignId('sub_program_id')->constrained('pk_sub_programs','sub_program_id');
-        });
+        // Schema::create('pk_program_indicators', function (Blueprint $table) {
+        //     $table->id('program_indicator_id');
+        //     $table->string('indicator_code')->unique();
+        //     $table->string('indicator_name');
+        //     $table->string('indicator_type')->default('Baseline');
+        //     $table->boolean('indicator_active')->default(true);
+        //     $table->foreignId('sub_program_id')->constrained('pk_sub_programs','sub_program_id');
+        // });
     }
 
     /**

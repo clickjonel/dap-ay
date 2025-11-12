@@ -22,9 +22,9 @@ class CreateProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'program_name' => 'required|string',
-            'program_code' => 'required|string|unique:pk_programs,program_code',
-            'program_active' => 'required|numeric'
+            'name' => 'required|string',
+            'code' => 'required|string|unique:programs,code',
+            'active' => 'required|boolean'
         ];
     }
 }

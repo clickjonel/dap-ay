@@ -4,20 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Indicator extends Model
+class BarangayPriorityProgram extends Model
 {
     protected $connection = 'dap-ay';
-    protected $table = 'indicators';
+    protected $table = 'barangay_priority_programs';
     public $timestamps = false;
     protected $fillable = [
-        'name',
+        'barangay_id',
         'sub_program_id',
-        'active',
-        'type',
+        'baseline',
+        'order',
     ];
-     protected $casts = [
-        'active' => 'boolean',
-    ];
+
+    public function barangay()
+    {
+        return $this->belongsTo(Barangay::class,'barangay_id');
+    }
 
     public function subProgram()
     {
