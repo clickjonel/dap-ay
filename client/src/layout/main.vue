@@ -13,19 +13,8 @@
                 <Button @click="handleNavigation('/baseline-indicators')" label="PK Baseline Indicators" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/reports')" label="Reports" severity="info" class="w-full" />
                 <Button @click="handleNavigation('/indicators')" label="Indicators" severity="info" class="w-full" />
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 <Button @click="handleNavigation('/server-logs')" label="Server Logs" severity="info" class="w-full" />
-=======
                 <Button @click="handleNavigation('/barangays')" label="Barangays" severity="info" class="w-full" />
->>>>>>> Stashed changes
-=======
-                <Button @click="handleNavigation('/barangays')" label="Barangays" severity="info" class="w-full" />
->>>>>>> Stashed changes
-=======
-                <Button @click="handleNavigation('/barangays')" label="Barangays" severity="info" class="w-full" />
->>>>>>> Stashed changes
             </div>
         </div>
 
