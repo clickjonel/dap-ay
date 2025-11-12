@@ -88,9 +88,15 @@ const routes = [
         {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           path: '/server-logs',
           name: 'Server Logs',
           component: () => import('@/views/serverLogs/serverLogs.vue'),
+=======
+          path: '/barangays',
+          name: 'Barangays',
+          component: () => import('@/views/barangay/barangays.vue'),
+>>>>>>> Stashed changes
 =======
           path: '/barangays',
           name: 'Barangays',
