@@ -10,6 +10,7 @@ use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServerLogsController;
 use App\Models\ActivityProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -144,6 +145,13 @@ Route::group([
     ],function(){
         Route::post('/create',[IndicatorController::class,'create']);
         Route::get('/list',[IndicatorController::class,'list']);
+    });
+
+    Route::group([
+        'prefix' => '/server-logs'
+    ],function(){
+        Route::post('/create',[ServerLogsController::class,'createServerLog']);
+        Route::get('/list',[ServerLogsController::class,'readAllServerLogs']);
     });
 
 });

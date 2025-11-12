@@ -93,6 +93,14 @@ const routes = [
             requiresAuth:true
           }
         },
+        {
+          path: '/server-logs',
+          name: 'Server Logs',
+          component: () => import('@/views/serverLogs/serverLogs.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
       ]
     },
     {
