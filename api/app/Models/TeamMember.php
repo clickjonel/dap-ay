@@ -7,23 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class TeamMember extends Model
 {
     protected $connection = 'dap-ay';
-    protected $table = 'pk_team_members';
-    protected $primaryKey = 'team_member_id';
+    protected $table = 'team_members';
     public $timestamps = false;
 
     protected $fillable = [
         'team_id',
-        'member_name',
-        'member_position',
-        'member_oriented',
-        'member_trained',
-        'pk_kit_receipt',
-        'site_name',
         'user_id',
+        'doh_deployed',
+        'name',
+        'position',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class,'user_id','user_id');
-    }
 }

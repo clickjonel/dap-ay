@@ -8,23 +8,17 @@
 
         <div class="w-full h-full flex flex-col justify-between items-start gap-2">
 
-            <div class="w-full min-h-full h-full flex flex-col justify-start items-start">
+            <div class="w-full min-h-full h-full flex flex-col justify-start items-start font-lexend">
 
                 <div class="min-w-full w-full flex justify-start items-start divide-x divide-black border-b uppercase font-semibold bg-teal-100 border z-10">
-                   <span class="w-[20%] p-2">Team Name</span>
-                   <span class="w-[20%] p-2">Province</span>
-                   <span class="w-[20%] p-2">Municipality</span>
-                   <span class="w-[20%] p-2">Barangay</span>
+                   <span class="w-[80%] p-2">Team Name</span>
                    <span class="w-[20%] p-2">Actions</span>
                 </div>
                 
                 <div v-for="team in teams.data" class="w-full flex justify-start items-stretch divide-x divide-black border-b font-light border-x text-sm">
-                    <span class="w-[20%] p-2">{{ team.team_name }}</span>
-                    <span class="w-[20%] p-2">{{ team.barangay?.province?.province_name }}</span>
-                    <span class="w-[20%] p-2">{{ team.barangay?.municipality?.municipality_name }}</span>
-                    <span class="w-[20%] p-2">{{ team.barangay?.barangay_name }}</span>
-                    <span class="w-[20%] p-2 flex justify-start items-center gap-2">
-                        <Button @click="router.push({path:`/team/update/${team.team_id}`})" v-tooltip="'Update Team'" icon="pi pi-user-edit" severity="info" rounded outlined/>
+                    <span class="w-[80%] p-1">{{ team.name }}</span>
+                    <span class="w-[20%] p-1 flex justify-start items-center gap-2">
+                        <Button @click="router.push({path:`/team/update/${team.id}`})" v-tooltip="'Update Team'" icon="pi pi-cog" severity="secondary" rounded outlined class="!size-8"/>
                     </span>
                 </div>
 

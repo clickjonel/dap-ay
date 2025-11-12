@@ -32,6 +32,10 @@ return new class extends Migration
             $table->integer('target_purok')->nullable();
             $table->integer('target_population')->nullable();
 
+            // others
+            // $table->boolean('pk_oriented'); //Number or Boolean
+            // $table->boolean('pk_kit_received'); //Number or Boolean
+
         });
 
         Schema::create('barangay_priority_programs', function (Blueprint $table) {

@@ -19,8 +19,13 @@ class Team extends Model
     //     return $this->belongsTo(Barangay::class,'barangay_id','barangay_id');
     // }
 
-    // public function members()
-    // {
-    //     return $this->hasMany(TeamMember::class,'team_id','team_id');
-    // }
+    public function members()
+    {
+        return $this->hasMany(TeamMember::class,'team_id','id');
+    }
+
+    public function barangays()
+    {
+        return $this->hasMany(TeamBarangay::class,'team_id','id');
+    }
 }

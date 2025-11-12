@@ -13,6 +13,8 @@ use App\Http\Controllers\SubProgramController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServerLogsController;
+use App\Http\Controllers\TeamBarangayController;
+use App\Http\Controllers\TeamMemberController;
 use App\Models\ActivityProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -96,16 +98,22 @@ Route::group([
         'prefix' => '/team'
     ],function(){
         Route::get('/list',[TeamController::class,'list']);
-        // Route::post('/update',[TeamController::class,'updateTeam']);
-        Route::post('/member/add',[TeamController::class,'addTeamMember']);
-        Route::delete('/member/remove',[TeamController::class,'removeTeamMember']);
+        Route::get('/find',[TeamController::class,'find']);
+        Route::post('/update',[TeamController::class,'update']);
+    });
 
-        Route::post('/create',[TeamController::class,'createTeam']);
-        Route::get('/find',[TeamController::class,'findTeam']);
+    // Team Members
+    Route::group([
+        'prefix' => '/team-member'
+    ],function(){
+        Route::post('/create',[TeamMemberController::class,'create']);
+    });
 
-        Route::post('/member/update',[TeamController::class,'updateMemberDetails']);
-        Route::delete('/member/delete',[TeamController::class,'deleteMember']);
-        Route::post('/update',[TeamController::class,'updateTeamDetails']);
+    // Team Barangay
+    Route::group([
+        'prefix' => '/team-barangay'
+    ],function(){
+        Route::post('/create',[TeamBarangayController::class,'create']);
     });
 
     // User
