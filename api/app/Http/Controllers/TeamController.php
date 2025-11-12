@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServerLog;
 use App\Models\Team;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
