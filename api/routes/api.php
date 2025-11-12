@@ -147,6 +147,7 @@ Route::group([
         Route::post('/create',[IndicatorController::class,'create']);
         Route::get('/list',[IndicatorController::class,'list']);
         Route::post('/update',[IndicatorController::class,'update']);
+<<<<<<< Updated upstream
     });
 
     Route::group([
@@ -154,6 +155,8 @@ Route::group([
     ],function(){
         Route::post('/create',[ServerLogsController::class,'createServerLog']);
         Route::get('/list',[ServerLogsController::class,'readAllServerLogs']);
+=======
+>>>>>>> Stashed changes
     });
 
 });
