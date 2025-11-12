@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -234,6 +235,11 @@ class BaguioTeamSeeder extends Seeder
                 "barangay_id" => "1161"
             ],
         ];
+
+        foreach($teams as $team){
+            Team::create(['name' => $team['team_name']]);
+
+        }
 
     }
 }
