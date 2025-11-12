@@ -86,18 +86,17 @@ const routes = [
           }
         },
         {
+          path: '/barangays',
+          name: 'Barangays',
+          component: () => import('@/views/barangay/barangays.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/server-logs',
           name: 'Server Logs',
           component: () => import('@/views/serverLogs/serverLogs.vue'),
-          path: '/barangays',
-          name: 'Barangays',
-          component: () => import('@/views/barangay/barangays.vue'),
-          path: '/barangays',
-          name: 'Barangays',
-          component: () => import('@/views/barangay/barangays.vue'),
-          path: '/barangays',
-          name: 'Barangays',
-          component: () => import('@/views/barangay/barangays.vue'),
           meta:{
             requiresAuth:true
           }
