@@ -45,10 +45,10 @@ class ProvinceSeeder extends Seeder
                 'dohis_province_id'   => 1481,
                 'province_name' => 'Apayao',
             ],
-            [
-                'dohis_province_id'   => 1430,
-                'province_name' => 'City of Baguio',
-            ],
+            // [
+            //     'dohis_province_id'   => 1430,
+            //     'province_name' => 'City of Baguio',
+            // ],
         ];
 
         foreach($provinces as $province){
@@ -65,7 +65,7 @@ class ProvinceSeeder extends Seeder
                 ]);
 
                 $barangays = DB::connection('pkpulse')->table('pkp_barangay')->where('municipality_id',$mun->municipality_id)->get();
-                $bagiuo_pk_sites = [1049,1121,1122,1052,1051,1172,1087,1108,1105,1056,1060,1165,1080,1054,1117,1152,1123,1115,1103,1078,1085,1061,1089,1162,1109,1156,1082,1109,1155,1077,1110,1097,1132,1066,1111,1114,1136,1073,1170,1070,1071,1102,1053,1161];
+                $bagiuo_pk_barangays = [1049,1121,1122,1052,1051,1172,1087,1108,1105,1056,1060,1165,1080,1054,1117,1152,1123,1115,1103,1078,1085,1061,1089,1162,1109,1156,1082,1109,1155,1077,1110,1097,1132,1066,1111,1114,1136,1073,1170,1070,1071,1102,1053,1161];
 
                 foreach($barangays as $brgy){
                     $barangay = Barangay::create([
@@ -80,7 +80,7 @@ class ProvinceSeeder extends Seeder
                         'target_population' => null
                     ]);
 
-                    if (in_array($barangay->id, $bagiuo_pk_sites)) {
+                    if (in_array($barangay->id, $bagiuo_pk_barangays)) {
                         $barangay->update(['status' => 'Implementing PK']);
 
                         BarangayPriorityProgram::create([
@@ -90,7 +90,6 @@ class ProvinceSeeder extends Seeder
                             'order' => 1,
                         ]);
                     }
-
                     
                 }
             }

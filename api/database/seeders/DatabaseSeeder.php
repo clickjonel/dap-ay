@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProgramSeeder::class,
             ProvinceSeeder::class,
             IndicatorSeeder::class,
+            BaguioTeamSeeder::class,
         ]);
     }
 }
