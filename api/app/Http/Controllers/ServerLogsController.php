@@ -9,11 +9,8 @@ class ServerLogsController extends Controller
 {
     public function readAllServerLogs()
     {
-        $records = ServerLog::all();
-        return response()->json([
-            'message' => 'Records retrieved successfully',
-            'data' => $records
-        ], 200);
+        $records = ServerLog::query()->simplePaginate(10);
+        return response()->json($records, 200);
     }
 
     public function createServerLog(Request $request)
