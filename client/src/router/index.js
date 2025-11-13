@@ -101,6 +101,14 @@ const routes = [
             requiresAuth:true
           }
         },
+        {
+          path: '/announcements',
+          name: 'Announcements',
+          component: () => import('@/views/announcement/announcements.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
       ]
     },
     {

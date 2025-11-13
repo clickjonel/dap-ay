@@ -150,6 +150,11 @@
             icon: 'pi pi-file-check',
             command: () => handleNavigation('/reports')
         },
+        {
+            label: 'Announcements',
+            icon: 'pi pi-volume-up',
+            command: () => handleNavigation('/announcements')
+        },
     ];
 
     const toggleMobileNavigationPopover = (event) => {

@@ -1,35 +1,32 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\ServerLog;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 
-class ServerLogsController extends Controller
+class AnnouncementController extends Controller
 {
-    public function readAllServerLogs(Request $request)
+    public function readAllAnnouncements(Request $request)
     {
-        $records = ServerLog::query()
+        $records = Announcement::query()
             ->when(isset($request->keyword), function ($query) use ($request) {
-                $query->where('action_done', 'LIKE', "%{$request->keyword}%");
+                $query->where('title', 'LIKE', "%{$request->keyword}%");
             })
             ->with('user')
             ->orderBy('id', 'DESC')
             ->simplePaginate(10);
         return response()->json($records, 200);
     }
-
-
-
-    public function createServerLog(Request $request)
+    public function createAnnouncement(Request $request)
     {
         $validatedData = $request->validate([
             'created_by_id' => 'integer',
-            'action_done' => 'string|max:255',
-            'table_name' => 'string|max:255',
-            'column_id' => 'nullable|string|max:255'
+            'date_start' => 'nullable|max:255',
+            'date_end' => 'nullable|max:255',
+            'title' => 'nullable|string|max:255',
+            'details' => 'nullable|string|max:255'
         ]);
-        $record = ServerLog::create($validatedData);
+        $record = Announcement::create($validatedData);
         return response()->json([
             'message' => 'Record created successfully',
             'data' => $record
