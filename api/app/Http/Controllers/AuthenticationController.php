@@ -17,7 +17,7 @@ class AuthenticationController extends Controller
 
 
         if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']])){
-            $user = Auth::user();
+            $user = $request->user()->load(['teams']);
 
             $token = $user->createToken($user->id)->plainTextToken;
 

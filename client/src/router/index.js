@@ -171,6 +171,16 @@ const routes = [
         requiresAuth:true
       }
     },
+
+    //report forms
+    {
+      path: '/report/create',
+      name: 'Create Report',
+      component: () => import('@/views/report/createReport.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
 ];
 
 const router = createRouter({

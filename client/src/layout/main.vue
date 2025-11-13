@@ -62,13 +62,16 @@
 
     <Popover ref="profilePopover">
         <div class="flex flex-col gap-2 w-[300px]">
-            <span class="font-semibold uppercase">User Profile</span>
-            <span>Team 1</span>
-            <span>Team 2</span>
+            <span class="font-semibold uppercase">{{ auth.user.full_name }}</span>
+
+            <div class="w-full flex flex-col justify-start items-start">
+                <span class="text-sm font-medium">Teams:</span>
+                <span v-for="team in auth.teams" class="w-full text-xs border-y p-2 bg-sky-100 hover:bg-sky-200 uppercase mt-1">{{ team.name }} - {{ team.pivot.position }}</span>
+            </div>
+
             <Button @click="logout" label="Logout" severity="danger" />
         </div>
     </Popover>
-
 
 
 </template>
@@ -141,6 +144,11 @@
             label: 'Barangays',
             icon: 'pi pi-map',
             command: () => handleNavigation('/barangays')
+        },
+        {
+            label: 'Reports',
+            icon: 'pi pi-file-check',
+            command: () => handleNavigation('/reports')
         },
     ];
 

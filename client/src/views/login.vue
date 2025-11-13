@@ -77,6 +77,7 @@
             axios.post('login',credentials.value)
             .then((response) => {
                 store.setUser(response.data.user)
+                store.setTeams(response.data.user?.teams ?? [])
                 store.setToken(response.data.token)
                 store.isAuthenticated = true
                 router.push({ path: '/dashboard' })

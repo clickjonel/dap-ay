@@ -5,6 +5,7 @@ import axios from '@/utils/axios'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
+    teams:[],
     token: localStorage.getItem('token') || '',
     isAuthenticated: false,
     isAdmin: false
@@ -14,6 +15,10 @@ export const useAuthStore = defineStore('auth', {
     setUser(user) {
       this.user = user
       this.isAuthenticated = true
+    },
+
+    setTeams(teams) {
+      this.teams = teams
     },
 
     setToken(token) {
@@ -26,6 +31,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = ''
       this.isAuthenticated = false
       this.user = null
+      this.teams = []
       localStorage.removeItem('token')
     },
 
@@ -33,6 +39,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.get('user')
         this.setUser(response.data)
+        this.setTeams(response.data.teams)
+        console.log(response.data)
       }
       catch (error) {
         this.clearUser()
