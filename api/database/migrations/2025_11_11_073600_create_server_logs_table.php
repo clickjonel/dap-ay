@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('server_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('created_by_id')->constrained('users', 'id');
             $table->string('action_done')->nullable();
             $table->string('table_name')->nullable();
             $table->string('column_id')->nullable();

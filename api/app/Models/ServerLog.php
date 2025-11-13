@@ -9,7 +9,7 @@ class ServerLog extends Model
     protected $connection ='dap-ay';
     protected $table = 'server_logs';
     protected $fillable = [
-        'user_id',
+        'created_by_id',
         'action_done',
         'table_name',
         'column_id'
@@ -17,6 +17,6 @@ class ServerLog extends Model
 
     //Defined relationships
     public function user(){
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'created_by_id','id');
     }
 }
