@@ -1,23 +1,23 @@
 <template>
     <div class="w-full h-full flex flex-col justify-start items-start gap-2">
 
-        <div class="w-full flex justify-between items-center p-2">
+        <div class="w-full flex justify-between items-center p-2 rounded-xl">
             <FloatLabel variant="on" class="w-[400px]">
                 <InputText v-model="keyword" class="w-full" @change="fetchPrograms(current_page)"/>
                 <label class="text-sm">Search</label>
             </FloatLabel>
-            <Button @click="router.push('/program/create')" label="Add Program" size="small"/>
+            <Button @click="router.push('/program/create')" label="Add Program" class="!bg-[#5A686A] !border-none"/>
         </div>
 
-        <div class="w-full h-full flex flex-col justify-between items-start gap-2">
-            <div class="w-full h-full flex flex-col justify-start items-start text-sm border divide-y font-lexend">
-                <div class="w-full flex justify-start items-start divide-x divide-black capitalize font-semibold bg-teal-100">
+        <div class="w-full h-full flex flex-col justify-between items-start gap-2 overflow-y-auto">
+            <div class="w-full h-full flex flex-col justify-start items-start text-sm">
+                <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB]">
                     <span class="w-[25%] p-2">Program Name</span>
                     <span class="w-[25%] p-2">Program Code</span>
                     <span class="w-[25%] p-2">Program Status</span>
                     <span class="w-[25%] p-2">Actions</span>
                 </div>
-                <div v-for="prog in programs.data" class="w-full flex justify-start items-stretch divide-x font-light text-xs border-b">
+                <div v-for="prog in programs.data" class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
                     <span class="w-[25%] p-1">{{ prog.name }}</span>
                     <span class="w-[25%] p-1">{{ prog.code }}</span>
                     <span class="w-[25%] p-1">
@@ -28,16 +28,15 @@
                     </span>
                 </div>
             </div>
+        </div>
 
-            <div class="w-full min-h-[60px] flex justify-between items-center px-4 border">
-                <span class="text-md font-light">Showing rows {{ programs.from }} - {{ programs.to }}</span>
-                <div class="flex justify-between items-center gap-4">
-                    <Button @click="fetchPrograms(programs.current_page - 1)" icon="pi pi-angle-left" severity="info" rounded aria-label="Previous" :disabled="programs.current_page === 1"/>
-                    <span class="border rounded-full size-12 text-xs flex justify-center items-center font-medium">{{ programs.current_page }}</span>
-                    <Button @click="fetchPrograms(programs.current_page + 1)" icon="pi pi-angle-right" severity="info" rounded aria-label="Next" :disabled="programs.next_page_url === null"/>
-                </div>
+        <div class="w-full flex justify-between items-center">
+            <span class="text-md font-base">Showing rows {{ programs.from }} - {{ programs.to }}</span>
+            <div class="flex justify-between items-center gap-4">
+                <Button @click="fetchPrograms(programs.current_page - 1)" icon="pi pi-angle-left" severity="info" rounded aria-label="Previous" :disabled="programs.current_page === 1"/>
+                <span class="border rounded-full size-10 text-xs flex justify-center items-center font-medium">{{ programs.current_page }}</span>
+                <Button @click="fetchPrograms(programs.current_page + 1)" icon="pi pi-angle-right" severity="info" rounded aria-label="Next" :disabled="programs.next_page_url === null"/>
             </div>
-
         </div>
 
     </div>

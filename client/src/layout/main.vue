@@ -1,49 +1,49 @@
 <template>
-    <div class="w-full min-h-screen h-screen flex justify-start items-start gap-4 p-2">
+    <div class="w-full min-h-screen h-screen flex justify-start items-start gap-4 p-2 bg-[#F0FCFA]">
 
-        <div class="hidden md:w-[200px] lg:w-[300px] h-full md:flex flex-col justify-start items-start p-2 rounded-2xl shadow-md bg-gray-200 gap-4">
-            <span class="text-xl font-bold">Navigation Links</span>
-            <div class="w-full flex flex-col justify-start items-start gap-2">
-                <Button @click="handleNavigation('/dashboard')" label="Dashboard" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/programs')" label="Programs" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/users')" label="Users" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/activities')" label="Activities" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/sites')" label="PK Sites" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/teams')" label="PK Teams" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/baseline-indicators')" label="PK Baseline Indicators" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/reports')" label="Reports" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/indicators')" label="Indicators" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/server-logs')" label="Server Logs" severity="info" class="w-full" />
-                <Button @click="handleNavigation('/barangays')" label="Barangays" severity="info" class="w-full" />
+        <div class="w-[300px] h-full flex flex-col justify-between bg-[#D3DDDB] rounded-xl">
+            <!-- Links -->
+            <div class="w-full flex flex-col justify-start items-center p-2">
+                <span class="p-2 ">Dap-ay Information System</span>
+                <PanelMenu :model="links" class="w-full text-sm" 
+                     :pt="{
+                        panel: { 
+                            class: '!bg-transparent' 
+                        },
+                        submenuIcon:{
+                            class:'!text-[#2C2E2E]'     
+                        },
+                        headerContent:{
+                            class:'!text-'     
+                        },
+                        headerIcon:{
+                            class:'!text-[#2C2E2E]'     
+                        },
+                    }"
+                />
+            </div>
+
+            <!-- Profile -->
+            <div class="w-full flex flex-col justify-start items-start p-2">
+                <div 
+                    @click="toggleProfilePopover" 
+                    class="w-full flex items-center gap-3 p-3 hover:bg-[#F0FCFA] rounded-lg cursor-pointer transition-all bg-[#5A686A] text-white hover:text-[#5A686A]"
+                >
+                    <i class="pi pi-user text-lg"></i>
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold">{{ auth.user?.first_name ?? 'User' }}</p>
+                    </div>
+                    <i class="pi pi-chevron-right text-xs"></i>
+                </div>
             </div>
         </div>
 
-        <div class="w-full h-full flex flex-col justify-start items-start gap-2">
-            <div class="w-full min-h-[60px] flex justify-between items-center p-2 rounded-xl shadow-md bg-gray-200">
-                <span class="md:hidden font-bold uppercase">Purokalusugan</span>
-                <span class="md:hidden">
-                    <Button @click="toggleMobileNavigationPopover" icon="pi pi-bars" outlined severity="secondary" size="small" class="shadow-md shadow-slate-400"/>
-                </span>
-                <span class="hidden md:flex text-xl font-bold uppercase text-shadow-md shadow-slate-600 px-4">{{ route.name ?? 'Purokalusugan' }}</span>
-                <span class="hidden md:flex">
-                    <Button @click="toggleProfilePopover" :label="auth.user?.nickname ?? ''" severity="info" class="uppercase shadow-md shadow-slate-600"/>
-                </span>
-            </div>
-            <div class="w-full max-h-full h-full p-4 overflow-y-scroll">
+        <div class="w-full min-h-full h-full flex flex-col justify-start items-start gap-2">
+
+            <div class="w-full min-h-full h-full">
                 <router-view></router-view>
             </div>
-            <div class="w-full min-h-[60px] flex justify-between items-center bg-gray-200 px-4 py-2 rounded-2xl shadow-md">
-                <div class="flex justify-center items-center gap-2">
-                    <img :src="dohLogo" alt="DOH Logo" class="size-[50px]">
-                    <img :src="chdCarLogo" alt="DOH Car Logo" class="size-[50px] rounded-full">
-                    <!-- <img src="" alt="Bagong Pilipinas Logo">
-                    <img src="" alt="Dap-ay Logo"> -->
-                </div>
-                <div class="flex flex-col justify-start items-center gap-1 text-xs font-medium text-gray-600">
-                    <span>Dap-ay Information System (Purokalusugan)</span>
-                    <span>Developed by ICTMU-CHD-CAR</span>
-                </div>
-            </div>
+
         </div>
 
     </div>
@@ -75,7 +75,7 @@
 
 <script setup>
     import { ref } from 'vue';
-    import { Button,Popover } from 'primevue';
+    import { Button,Popover,Card, PanelMenu } from 'primevue';
     import { useRoute,useRouter  } from 'vue-router';
     import { useAuthStore } from '@/stores/auth';
     import axios from '@/utils/axios'
@@ -91,6 +91,58 @@
     const auth = useAuthStore()
     const mobileNavigationPopover = ref()
     const profilePopover = ref()
+
+    const links = [
+        {
+            label: 'Dashboards',
+            icon: 'pi pi-chart-bar',
+            items:[
+                {
+                    label: 'Admin Dashboard',
+                    command: () => handleNavigation('/dashboard')
+                }
+            ]
+        },
+        {
+            label: 'Program',
+            icon: 'pi pi-table',
+            items:[
+                {
+                    label: 'Programs',
+                    command: () => handleNavigation('/programs')
+                },
+                {
+                    label: 'Sub Programs',
+                    // command: () => handleNavigation('/programs')
+                }
+            ]
+        },
+        {
+            label: 'Users',
+            icon: 'pi pi-users',
+            command: () => handleNavigation('/users')
+        },
+        {
+            label: 'Teams',
+            icon: 'pi pi-chart-bar',
+            command: () => handleNavigation('/teams')
+        },
+        {
+            label: 'Indicators',
+            icon: 'pi pi-wave-pulse',
+            command: () => handleNavigation('/indicators')
+        },
+        {
+            label: 'Logs',
+            icon: 'pi pi-server',
+            command: () => handleNavigation('/server-logs')
+        },
+        {
+            label: 'Barangays',
+            icon: 'pi pi-map',
+            command: () => handleNavigation('/barangays')
+        },
+    ];
 
     const toggleMobileNavigationPopover = (event) => {
         mobileNavigationPopover.value.toggle(event)
