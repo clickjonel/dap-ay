@@ -189,6 +189,17 @@ const routes = [
         requiresAuth:true
       }
     },
+
+    //announcement forms
+    {
+      path: '/announcement/create',
+      name: 'Create Announcement',
+      component: () => import('@/views/announcement/createAnnouncement.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
+
 ];
 
 const router = createRouter({
