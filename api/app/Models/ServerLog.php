@@ -14,4 +14,9 @@ class ServerLog extends Model
         'table_name',
         'column_id'
     ];
+
+    //Defined relationships
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }
