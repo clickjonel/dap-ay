@@ -1,5 +1,6 @@
 <template>
     <div class="w-full min-h-screen flex flex-col justify-start items-start p-4 bg-gray-100 gap-4">
+        <a href='/announcements' class='text-white bg-slate-800 hover:bg-red-500 p-1 rounded'>Return</a>
         <span class="uppercase text-xl font-bold">Create Announcement</span>
         <Panel header="Announcement Details" class="w-full">
             <div class="w-full flex flex-col justify-start items-start gap-4 pt-4">
