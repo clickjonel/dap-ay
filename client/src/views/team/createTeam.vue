@@ -12,7 +12,7 @@
                     <FloatLabel class="w-full text-xs" variant="on">
                         <Select v-model="selectedProvince" 
                             :options="locationStore.provinces" 
-                            optionLabel="province_name" 
+                            optionLabel="name" 
                             class="w-full" 
                             @change="handleProvinceChange"
                         />
@@ -21,7 +21,7 @@
                     <FloatLabel class="w-full text-xs" variant="on">
                         <Select v-model="selectedMunicipality" 
                             :options="locationStore.municipalities" 
-                            optionLabel="municipality_name" 
+                            optionLabel="name" 
                             class="w-full" 
                             :disabled="!selectedProvince"
                             @change="handleMunicipalityChange"
@@ -31,8 +31,8 @@
                     <FloatLabel class="w-full text-xs" variant="on">
                         <Select v-model="team.barangay_id" 
                             :options="locationStore.barangays" 
-                            optionLabel="barangay_name" 
-                            optionValue="barangay_id"
+                            optionLabel="name" 
+                            optionValue="id"
                             class="w-full"
                             :disabled="!selectedMunicipality"
                         />
@@ -217,13 +217,13 @@
     })
 
     const handleProvinceChange = () => {
-        locationStore.fetchMunicipalities(selectedProvince.value?.province_id)
+        locationStore.fetchMunicipalities(selectedProvince.value?.id)
         selectedMunicipality.value = null
         team.value.barangay_id = undefined
     }
 
     const handleMunicipalityChange = () => {
-        locationStore.fetchBarangays(selectedMunicipality.value?.municipality_id, false)
+        locationStore.fetchBarangays(selectedMunicipality.value?.id, false)
         team.value.barangay_id = undefined
     }
 
