@@ -155,7 +155,24 @@
         {
             label: 'Reports',
             icon: 'pi pi-file-check',
-            command: () => handleNavigation('/reports')
+            items:[
+                {
+                    label: 'All Reports',
+                    command: () => handleNavigation('/reports')
+                },
+                {
+                    label: 'Monthly Municipal Level Report',
+                    command: () => handleNavigation('/report/monthly/municipal-level-report')
+                },
+                {
+                    label: 'Monthly Provincial Level Report',
+                    // command: () => handleNavigation('/programs')
+                },
+                {
+                    label: 'Quarterly Report',
+                    // command: () => handleNavigation('/programs')
+                },
+            ]
         },
         {
             label: 'Announcements',

@@ -62,6 +62,14 @@ const routes = [
           }
         },
         {
+          path: '/report/monthly/municipal-level-report',
+          name: 'Monthly Municipal Level Report',
+          component: () => import('@/views/report/monthlyMunicipalLevelReport.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/users',
           name: 'PK Users',
           component: () => import('@/views/user/users.vue'),
