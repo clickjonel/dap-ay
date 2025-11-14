@@ -86,9 +86,9 @@
                     <span class="w-1/4 p-1">Action</span>
                 </div>
                 <div v-for="brgy in team.barangays" class="w-full flex justify-start items-start divide-x font-base text-sm">
-                    <span class="w-1/4 p-1">{{ brgy.barangay.name }}</span>
-                    <span class="w-1/4 p-1">{{ brgy.barangay.municipality.name }}</span>
-                    <span class="w-1/4 p-1">{{ brgy.barangay.municipality.province.name }}</span>
+                    <span class="w-1/4 p-1">{{ brgy.name }}</span>
+                    <span class="w-1/4 p-1">{{ brgy.municipality.name }}</span>
+                    <span class="w-1/4 p-1">{{ brgy.municipality.province.name }}</span>
                     <span class="w-1/4 p-1">
                         
                     </span>
@@ -230,7 +230,7 @@
                 team_id:route.params.team_id,
                 relationships:[
                     'members',
-                    'barangays.barangay.municipality.province'
+                    'barangays.municipality.province'
                 ]
             }
         })
@@ -291,7 +291,7 @@
             barangay_id: addBarangayModal.value.barangay?.id,
         })
         .then((response)=>{
-            toast.add({ severity: 'success', summary: 'Updated', detail: response.data, life: 3000 });
+            toast.add({ severity: 'success', summary: 'Created', detail: response.data, life: 3000 });
             addBarangayModal.value.province = {}
             addBarangayModal.value.municipality = {}
             addBarangayModal.value.barangay = {}
@@ -305,7 +305,6 @@
         .finally(()=>{
 
         })
-
     }
 
     const handleSelectPositionChange = () => {

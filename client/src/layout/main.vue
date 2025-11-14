@@ -66,7 +66,14 @@
 
             <div class="w-full flex flex-col justify-start items-start">
                 <span class="text-sm font-medium">Teams:</span>
-                <span v-for="team in auth.teams" class="w-full text-xs border-y p-2 bg-sky-100 hover:bg-sky-200 uppercase mt-1">{{ team.name }} - {{ team.pivot.position }}</span>
+                <div class="w-full flex flex-col justify-start items-start gap-1">
+                    <div v-for="team in auth.teams" class="w-full text-xs border-y p-2 bg-[#D3DDDB] hover:bg-sky-200 uppercase mt-1">
+                        <span>{{ team.name }}</span>
+                        <div class="ml-2 flex flex-col justify-start items-start gap-1">
+                            <li v-for="brgy in team.barangays" class="ml-4">{{ brgy.name }}</li>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <Button @click="logout" label="Logout" severity="danger" />

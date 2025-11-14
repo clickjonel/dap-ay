@@ -40,7 +40,6 @@ export const useAuthStore = defineStore('auth', {
         const response = await axios.get('user')
         this.setUser(response.data)
         this.setTeams(response.data.teams)
-        console.log(response.data)
       }
       catch (error) {
         this.clearUser()

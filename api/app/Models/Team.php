@@ -14,11 +14,6 @@ class Team extends Model
         'name',
     ];
 
-    // public function barangay()
-    // {
-    //     return $this->belongsTo(Barangay::class,'barangay_id','barangay_id');
-    // }
-
     public function members()
     {
         return $this->hasMany(TeamMember::class,'team_id','id');
@@ -26,6 +21,6 @@ class Team extends Model
 
     public function barangays()
     {
-        return $this->hasMany(TeamBarangay::class,'team_id','id');
+        return $this->belongsToMany(Barangay::class, 'team_barangays', 'team_id', 'barangay_id');
     }
 }

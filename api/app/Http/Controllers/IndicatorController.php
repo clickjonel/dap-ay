@@ -43,4 +43,11 @@ class IndicatorController extends Controller
 
 
     }
+
+    public function getActiveIndicators(Request $request)
+    {
+        $indicators = Indicator::with(['subProgram'])->whereActive(1)->get();
+
+         return response()->json($indicators,200);
+    }
 }

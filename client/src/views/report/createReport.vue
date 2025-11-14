@@ -24,22 +24,34 @@
                     />
                     <label class="text-sm">Report End</label>
                 </FloatLabel>
+                <FloatLabel variant="on" class="w-full">
+                    <Select v-model="report.barangay" 
+                        :options="handledBarangays" 
+                        optionLabel="name"
+                        optionValue="id"
+                        class="w-full"
+                    />
+                    <label class="text-sm">Select Barangay</label>
+                </FloatLabel>
            </div>
         </Panel>
 
-        <!-- <Panel header="Report Approvals" class="w-full">
-          
-        </Panel> -->
-
-        <Panel header="Report Barangays" class="w-full">
-          
+        <Panel header="Report Values" class="w-full">
+            <div class="w-full flex flex-col justify-start items-start gap-4">
+                <FloatLabel v-for="ind in indicators" variant="on" class="w-full">
+                    <InputNumber v-model="ind.value" class="w-full"/>
+                    <label class="text-sm">{{ ind.name }}</label>
+                </FloatLabel>
+            </div>
         </Panel>
+
+        <Button label="Create Report" class="!bg-[#5A686A] !border-none"/>
 
     </div>
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, onMounted } from 'vue';
     import { 
         Panel,
         FloatLabel,
@@ -64,7 +76,31 @@
     const router = useRouter()
     const auth = useAuthStore()
 
+    const handledBarangays = ref([])
+    const indicators = ref([])
+
     const report = ref({})
     
+
+    onMounted(()=>{
+        handledBarangays.value = auth.teams?.flatMap(team => team.barangays) || [];
+        getActiveIndicators()
+    })
+
+    const getActiveIndicators = () => {
+         axios.get('indicator/active',{
+            params:{}
+        })
+        .then((response)=>{
+            indicators.value = response.data
+            console.log(indicators.value)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        .finally(()=>{
+
+        })
+    }
 
 </script>

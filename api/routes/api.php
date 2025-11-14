@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
-    $user = $request->user()->load(['teams']);
+    $user = $request->user()->load(['teams.barangays']);
     // $teams = $user->load(['teamMemberships']);
     return $user;
 })->middleware('auth:sanctum');
@@ -158,6 +158,7 @@ Route::group([
         Route::post('/create',[IndicatorController::class,'create']);
         Route::get('/list',[IndicatorController::class,'list']);
         Route::post('/update',[IndicatorController::class,'update']);
+        Route::get('/active',[IndicatorController::class,'getActiveIndicators']);
     });
 
     Route::group([

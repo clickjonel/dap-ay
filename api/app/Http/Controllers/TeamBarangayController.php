@@ -11,7 +11,7 @@ class TeamBarangayController extends Controller
     {
         $validated = $request->validate([
             'team_id' => 'required|exists:teams,id',
-            'barangay_id' => 'nullable|exists:barangays,id',
+            'barangay_id' => 'required|exists:barangays,id',
         ]);
 
         TeamBarangay::create($validated);
