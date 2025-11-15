@@ -1,4 +1,8 @@
 <template>
+    <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="border-4 border-gray-300 border-t-white rounded-full w-12 h-12 animate-spin"></div>
+        <span class="text-white ml-4">Please wait...</span>
+    </div>
     <div class="w-full min-h-screen flex flex-col justify-start items-start p-4 bg-gray-100 gap-4">
         <a href='/announcements' class='text-white bg-slate-800 hover:bg-red-500 p-1 rounded'>Return</a>
         <span class="uppercase text-xl font-bold">Create Announcement</span>
@@ -35,7 +39,7 @@
 
 <script setup>
 
-import { ref, watch } from 'vue';
+import { ref, watch,onMounted } from 'vue';
 import {
     Panel,
     FloatLabel,
@@ -49,13 +53,17 @@ import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'primevue';
 import { useLocationStore } from '@/stores/location';
 import { useUsersStore } from '@/stores/users';
+import { useAuthStore } from '@/stores/auth';
 
-const locationStore = useLocationStore()
-const userStore = useUsersStore()
-const toast = useToast()
-const router = useRouter()
+//variables
+const locationStore = useLocationStore();
+const userStore = useUsersStore();
+const authStore = useAuthStore();
+const toast = useToast();
+const router = useRouter();
 const message = ref('');
 const isToDisplayMessageOnTheForm = ref(false);
+const isLoading = ref(false)
 const announcement = ref({
     created_by_id: 0,
     date_start: '',
@@ -64,7 +72,6 @@ const announcement = ref({
     details: '',
 });
 
-console.log('user store', userStore)
 //functions
 function areRequiredFieldsEntered() {
     let wordsToConcatenate = '';
@@ -97,28 +104,36 @@ function showMessageOnTheForm() {
 const createAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
         toast.add({ severity: 'Creation Failed', summary: 'Message', detail: message.value, life: 5000 });
-    } else {
-        announcement.value.created_by_id = 2;
-        console.log('announcement values now', announcement.value)
-        axios.post('announcement/create', announcement.value)
-            .then((response) => {
-                console.log('response data here', response.data)
-                toast.add({
-                    severity: 'success', summary: 'Created',
-                    detail: `${response.data.message} for ${response.data.data.title}`,
-                    life: 3000
-                });
-                router.push('/announcements')
-            })
-            .catch((error) => {
-                const errorMsg = error.response?.data?.errors
-                    ? Object.values(error.response.data.errors).flat().join('\n')
-                    : 'Failed to create record'
-                toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
-            })
+        return;
     }
+    isLoading.value = true;
+    announcement.value.created_by_id = authStore.user?.id;
+    axios.post('announcement/create', announcement.value)
+        .then((response) => {
+            toast.add({
+                severity: 'success', summary: 'Created',
+                detail: `${response.data.message} for ${response.data.data.title}`,
+                life: 3000
+            });
+            router.push('/announcements')
+        })
+        .catch((error) => {
+            const errorMsg = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat().join('\n')
+                : 'Failed to create record'
+            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
+        })
+        .finally(() => {
+            isLoading.value = false;
+        })
 
 }
+
+//effects
+onMounted(() => {
+    //check if there is user token, if true fetch user data
+    authStore.initAuth();
+})
 
 watch(message, () => {
     if (message.value !== '') {
