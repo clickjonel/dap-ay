@@ -49,15 +49,11 @@ import {
     DatePicker
 } from 'primevue';
 import axios from '@/utils/axios';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useToast } from 'primevue';
-import { useLocationStore } from '@/stores/location';
-import { useUsersStore } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';
 
 //variables
-const locationStore = useLocationStore();
-const userStore = useUsersStore();
 const authStore = useAuthStore();
 const toast = useToast();
 const router = useRouter();

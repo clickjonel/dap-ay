@@ -29,8 +29,11 @@
                     <span class="w-[20%] p-1">{{ record.title }}</span>
                     <span class="w-[20%] p-1">{{ record.details }}</span>
                     <span class="w-[20%] p-1">
-                        <Button @click="router.push(`/barangay/update/${brgy.id}`)" v-tooltip="'Manage Barangay'"
+                        <Button @click="router.push(`/announcement/update/${record.id}`)" v-tooltip="'Manage Announcement'"
                             icon="pi pi-cog" size="small" severity="secondary" rounded outlined />
+                        <Button @click="deleteAnnouncement(record)" v-tooltip="'Delete Announcement'"
+                            class="hover:text-red-500"
+                            icon="pi pi-trash" size="small" severity="secondary" rounded outlined />
                     </span>
                 </div>
             </div>
@@ -52,17 +55,73 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Button, Tag, FloatLabel, InputText } from 'primevue';
+import { useToast } from 'primevue';
+import { Button, FloatLabel, InputText } from 'primevue';
 import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
-const router = useRouter()
-const keyword = ref('')
-const announcements = ref([])
+//variables
+const authStore = useAuthStore();
+const router = useRouter();
+const keyword = ref('');
+const announcements = ref([]);
+const toast = useToast();
+const serverLog = ref({
+    created_by_id: 0,
+    action_done: '',
+    table_name: '',
+    column_id: ''    
+});
 
-onMounted(() => {
-    fetchAnnouncements(1);
-})
+//functions
+function displayReadableDateTime(dateTime) {
+    const result = new Date(dateTime);
+    return result.toLocaleString('en-PH', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        timeZone: 'Asia/Manila'
+    });
+}
+
+function displayReadableDate(dateTime) {
+    const result = new Date(dateTime);
+    return result.toLocaleString('en-PH', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+}
+
+function isConfirmedDeleted(){
+    const confirm = window.confirm("This will delete the record");
+    if(confirm){
+        return true;
+    }
+    return false;
+}
+
+const createServerLog=(actionDone,tableName,recordId)=>{
+    serverLog.value.created_by_id = authStore.user?.id;
+    serverLog.value.action_done=actionDone;
+    serverLog.value.table_name=tableName;
+    serverLog.value.column_id=recordId.toLocaleString();
+    axios.post('server-log/create', serverLog.value)
+        .then((response) => {
+            toast.add({
+                severity: 'success', summary: 'Created',
+                detail: `${response.data.message}`,
+                life: 3000
+            });            
+        })
+        .catch((error) => {
+            const errorMsg = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat().join('\n')
+                : 'Failed to create record'
+            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
+        })
+        .finally(() => {
+            isLoading.value = false;
+        })
+}
 
 const fetchAnnouncements = (page) => {
     axios.get(`/announcement/list/?page=${page}`, {
@@ -82,18 +141,39 @@ const fetchAnnouncements = (page) => {
         })
 }
 
-function displayReadableDateTime(dateTime) {
-    const result = new Date(dateTime);
-    return result.toLocaleString('en-PH', {
-        year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-        timeZone: 'Asia/Manila'
+const deleteAnnouncement = (record) => {
+    if(!isConfirmedDeleted()){
+        return;
+    }
+    const actionDone = `Deleted the announcement titled ${record.title}`;
+    const tableName="announcements";
+    createServerLog(actionDone,tableName,record.id);        
+    axios.delete(`/announcement/delete`,{ 
+       params: {
+            id:record.id
+        }
+    })
+    .then(() => {
+        toast.add({
+            severity: 'success',
+            summary: 'Deleted',
+            detail: 'Announcement deleted successfully',
+            life: 3000
+        });
+        fetchAnnouncements(1);
+    })
+    .catch((error) => {
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response?.data?.message || 'Error deleting announcement',
+            life: 3000
+        });
     });
 }
-function displayReadableDate(dateTime) {
-    const result = new Date(dateTime);
-    return result.toLocaleString('en-PH', {
-        year: 'numeric', month: 'long', day: 'numeric'
-    });
-}
+
+//effects
+onMounted(() => {
+    fetchAnnouncements(1);
+})
 </script>

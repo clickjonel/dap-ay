@@ -14,7 +14,7 @@
                     <span class="w-[20%] p-2">Action By</span>
                     <span class="w-[20%] p-2">Action Done</span>
                     <span class="w-[20%] p-2">Table Interaction</span>
-                    <span class="w-[20%] p-2">Primary Key</span>
+                    <span class="w-[20%] p-2">Column Id</span>
                 </div>
                 <div v-for="record in serverLogs.data" class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
                     <span class="w-[20%] p-1">{{ displayReadableDateTime(record.created_at)}}</span>
