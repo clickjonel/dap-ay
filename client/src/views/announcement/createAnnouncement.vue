@@ -68,6 +68,13 @@ const announcement = ref({
     details: '',
 });
 
+const serverLog = ref({
+    created_by_id: 0,
+    action_done: '',
+    table_name: '',
+    column_id: ''    
+});
+
 //functions
 function areRequiredFieldsEntered() {
     let wordsToConcatenate = '';
@@ -97,6 +104,31 @@ function areRequiredFieldsEntered() {
 function showMessageOnTheForm() {
     return message.value;
 }
+
+const createServerLog=(actionDone,tableName,recordId)=>{
+    serverLog.value.created_by_id = authStore.user?.id;
+    serverLog.value.action_done=actionDone;
+    serverLog.value.table_name=tableName;
+    serverLog.value.column_id=recordId.toLocaleString();
+    axios.post('server-log/create', serverLog.value)
+        .then((response) => {
+            toast.add({
+                severity: 'success', summary: 'Created',
+                detail: `${response.data.message}`,
+                life: 3000
+            });            
+        })
+        .catch((error) => {
+            const errorMsg = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat().join('\n')
+                : 'Failed to create record'
+            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
+        })
+        .finally(() => {
+            isLoading.value = false;
+        })
+}
+
 const createAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
         toast.add({ severity: 'Creation Failed', summary: 'Message', detail: message.value, life: 5000 });
@@ -104,6 +136,10 @@ const createAnnouncement = () => {
     }
     isLoading.value = true;
     announcement.value.created_by_id = authStore.user?.id;
+    const actionDone = `Created an announcement entitled ${announcement.value.title}`;
+    const tableName="announcements";
+    const recordId = "Unable to obtain from initial creation. Refer to title or creation date instead";
+    createServerLog(actionDone,tableName,recordId);   
     axios.post('announcement/create', announcement.value)
         .then((response) => {
             toast.add({
