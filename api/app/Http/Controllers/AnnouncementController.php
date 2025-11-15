@@ -32,4 +32,22 @@ class AnnouncementController extends Controller
             'data' => $record
         ], 201);
     }
+
+    public function deleteAnnouncement(Request $request)
+    {
+        try {
+            $record = Announcement::findOrFail($request->id);
+            $record->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Record deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting record',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
