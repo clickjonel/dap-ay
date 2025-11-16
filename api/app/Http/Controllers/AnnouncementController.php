@@ -32,6 +32,20 @@ class AnnouncementController extends Controller
             'data' => $record
         ], 201);
     }
+    public function updateAnnouncement(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|numeric',
+            'date_start' => 'nullable|max:255',
+            'date_end' => 'nullable|max:255',
+            'title' => 'nullable|string|max:255',
+            'details' => 'nullable|string|max:255'
+        ]);
+
+        Announcement::find($validated['id'])->update($validated);
+
+        return response()->json('Updated Record Successfully',200);
+    }
 
     public function deleteAnnouncement(Request $request)
     {

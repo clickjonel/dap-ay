@@ -59,7 +59,7 @@ const toast = useToast();
 const router = useRouter();
 const message = ref('');
 const isToDisplayMessageOnTheForm = ref(false);
-const isLoading = ref(false)
+const isLoading = ref(false);
 const announcement = ref({
     created_by_id: 0,
     date_start: '',

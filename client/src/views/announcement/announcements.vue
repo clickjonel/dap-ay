@@ -1,4 +1,8 @@
 <template>
+    <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="border-4 border-gray-300 border-t-white rounded-full w-12 h-12 animate-spin"></div>
+        <span class="text-white ml-4">Please wait...</span>
+    </div>
     <div class="w-full h-full flex flex-col justify-start items-start gap-2">
         <div class="w-full flex justify-between items-center p-2">
             <FloatLabel variant="on" class="w-[400px]">
@@ -15,8 +19,8 @@
                     <span class="w-[20%] p-2">Notes</span>
                     <span class="w-[20%] p-2">Duration</span>
                     <span class="w-[20%] p-2">Title</span>
-                    <span class="w-[20%] p-2">Details</span>
-                    <span class="w-[20%] p-2">Actions</span>
+                    <span class="w-[30%] p-2">Details</span>
+                    <span class="w-[10%] p-2">Actions</span>
                 </div>
                 <div v-for="record in announcements.data"
                     class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
@@ -29,8 +33,8 @@
                         <small>End:{{ displayReadableDate(record.date_end) }}</small>
                     </span>
                     <span class="w-[20%] p-1">{{ record.title }}</span>
-                    <span class="w-[20%] p-1">{{ record.details }}</span>
-                    <span class="w-[20%] p-1">
+                    <span class="w-[30%] p-1">{{ record.details }}</span>
+                    <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"
                             v-tooltip="'Manage Announcement'" icon="pi pi-cog" size="small" severity="secondary" rounded
                             outlined />
@@ -70,6 +74,7 @@ const router = useRouter();
 const keyword = ref('');
 const announcements = ref([]);
 const toast = useToast();
+const isLoading = ref(false);
 const serverLog = ref({
     created_by_id: 0,
     action_done: '',
@@ -127,20 +132,20 @@ const createServerLog = (actionDone, tableName, recordId) => {
 }
 
 const fetchAnnouncements = (page) => {
+    isLoading.value = true;
     axios.get(`/announcement/list/?page=${page}`, {
         params: {
             keyword: keyword.value
         }
     })
         .then((response) => {
-            announcements.value = response.data
-            console.log('announcements', announcements.value)
+            announcements.value = response.data            
         })
         .catch((error) => {
             console.log(error)
         })
         .finally(() => {
-
+            isLoading.value = false;
         })
 }
 
