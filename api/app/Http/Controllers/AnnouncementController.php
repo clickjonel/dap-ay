@@ -17,6 +17,14 @@ class AnnouncementController extends Controller
             ->simplePaginate(10);
         return response()->json($records, 200);
     }
+
+    public function readAnnouncement(Request $request)
+    {
+        $id = $request->id;
+        $activity = Announcement::findOrFail($id);
+        return response()->json($activity, 200);
+    }
+
     public function createAnnouncement(Request $request)
     {
         $validatedData = $request->validate([
@@ -43,10 +51,13 @@ class AnnouncementController extends Controller
         ]);
 
         Announcement::find($validated['id'])->update($validated);
+        $updatedRecord = Announcement::find($validated['id']); // Fetch the updated record
 
-        return response()->json('Updated Record Successfully',200);
+        return response()->json([
+            'message' => 'Record updated successfully',
+            'data' => $updatedRecord
+        ], 200);        
     }
-
     public function deleteAnnouncement(Request $request)
     {
         try {

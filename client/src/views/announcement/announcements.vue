@@ -36,7 +36,7 @@
                     <span class="w-[30%] p-1">{{ record.details }}</span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"
-                            v-tooltip="'Manage Announcement'" icon="pi pi-cog" size="small" severity="secondary" rounded
+                            v-tooltip="'Update Announcement'" icon="pi pi-pencil" size="small" severity="secondary" rounded
                             outlined />
                         <Button @click="deleteAnnouncement(record)" v-tooltip="'Delete Announcement'"
                             class="hover:text-red-500" icon="pi pi-trash" size="small" severity="secondary" rounded
