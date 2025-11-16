@@ -12,28 +12,31 @@
         <div class="w-full h-full flex flex-col justify-between items-start gap-2 overflow-y-auto">
             <div class="w-full h-full flex flex-col justify-start items-start text-sm">
                 <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB] sticky top-0">
-                    <span class="w-[20%] p-2">Created At</span>
-                    <span class="w-[20%] p-2">Created By</span>
-                    <span class="w-[20%] p-2">Date Start</span>
-                    <span class="w-[20%] p-2">End</span>
+                    <span class="w-[20%] p-2">Notes</span>
+                    <span class="w-[20%] p-2">Duration</span>
                     <span class="w-[20%] p-2">Title</span>
                     <span class="w-[20%] p-2">Details</span>
                     <span class="w-[20%] p-2">Actions</span>
                 </div>
                 <div v-for="record in announcements.data"
                     class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
-                    <span class="w-[20%] p-1">{{ displayReadableDateTime(record.created_at) }}</span>
-                    <span class="w-[20%] p-1">{{ record.user.full_name }}</span>
-                    <span class="w-[20%] p-1">{{ displayReadableDate(record.date_start) }}</span>
-                    <span class="w-[20%] p-1">{{ displayReadableDate(record.date_end) }}</span>
+                    <span class="w-[20%] p-1 flex flex-col">
+                        <small>Created by:{{ record.user.full_name }}</small>
+                        <small>Created at: {{ displayReadableDateTime(record.created_at) }} </small>
+                    </span>
+                    <span class="w-[20%] p-1 flex flex-col">
+                        <small>Start:{{ displayReadableDate(record.date_start) }}</small>
+                        <small>End:{{ displayReadableDate(record.date_end) }}</small>
+                    </span>
                     <span class="w-[20%] p-1">{{ record.title }}</span>
                     <span class="w-[20%] p-1">{{ record.details }}</span>
                     <span class="w-[20%] p-1">
-                        <Button @click="router.push(`/announcement/update/${record.id}`)" v-tooltip="'Manage Announcement'"
-                            icon="pi pi-cog" size="small" severity="secondary" rounded outlined />
+                        <Button @click="router.push(`/announcement/update/${record.id}`)"
+                            v-tooltip="'Manage Announcement'" icon="pi pi-cog" size="small" severity="secondary" rounded
+                            outlined />
                         <Button @click="deleteAnnouncement(record)" v-tooltip="'Delete Announcement'"
-                            class="hover:text-red-500"
-                            icon="pi pi-trash" size="small" severity="secondary" rounded outlined />
+                            class="hover:text-red-500" icon="pi pi-trash" size="small" severity="secondary" rounded
+                            outlined />
                     </span>
                 </div>
             </div>
@@ -71,7 +74,7 @@ const serverLog = ref({
     created_by_id: 0,
     action_done: '',
     table_name: '',
-    column_id: ''    
+    column_id: ''
 });
 
 //functions
@@ -91,26 +94,26 @@ function displayReadableDate(dateTime) {
     });
 }
 
-function isConfirmedDeleted(){
+function isConfirmedDeleted() {
     const confirm = window.confirm("This will delete the record");
-    if(confirm){
+    if (confirm) {
         return true;
     }
     return false;
 }
 
-const createServerLog=(actionDone,tableName,recordId)=>{
+const createServerLog = (actionDone, tableName, recordId) => {
     serverLog.value.created_by_id = authStore.user?.id;
-    serverLog.value.action_done=actionDone;
-    serverLog.value.table_name=tableName;
-    serverLog.value.column_id=recordId.toLocaleString();
+    serverLog.value.action_done = actionDone;
+    serverLog.value.table_name = tableName;
+    serverLog.value.column_id = recordId.toLocaleString();
     axios.post('server-log/create', serverLog.value)
         .then((response) => {
             toast.add({
                 severity: 'success', summary: 'Created',
                 detail: `${response.data.message}`,
                 life: 3000
-            });            
+            });
         })
         .catch((error) => {
             const errorMsg = error.response?.data?.errors
@@ -142,34 +145,34 @@ const fetchAnnouncements = (page) => {
 }
 
 const deleteAnnouncement = (record) => {
-    if(!isConfirmedDeleted()){
+    if (!isConfirmedDeleted()) {
         return;
     }
     const actionDone = `Deleted the announcement titled ${record.title}`;
-    const tableName="announcements";
-    createServerLog(actionDone,tableName,record.id);        
-    axios.delete(`/announcement/delete`,{ 
-       params: {
-            id:record.id
+    const tableName = "announcements";
+    createServerLog(actionDone, tableName, record.id);
+    axios.delete(`/announcement/delete`, {
+        params: {
+            id: record.id
         }
     })
-    .then(() => {
-        toast.add({
-            severity: 'success',
-            summary: 'Deleted',
-            detail: 'Announcement deleted successfully',
-            life: 3000
+        .then(() => {
+            toast.add({
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Announcement deleted successfully',
+                life: 3000
+            });
+            fetchAnnouncements(1);
+        })
+        .catch((error) => {
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response?.data?.message || 'Error deleting announcement',
+                life: 3000
+            });
         });
-        fetchAnnouncements(1);
-    })
-    .catch((error) => {
-        toast.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.response?.data?.message || 'Error deleting announcement',
-            life: 3000
-        });
-    });
 }
 
 //effects
