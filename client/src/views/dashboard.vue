@@ -1,5 +1,5 @@
 <template>
-
+     <AnnouncementPosters/>
     <div class="w-full flex flex-col justify-start items-start gap-4">
         <Panel header="Baseline Data" class="w-full">
             <span>Totals of Indicators(Targets Purok,)</span>
@@ -28,4 +28,5 @@
 
 <script setup>
     import { Panel } from 'primevue';
+    import AnnouncementPosters from './announcement/announcementPosters.vue';
 </script>

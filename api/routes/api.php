@@ -174,6 +174,7 @@ Route::group([
     ],function(){
         Route::post('/create',[AnnouncementController::class,'createAnnouncement']);
         Route::get('/list',[AnnouncementController::class,'readAllAnnouncements']);
+        Route::get('/posters/list',[AnnouncementController::class,'readAllAnnouncementForPosting']);
         Route::get('/find',[AnnouncementController::class,'readAnnouncement']);
         Route::put('/update',[AnnouncementController::class,'updateAnnouncement']);
         Route::delete('/delete',[AnnouncementController::class,'deleteAnnouncement']);

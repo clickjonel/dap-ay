@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
+    public function readAllAnnouncementForPosting(){
+        $records = Announcement::all();
+        return response()->json([
+            'message' => "Records retrieved successfully",
+            'data'=>$records
+        ],200);
+    }
     public function readAllAnnouncements(Request $request)
     {
         $records = Announcement::query()
