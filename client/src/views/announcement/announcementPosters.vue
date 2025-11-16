@@ -26,6 +26,9 @@
           bg-white 
           transition-opacity duration-300 ease-in-out
         ">
+                <div class='flex justify-center'>
+                    <img :src="megaphoneImage" alt="Announcement Megaphone Icon" class="h-40 w-40"/>
+                </div>
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-slate-700">{{ currentPoster.title }}</h3>
                     <p class="text-base text-gray-700">{{ currentPoster.details }}</p>
@@ -62,6 +65,7 @@ import { Panel } from 'primevue';
 import axios from '@/utils/axios';
 
 //variables
+const megaphoneImage = "https://img.freepik.com/premium-vector/important-announcement-megaphone-announces-news-vector-illustration_3482-13249.jpg";
 const wrapAround = true;
 const isLoading = ref(false);
 const posters = ref([]);
