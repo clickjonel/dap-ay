@@ -29,6 +29,9 @@
                         <small>Created at: {{ displayReadableDateTime(record.created_at) }} </small>
                     </span>
                     <span class="w-[20%] p-1 flex flex-col">
+                        <small :class="determineStatusColor(determineStatus(record.date_start,record.date_end))">
+                            {{ determineStatus(record.date_start,record.date_end) }}
+                        </small>
                         <small>Start:{{ displayReadableDate(record.date_start) }}</small>
                         <small>End:{{ displayReadableDate(record.date_end) }}</small>
                     </span>
@@ -108,6 +111,27 @@ function isConfirmedDeleted() {
         return true;
     }
     return false;
+}
+
+function determineStatus(dateStart, dateEnd) {
+    const start = new Date(dateStart);
+    const end = new Date(dateEnd);
+    const currentDate = new Date();
+    if (currentDate >= start && currentDate <= end) {
+        return "Active";
+    }
+    return "Inactive";
+}
+
+function determineStatusColor(status){
+    let tailwindCSS = "text-center text-white p-1 rounded w-1/4 ";
+    if(status === "Inactive"){
+        tailwindCSS += "bg-red-500";
+    }
+    if(status ==="Active"){
+        tailwindCSS += "bg-green-500";
+    }    
+    return tailwindCSS;
 }
 
 const createServerLog = (actionDone, tableName, recordId) => {
