@@ -166,7 +166,7 @@
                 },
                 {
                     label: 'Monthly Provincial Level Report',
-                    // command: () => handleNavigation('/programs')
+                    command: () => handleNavigation('/report/monthly/provincial-level-report')
                 },
                 {
                     label: 'Quarterly Report',

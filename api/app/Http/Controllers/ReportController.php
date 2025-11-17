@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Province;
 use App\Models\Report;
 use App\Models\ReportValue;
 use Carbon\Carbon;
@@ -35,15 +36,6 @@ class ReportController extends Controller
 
     public function list(Request $request)
     {
-        // $keyword = $request->keyword ?? '';
-
-        // $query = Report::query();
-        // $list = $query->when(isset($keyword), function($query) use ($keyword) {
-        //             $query->where('name', 'LIKE', "%{$keyword}%");
-        //         })
-        //         ->with(['subProgram'])
-        //         ->simplePaginate(15);
-
         $list = Report::with(['barangay','createdBy'])->simplePaginate();
 
         return response()->json($list);
@@ -73,6 +65,62 @@ class ReportController extends Controller
         return response()->json([
             'month' => Carbon::now()->format('F'),
             'reports' => $reports
+        ]);
+    }
+
+    public function getMonthlyProvincialLevelReport(Request $request)
+    {
+         $validated = $request->validate([
+            'province_id' => 'required|numeric|exists:provinces,id'
+        ]);
+
+        $provinceId = $validated['province_id'];
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $province = Province::with([
+            'municipalities' => function ($query) use ($startOfMonth, $endOfMonth) {
+                $query->whereHas('reports', function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->where('start', '<=', $endOfMonth)
+                    ->where('end', '>=', $startOfMonth);
+                });
+            },
+            'municipalities.reports' => function ($query) use ($startOfMonth, $endOfMonth) {
+                $query->where('start', '<=', $endOfMonth)
+                    ->where('end', '>=', $startOfMonth)
+                    ->with(['values.indicator']);
+            }
+        ])
+        ->find($provinceId);
+
+        // Aggregate indicators for each municipality
+        $province->municipalities->each(function($municipality) {
+            // Collect all values from all reports in this municipality
+            $allValues = $municipality->reports->flatMap(function($report) {
+                return $report->values;
+            });
+            
+            // Group by indicator_id and sum
+            $aggregatedIndicators = $allValues->groupBy('indicator_id')->map(function($values) {
+                $indicator = $values->first()->indicator;
+                return [
+                    'indicator_id' => $indicator->id,
+                    'indicator_name' => $indicator->name,
+                    'total_value' => $values->sum('value'),
+                    'count' => $values->count()
+                ];
+            })->values();
+            
+            // Replace the reports with aggregated data
+            $municipality->aggregated_indicators = $aggregatedIndicators;
+            $municipality->total_reports = $municipality->reports->count();
+            // $municipality->total_value = $municipality->reports->sum('valueSum');
+            
+        });
+
+        return response()->json([
+            'month' => Carbon::now()->format('F'),
+            'province' => $province
         ]);
     }
 }

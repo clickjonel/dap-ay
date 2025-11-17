@@ -18,4 +18,17 @@ class Municipality extends Model
     {
         return $this->belongsTo(Province::class,'province_id');
     }
+
+     public function reports()
+    {
+        return $this->hasManyThrough(
+            Report::class,
+            Barangay::class,
+            'municipality_id',
+            'barangay_id',
+            'id',
+            'id'
+        );
+    }
+
 }

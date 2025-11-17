@@ -190,6 +190,7 @@ Route::group([
         Route::get('/list',[ReportController::class,'list']);
         Route::post('/create',[ReportController::class,'create']);
         Route::get('/monthly-municipal-level',[ReportController::class,'getMonthlyMunicipalLevelReport']);
+        Route::get('/monthly-provincial-level',[ReportController::class,'getMonthlyProvincialLevelReport']);
     });
 
     // Dashboard

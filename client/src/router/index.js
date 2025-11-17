@@ -70,6 +70,14 @@ const routes = [
           }
         },
         {
+          path: '/report/monthly/provincial-level-report',
+          name: 'Monthly Provincial Level Report',
+          component: () => import('@/views/report/monthlyProvincialLevelReport.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/users',
           name: 'PK Users',
           component: () => import('@/views/user/users.vue'),
