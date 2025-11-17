@@ -16,6 +16,7 @@ use App\Http\Controllers\ServerLogsController;
 use App\Http\Controllers\TeamBarangayController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Models\ActivityProgram;
 use Illuminate\Http\Request;
@@ -189,6 +190,14 @@ Route::group([
         Route::get('/list',[ReportController::class,'list']);
         Route::post('/create',[ReportController::class,'create']);
         Route::get('/monthly-municipal-level',[ReportController::class,'getMonthlyMunicipalLevelReport']);
+    });
+
+    // Dashboard
+    Route::group([
+        'prefix' => '/dashboard'
+    ],function(){
+        Route::get('/admin',[DashboardController::class,'getAdminDashboardData']);
+       
     });
 
 });

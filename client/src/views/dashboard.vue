@@ -18,8 +18,16 @@
         </Panel>
 
         <Panel header="Purokalusugan Teams" class="w-full">
-            <span>Total</span>
-            <span>Total per province</span>
+            <Panel header="Total Teams Created" class="w-full m-2">
+                <span class="text-5xl font-black">{{ teamData.total }}</span>
+            </Panel>
+            <div class="w-full grid grid-cols-3 gap-4 p-2">
+                 <div v-for="province in teamData.countPerProvince">
+                    <Panel :header="province.province" class="w-full">
+                        <span class="text-2xl font-black">{{ province.total }}</span>
+                    </Panel>
+                 </div>
+            </div>
         </Panel>
 
     </div>
@@ -27,6 +35,22 @@
 </template>
 
 <script setup>
+    import { ref,onMounted } from 'vue';
     import { Panel } from 'primevue';
     import AnnouncementPosters from './announcement/announcementPosters.vue';
+    import axios from '@/utils/axios'
+
+    const teamData = ref({})
+
+    onMounted(()=>{
+        axios.get('dashboard/admin',{
+            params:{
+
+            }
+        })
+        .then((response)=>{
+            console.log(response.data)
+            teamData.value = response.data.team
+        })
+    })
 </script>

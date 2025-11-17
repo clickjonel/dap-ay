@@ -11,7 +11,7 @@
 
         <div class="w-full h-full flex flex-col justify-between items-start gap-2 overflow-y-auto">
             <div class="w-full h-full flex flex-col justify-start items-start text-sm">
-                <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB] sticky top-0">
+                <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB] sticky top-0 z-10">
                     <span class="w-[80%] p-2">Team Name</span>
                     <span class="w-[20%] p-2">Actions</span>
                 </div>
