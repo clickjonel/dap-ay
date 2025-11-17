@@ -114,8 +114,10 @@ function isConfirmedDeleted() {
 }
 
 function determineStatus(dateStart, dateEnd) {
-    const start = new Date(dateStart);
-    const end = new Date(dateEnd);
+    const modifiedDateStart = dateStart.toLocaleString();
+    const modifiedDateEnd = dateEnd.toLocaleString();
+    const start = new Date(`${modifiedDateStart}T00:00:00`);
+    const end = new Date(`${modifiedDateEnd}T23:59:59`);
     const currentDate = new Date();
     if (currentDate >= start && currentDate <= end) {
         return "Active";
