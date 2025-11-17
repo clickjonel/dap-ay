@@ -27,8 +27,9 @@
                             <FloatLabel variant="on" class="w-full">
                                 <Select v-model="barangay.status" 
                                     :options="[
+                                        {value:true,status:'Action Planning Done'},
                                         {value:true,status:'Implementing PK'},
-                                        {value:false,status:'Monitoring PK'},
+                                        {value:false,status:'Monitored PK Implementation'},
                                     ]" 
                                     optionValue="status"
                                     optionLabel="status"

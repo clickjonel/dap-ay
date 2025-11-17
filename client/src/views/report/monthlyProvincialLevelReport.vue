@@ -12,6 +12,7 @@
                 <label class="text-sm">Select Province</label>
             </FloatLabel>
             <Button @click="fetchReports" :label="`Create Report for ${province?.name ?? ''}`" size="small" :disabled="!province"/>
+            <Button @click="createPrintContainer" label="Create Printable Document" size="small" severity="info"/>
         </div>
 
         <div class="w-full flex flex-col justify-start items-start border divide-y text-sm">
@@ -54,6 +55,52 @@
         </div>
 
     </div>
+
+    <!-- print window -->
+    <div v-if="showPrintableForm" class="absolute inset-0 w-full flex flex-col justify-start items-start gap-4 p-4 bg-white">
+        <div class="w-full flex justify-start items-end gap-2 print:hidden">
+            <Button @click="showPrintableForm = false" label="Cancel" size="small" severity="info"/>
+            <Button @click="print" label="Print Form" size="small"/>
+        </div>
+        <div class="w-full flex flex-col justify-start items-start border divide-y text-sm">
+            <div class="w-full flex justify-start items-start divide-x">
+                <span class="w-1/3 px-2">Name of Region</span>
+                <span class="w-2/3 px-2">Cordillera Administrative Region</span>
+            </div>
+            <div class="w-full flex justify-start items-start divide-x">
+                <span class="w-1/3 px-2">Name of Province</span>
+                <span class="w-2/3 px-2">{{ province?.name }}</span>
+            </div>
+            <div class="w-full flex justify-start items-start divide-x">
+                <span class="w-1/3 px-2">Month of Report</span>
+                <span class="w-2/3 px-2">{{ month }}</span>
+            </div>
+
+        </div>
+
+        <div class="w-full flex flex-col justify-start items-start border divide-y text-sm">
+            <div class="w-full flex justify-start items-stretch divide-x text-left font-semibold uppercase">
+                <span class="w-1/3 p-1">Municipality</span>
+                <div class="w-2/3 flex justify-start items-stretch divide-x">
+                    <span class="w-2/3 p-1">Indicator</span>
+                    <span class="w-1/3 p-1">Total</span>
+                </div>
+            </div>
+            <div v-for="municipality in report.municipalities" class="w-full flex justify-start items-stretch divide-x text-left text-xs font-lexend">
+                <span class="w-1/3 p-1">{{ municipality.name }}</span>
+                <div class="w-2/3 flex flex-col justify-start items-stretch divide-y">
+                   <div v-for="indicator in municipality.aggregated_indicators" class="w-full flex justify-start items-stretch divide-x">
+                        <span class="w-2/3 p-1">{{ indicator.indicator_name }}</span>
+                        <span class="w-1/3 p-1">{{ indicator.total_value }}</span>
+                   </div>
+                   <!-- <div class="w-full flex justify-start items-start divide-x font-bold bg-sky-100">
+                        <span class="w-2/3 p-1">Total</span>
+                        <span class="w-1/3 p-1">{{ report.valueSum }}</span>
+                   </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -69,6 +116,7 @@
     const report = ref([])
     const month = ref('')
     const province = ref(null)
+    const showPrintableForm = ref(false)
 
 
     const fetchReports = () => {
@@ -89,4 +137,13 @@
 
         })
     }
+
+    const createPrintContainer = () => {
+        showPrintableForm.value = true
+    }
+
+    const print = () => {
+        window.print()
+    }
+
 </script>

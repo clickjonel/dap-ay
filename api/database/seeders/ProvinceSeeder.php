@@ -72,7 +72,7 @@ class ProvinceSeeder extends Seeder
                         'province_id' => $provinceID,
                         'municipality_id' => $municipality->id,
                         'name'  => $brgy->barangay_name,
-                        'status' => 'Implementing PK',
+                        'status' => 'Not Implementing',
                         'latitude' => null,
                         'longitude' => null,
                         'total_purok' => null,

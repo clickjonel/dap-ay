@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangay;
 use App\Models\ProgramIndicator;
 use App\Models\Province;
 use App\Models\Team;
@@ -20,12 +21,19 @@ class DashboardController extends Controller
         ->get();
 
         $teamTotal = Team::count();
+
+        // pk site data
+        $barangayGrouped = Barangay::select('status')
+        ->selectRaw('COUNT(*) as count')
+        ->groupBy('status')
+        ->get();
         
        return response()->json([
             'team' => [
                 'countPerProvince' => $teamPerProvince,
-                'total' => $teamTotal
-            ]
+                'total' => $teamTotal,
+            ],
+            'barangay' => $barangayGrouped
        ]);
     }
 }
