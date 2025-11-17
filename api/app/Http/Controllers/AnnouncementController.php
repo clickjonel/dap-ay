@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Logtrait;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
+    use Logtrait;
+
     public function readAllAnnouncementForPosting(){
         $records = Announcement::all();
         return response()->json([
@@ -42,6 +46,7 @@ class AnnouncementController extends Controller
             'details' => 'nullable|string|max:255'
         ]);
         $record = Announcement::create($validatedData);
+
         return response()->json([
             'message' => 'Record created successfully',
             'data' => $record
