@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 class AnnouncementController extends Controller
 {
-    public function readAllAnnouncementForPosting(){
-        $records = Announcement::all();
+    public function readAllAnnouncementForPosting()
+    {        
+        $today = Carbon::today(); //get date today
+        $records = Announcement::whereDate('date_start', '<=', $today)
+                               ->whereDate('date_end', '>=', $today)
+                               ->get();
         return response()->json([
-            'message' => "Records retrieved successfully",
-            'data'=>$records
-        ],200);
+            'message' => "Active records retrieved successfully",
+            'data' => $records
+        ], 200);
     }
     public function readAllAnnouncements(Request $request)
     {
@@ -54,7 +58,8 @@ class AnnouncementController extends Controller
             'date_start' => 'nullable|max:255',
             'date_end' => 'nullable|max:255',
             'title' => 'nullable|string|max:255',
-            'details' => 'nullable|string|max:255'
+            'details' => 'nullable|string|max:255',
+            'image_url_source' => 'nullable|string|max:255'
         ]);
 
         Announcement::find($validated['id'])->update($validated);

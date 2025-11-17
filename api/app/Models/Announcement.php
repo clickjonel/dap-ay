@@ -13,7 +13,8 @@ class Announcement extends Model
         'date_start',
         'date_end',
         'title',
-        'details'
+        'details',
+        'image_url_source'
     ];
 
     //Defined relationships
