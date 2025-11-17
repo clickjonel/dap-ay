@@ -67,6 +67,7 @@ class ReportController extends Controller
                         ->where('end', '>=', $startOfMonth);
                 })
                 ->with(['barangay.municipality', 'createdBy','values.indicator'])
+                ->withSum('values as valueSum', 'value')
                 ->get();
 
         return response()->json([

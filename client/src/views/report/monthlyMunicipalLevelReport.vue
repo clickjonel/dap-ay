@@ -61,6 +61,10 @@
                         <span class="w-2/3 p-1">{{ value.indicator.name }}</span>
                         <span class="w-1/3 p-1">{{ value.value }}</span>
                    </div>
+                   <div class="w-full flex justify-start items-start divide-x font-bold">
+                        <span class="w-2/3 p-1">Total</span>
+                        <span class="w-1/3 p-1">{{ report.valueSum }}</span>
+                   </div>
                 </div>
             </div>
         </div>
