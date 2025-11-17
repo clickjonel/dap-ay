@@ -11,7 +11,7 @@
                 <strong class="text-red-500 text-center">{{ showMessageOnTheForm() }}</strong>
             </div>
             <div class="w-full flex flex-col justify-start items-start gap-4 pt-4">
-                <div class="w-full flex gap-1">
+                <div class="w-full flex gap-4">
                     <FloatLabel variant="on" class="w-1/2 text-xs">
                         <InputText v-model="announcement.title" class="w-full text-xs" />
                         <label class="text-sm">Title</label>
