@@ -15,6 +15,8 @@ class TeamMemberController extends Controller
             'doh_deployed' => 'required|boolean',
             'name' => 'required|string',
             'position' => 'required|string',
+            'pk_oriented' => 'required|boolean',
+            'received_pk_kit' => 'required|boolean' 
         ]);
 
         TeamMember::create($validated);

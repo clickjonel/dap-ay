@@ -136,6 +136,34 @@
                 </FloatLabel>
             </div>
 
+            <div class="w-full flex justify-start items-start gap-4"    >
+                <FloatLabel variant="on" class="w-full">
+                    <Select v-model="addMemberModal.member.pk_oriented" 
+                        :options="[
+                            {value:true,label:'Yes'},
+                            {value:false,label:'No'}
+                        ]" 
+                        optionLabel="label"
+                        optionValue="value"
+                        class="w-full"
+                    />
+                    <label class="text-sm">Oriented/Trained on PK?</label>
+                </FloatLabel>
+
+                <FloatLabel variant="on" class="w-full">
+                    <Select v-model="addMemberModal.member.received_pk_kit" 
+                        :options="[
+                            {value:true,label:'Yes'},
+                            {value:false,label:'No'}
+                        ]" 
+                        optionLabel="label"
+                        optionValue="value"
+                        class="w-full"
+                    />
+                    <label class="text-sm">Member Received PK Kit?</label>
+                </FloatLabel>
+            </div>
+
         </div>
         <Button @click="addMember" label="Create" size="small"/>
     </Dialog>
@@ -268,6 +296,8 @@
             doh_deployed:  addMemberModal.value.member.position.doh_deployed,
             name: addMemberModal.value.member.member_name,
             position: addMemberModal.value.member.position_name,
+            pk_oriented: addMemberModal.value.member.pk_oriented,
+            received_pk_kit: addMemberModal.value.member.received_pk_kit
         })
         .then((response)=>{
             toast.add({ severity: 'success', summary: 'Updated', detail: response.data, life: 3000 });

@@ -104,6 +104,7 @@ Route::group([
         Route::get('/list',[TeamController::class,'list']);
         Route::get('/find',[TeamController::class,'find']);
         Route::post('/update',[TeamController::class,'update']);
+        Route::post('/create',[TeamController::class,'create']);
     });
 
     // Team Members

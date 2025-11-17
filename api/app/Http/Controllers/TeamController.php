@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
+    public function create(Request $request)
+    {
+        Team::create(['name' => $request->name]);
+
+        return response()->json('Created Team Successfully',201);
+    }
     public function list(Request $request)
     {
         $keyword = $request->keyword ?? '';
