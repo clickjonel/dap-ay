@@ -170,7 +170,7 @@ const fetchAnnouncements = (page) => {
         .then((response) => {
             announcements.value = response.data            
         })
-        .catch((error) => {
+        .catch((error) => {``
             console.log(error)
         })
         .finally(() => {
