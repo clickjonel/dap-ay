@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Logtrait;
 use App\Models\Announcement;
+use App\Trait\ServerLogTrait;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 class AnnouncementController extends Controller
 {
-    use Logtrait;
+    use ServerLogTrait;
 
     public function readAllAnnouncementForPosting()
     {        
@@ -32,14 +32,12 @@ class AnnouncementController extends Controller
             ->simplePaginate(10);
         return response()->json($records, 200);
     }
-
     public function readAnnouncement(Request $request)
     {
         $id = $request->id;
         $activity = Announcement::findOrFail($id);
         return response()->json($activity, 200);
     }
-
     public function createAnnouncement(Request $request)
     {
         $validatedData = $request->validate([
@@ -47,7 +45,8 @@ class AnnouncementController extends Controller
             'date_start' => 'nullable|max:255',
             'date_end' => 'nullable|max:255',
             'title' => 'nullable|string|max:255',
-            'details' => 'nullable|string|max:255'
+            'details' => 'nullable|string|max:255',
+            'image_url_source' => 'nullable|string|max:255'
         ]);
         $record = Announcement::create($validatedData);
 
