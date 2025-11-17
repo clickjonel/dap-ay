@@ -32,7 +32,10 @@
                         <small>Start:{{ displayReadableDate(record.date_start) }}</small>
                         <small>End:{{ displayReadableDate(record.date_end) }}</small>
                     </span>
-                    <span class="w-[20%] p-1">{{ record.title }}</span>
+                    <span class="w-[20%] p-1 flex items-center">
+                        <img :src="record.image_url_source" alt="No Available Image" class="w-20 h-20"/>
+                        <strong>{{ record.title }}</strong>
+                    </span>
                     <span class="w-[30%] p-1">{{ record.details }}</span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"

@@ -34,6 +34,12 @@
                         <label class="text-sm">Details</label>
                     </FloatLabel>
                 </div>
+                <div class="w-full flex">
+                    <FloatLabel variant="on" class="w-full text-xs">
+                        <InputText v-model="announcement.image_url_source" class="w-full text-xs" />
+                        <label class="text-sm">Image URL Source</label>
+                    </FloatLabel>
+                </div>
             </div>
             <div v-else class="text-center p-4">
                 <p class="text-gray-500">Loading announcement details or announcement not found...</p>
@@ -75,6 +81,7 @@ const announcement = ref({
     date_end: '',
     title: '',
     details: '',
+    image_url_source:''
 });
 
 const serverLog = ref({
@@ -142,6 +149,7 @@ const fetchAnnouncement = async (id) => {
             announcement.value.date_end = new Date(data.date_end);
             announcement.value.title = data.title;
             announcement.value.details = data.details;
+            announcement.value.image_url_source = data.image_url_source;
         } else {
             message.value = 'Announcement not found.';
         }

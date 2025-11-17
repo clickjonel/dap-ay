@@ -27,7 +27,7 @@
           transition-opacity duration-300 ease-in-out
         ">
                 <div class='flex justify-center'>
-                    <img :src="megaphoneImage" alt="Announcement Megaphone Icon" class="h-40 w-40"/>
+                    <img :src="determineImageToDisplay(currentPoster)" :alt = "determineAltImageToDisplay(currentPoster)" class="h-40 w-40"/>
                 </div>
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-slate-700">{{ currentPoster.title }}</h3>
@@ -108,6 +108,19 @@ const fetchAnnouncements = () => {
         })
 }
 
+function determineImageToDisplay(poster){
+    if(poster.image_url_source===null){
+        return megaphoneImage;
+    }
+    return poster.image_url_source;
+}
+function determineAltImageToDisplay(poster){
+    if(poster.image_url_source===null){
+        return "No Image Provided";
+    }
+    return poster.title;
+    
+}
 //effects
 onMounted(() => {
     fetchAnnouncements();

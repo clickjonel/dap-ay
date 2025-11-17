@@ -31,6 +31,12 @@
                         <label class="text-sm">Details</label>
                     </FloatLabel>
                 </div>
+                <div class="w-full flex">
+                    <FloatLabel variant="on" class="w-full text-xs">
+                        <InputText v-model="announcement.image_url_source" class="w-full text-xs" />
+                        <label class="text-sm">Image URL Source</label>
+                    </FloatLabel>
+                </div>
             </div>
         </Panel>
         <Button @click="createAnnouncement" label="Create Announcement" :disabled="announcement.length === 0" />
@@ -66,6 +72,7 @@ const announcement = ref({
     date_end: '',
     title: '',
     details: '',
+    image_url_source: '',
 });
 
 const serverLog = ref({
