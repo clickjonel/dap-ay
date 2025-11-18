@@ -29,21 +29,21 @@
                         <small>Created at: {{ displayReadableDateTime(record.created_at) }} </small>
                     </span>
                     <span class="w-[20%] p-1 flex flex-col">
-                        <small :class="determineStatusColor(determineStatus(record.date_start,record.date_end))">
-                            {{ determineStatus(record.date_start,record.date_end) }}
+                        <small :class="determineStatusColor(determineStatus(record.date_start, record.date_end))">
+                            {{ determineStatus(record.date_start, record.date_end) }}
                         </small>
                         <small>Start:{{ displayReadableDate(record.date_start) }}</small>
                         <small>End:{{ displayReadableDate(record.date_end) }}</small>
                     </span>
                     <span class="w-[20%] p-1 flex items-center">
-                        <img :src="record.image_url_source" alt="No Available Image" class="w-20 h-20"/>
+                        <img :src="record.image_url_source" alt="No Available Image" class="w-20 h-20" />
                         <strong>{{ record.title }}</strong>
                     </span>
                     <span class="w-[30%] p-1">{{ record.details }}</span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"
-                            v-tooltip="'Update Announcement'" icon="pi pi-pencil" size="small" severity="secondary" rounded
-                            outlined />
+                            v-tooltip="'Update Announcement'" icon="pi pi-pencil" size="small" severity="secondary"
+                            rounded outlined />
                         <Button @click="deleteAnnouncement(record)" v-tooltip="'Delete Announcement'"
                             class="hover:text-red-500" icon="pi pi-trash" size="small" severity="secondary" rounded
                             outlined />
@@ -61,6 +61,7 @@
                         severity="info" rounded aria-label="Next" :disabled="announcements.next_page_url === null" />
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -73,6 +74,7 @@ import { Button, FloatLabel, InputText } from 'primevue';
 import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 
 //variables
 const authStore = useAuthStore();
@@ -105,14 +107,6 @@ function displayReadableDate(dateTime) {
     });
 }
 
-function isConfirmedDeleted() {
-    const confirm = window.confirm("This will delete the record");
-    if (confirm) {
-        return true;
-    }
-    return false;
-}
-
 function determineStatus(dateStart, dateEnd) {
     const modifiedDateStart = dateStart.toLocaleString();
     const modifiedDateEnd = dateEnd.toLocaleString();
@@ -125,14 +119,14 @@ function determineStatus(dateStart, dateEnd) {
     return "Inactive";
 }
 
-function determineStatusColor(status){
+function determineStatusColor(status) {
     let tailwindCSS = "text-center text-white p-1 rounded w-1/4 ";
-    if(status === "Inactive"){
+    if (status === "Inactive") {
         tailwindCSS += "bg-red-500";
     }
-    if(status ==="Active"){
+    if (status === "Active") {
         tailwindCSS += "bg-green-500";
-    }    
+    }
     return tailwindCSS;
 }
 
@@ -168,9 +162,10 @@ const fetchAnnouncements = (page) => {
         }
     })
         .then((response) => {
-            announcements.value = response.data            
+            announcements.value = response.data
         })
-        .catch((error) => {``
+        .catch((error) => {
+            ``
             console.log(error)
         })
         .finally(() => {
@@ -179,34 +174,39 @@ const fetchAnnouncements = (page) => {
 }
 
 const deleteAnnouncement = (record) => {
-    if (!isConfirmedDeleted()) {
-        return;
-    }
-    const actionDone = `Deleted the announcement titled ${record.title}`;
-    const tableName = "announcements";
-    createServerLog(actionDone, tableName, record.id);
-    axios.delete(`/announcement/delete`, {
-        params: {
-            id: record.id
-        }
-    })
-        .then(() => {
-            toast.add({
-                severity: 'success',
-                summary: 'Deleted',
-                detail: 'Announcement deleted successfully',
-                life: 3000
-            });
-            fetchAnnouncements(1);
+    Confirm.show(
+        'Confirm Delete',
+        'Do you really want to delete this announcement?',
+        'Yes',
+        'No',
+        () => {
+            const actionDone = `Deleted the announcement titled ${record.title}`;
+            const tableName = "announcements";
+            createServerLog(actionDone, tableName, record.id);
+            axios.delete(`/announcement/delete`, {
+                params: {
+                    id: record.id
+                }
+            })
+                .then(() => {
+                    toast.add({
+                        severity: 'success',
+                        summary: 'Deleted',
+                        detail: 'Announcement deleted successfully',
+                        life: 3000
+                    });
+                    fetchAnnouncements(1);
+                })
+                .catch((error) => {
+                    toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response?.data?.message || 'Error deleting announcement',
+                        life: 3000
+                    });
+                });
         })
-        .catch((error) => {
-            toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response?.data?.message || 'Error deleting announcement',
-                life: 3000
-            });
-        });
+
 }
 
 //effects
