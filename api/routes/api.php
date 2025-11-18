@@ -201,4 +201,12 @@ Route::group([
        
     });
 
+    //User
+    Route::group([
+        'prefix' => '/user'
+    ],function(){
+        Route::get('/report-latest',[UserController::class,'userLatestSubmittedReport']);
+       
+    });
+
 });

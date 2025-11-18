@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
         this.clearUser()
       }
     },
-
+    
     async initAuth() {
       if (this.token) {
         await this.fetchUser()

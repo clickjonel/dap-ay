@@ -53,6 +53,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')->withPivot('doh_deployed', 'name', 'position');
     }
+
     
 
 }

@@ -27,9 +27,12 @@
                             <FloatLabel variant="on" class="w-full">
                                 <Select v-model="barangay.status" 
                                     :options="[
+                                        {value:true,status:'Not Implementing'},
+                                        {value:true,status:'Preparation Phase'},
                                         {value:true,status:'Action Planning Done'},
+                                        {value:true,status:'With Organized PK Kit'},
                                         {value:true,status:'Implementing PK'},
-                                        {value:false,status:'Monitored PK Implementation'},
+                                        {value:false,status:'Monitoring Implementation'},
                                     ]" 
                                     optionValue="status"
                                     optionLabel="status"

@@ -112,8 +112,6 @@
     }
 
     const save = () => {
-        console.log(report.value)
-
         axios.post('report/create',{
             values:indicators.value,
             created_by:auth.user.id,

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barangay;
+use App\Models\Indicator;
 use App\Models\ProgramIndicator;
 use App\Models\Province;
+use App\Models\ReportValue;
 use App\Models\Team;
 use App\Models\TeamBarangay;
 use Illuminate\Http\Request;
@@ -27,13 +29,21 @@ class DashboardController extends Controller
         ->selectRaw('COUNT(*) as count')
         ->groupBy('status')
         ->get();
+
+        // Indicators Total
+        $indicatorsValueSum = Indicator::withSum('reportValues as values_sum','value')->get();
+
         
        return response()->json([
             'team' => [
                 'countPerProvince' => $teamPerProvince,
                 'total' => $teamTotal,
             ],
-            'barangay' => $barangayGrouped
+            'barangayData' => [
+                'barangayByPKStatus' => $barangayGrouped ,
+                'barangayTotal' => Barangay::count()
+            ],
+            'indicatorsValueSum' => $indicatorsValueSum
        ]);
     }
 }

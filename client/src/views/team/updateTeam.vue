@@ -219,11 +219,13 @@
     import { useToast } from 'primevue';
     import { useLocationStore } from '@/stores/location';
     import { useUsersStore } from '@/stores/users';
+    import { useAuthStore } from '@/stores/auth';
 
     const toast = useToast()
     const route = useRoute()
     const locationStore = useLocationStore()
     const usersStore = useUsersStore()
+    const authStore = useAuthStore()
     const team = ref({})
 
     const addMemberModal = ref({
@@ -301,8 +303,9 @@
         })
         .then((response)=>{
             toast.add({ severity: 'success', summary: 'Updated', detail: response.data, life: 3000 });
-             addMemberModal.value.member = {}
-             addMemberModal.value.show = false
+            addMemberModal.value.member = {}
+            addMemberModal.value.show = false
+            authStore.fetchUser()
             fetchTeam()
         })
         .catch((error)=>{
@@ -326,6 +329,7 @@
             addBarangayModal.value.municipality = {}
             addBarangayModal.value.barangay = {}
             addBarangayModal.value.show = false
+            authStore.fetchUser()
             fetchTeam()
         })
         .catch((error)=>{
