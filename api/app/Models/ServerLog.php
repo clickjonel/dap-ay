@@ -12,7 +12,7 @@ class ServerLog extends Model
         'created_by_id',
         'action_done',
         'table_name',
-        'column_id'
+        'model_id'
     ];
 
     //Defined relationships

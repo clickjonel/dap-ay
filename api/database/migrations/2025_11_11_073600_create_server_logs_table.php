@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('created_by_id')->constrained('users', 'id');
             $table->string('action_done')->nullable();
             $table->string('table_name')->nullable();
-            $table->string('column_id')->nullable();
+            $table->string('model_id')->nullable();
             $table->timestamps();
         });
     }

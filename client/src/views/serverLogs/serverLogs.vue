@@ -18,7 +18,7 @@
                     <span class="w-[20%] p-2">Action By</span>
                     <span class="w-[20%] p-2">Action Done</span>
                     <span class="w-[20%] p-2">Table Interaction</span>
-                    <span class="w-[20%] p-2">Column Id</span>
+                    <span class="w-[20%] p-2">Model Id</span>
                 </div>
                 <div v-for="record in serverLogs.data"
                     class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
@@ -26,7 +26,7 @@
                     <span class="w-[20%] p-1">{{ record.user.full_name }}</span>
                     <span class="w-[20%] p-1">{{ record.action_done }}</span>
                     <span class="w-[20%] p-1">{{ record.table_name }}</span>
-                    <span class="w-[20%] p-1">{{ record.column_id }}</span>
+                    <span class="w-[20%] p-1">{{ record.model_id }}</span>
                 </div>
             </div>
             <div class="w-full min-h-[50px] flex justify-between items-center px-4 border">
