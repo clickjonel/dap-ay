@@ -143,10 +143,10 @@ const createAnnouncement = () => {
     }
     isLoading.value = true;
     announcement.value.created_by_id = authStore.user?.id;
-    const actionDone = `Created an announcement entitled ${announcement.value.title}`;
-    const tableName="announcements";
-    const recordId = "Unable to obtain from initial creation. Refer to title or creation date instead";
-    createServerLog(actionDone,tableName,recordId);   
+    // const actionDone = `Created an announcement entitled ${announcement.value.title}`;
+    // const tableName="announcements";
+    // const recordId = "Unable to obtain from initial creation. Refer to title or creation date instead";
+    // createServerLog(actionDone,tableName,recordId);   
     axios.post('announcement/create', announcement.value)
         .then((response) => {
             toast.add({

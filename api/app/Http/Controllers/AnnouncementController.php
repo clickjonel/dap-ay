@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
-use App\Trait\ServerLogTrait;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 class AnnouncementController extends Controller
-{
-    use ServerLogTrait;
+{   
 
     public function readAllAnnouncementForPosting()
     {        
@@ -49,7 +47,7 @@ class AnnouncementController extends Controller
             'image_url_source' => 'nullable|string|max:255'
         ]);
         $record = Announcement::create($validatedData);
-
+        
         return response()->json([
             'message' => 'Record created successfully',
             'data' => $record
