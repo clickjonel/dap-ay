@@ -84,13 +84,6 @@ const announcement = ref({
     image_url_source:''
 });
 
-const serverLog = ref({
-    created_by_id: 0,
-    action_done: '',
-    table_name: '',
-    column_id: ''
-});
-
 // Computed property for basic form validation
 const isFormValid = computed(() => {
     return (
@@ -162,21 +155,6 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
-const createServerLog = (actionDone, tableName, recordId) => {
-    serverLog.value.created_by_id = authStore.user?.id;
-    serverLog.value.action_done = actionDone;
-    serverLog.value.table_name = tableName;
-    serverLog.value.column_id = recordId.toLocaleString();
-   
-    axios.post('server-log/create', serverLog.value)
-        .then(() => {
-            toast.add({ severity: 'success', summary: 'Log Created', detail: 'Server log recorded.', life: 1000 });
-        })
-        .catch((error) => {
-            console.error("Server Log Creation Failed:", error);           
-        });
-}
-
 const updateAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
         isToDisplayMessageOnTheForm.value = true;
@@ -199,10 +177,6 @@ const updateAnnouncement = () => {
                 detail: `${response.data.message} for ${response.data.data.title}`,
                 life: 3000
             });            
-            const actionDone = `Updated announcement ID ${announcement.value.id} entitled ${announcement.value.title}`;
-            const tableName = "announcements";
-            const recordId = announcement.value.id;
-            createServerLog(actionDone, tableName, recordId);
             router.push('/announcements')
         })
         .catch((error) => {

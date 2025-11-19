@@ -73,22 +73,14 @@ import { useToast } from 'primevue';
 import { Button, FloatLabel, InputText } from 'primevue';
 import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 
 //variables
-const authStore = useAuthStore();
 const router = useRouter();
 const keyword = ref('');
 const announcements = ref([]);
 const toast = useToast();
 const isLoading = ref(false);
-const serverLog = ref({
-    created_by_id: 0,
-    action_done: '',
-    table_name: '',
-    column_id: ''
-});
 
 //functions
 function displayReadableDateTime(dateTime) {
@@ -130,30 +122,6 @@ function determineStatusColor(status) {
     return tailwindCSS;
 }
 
-const createServerLog = (actionDone, tableName, recordId) => {
-    serverLog.value.created_by_id = authStore.user?.id;
-    serverLog.value.action_done = actionDone;
-    serverLog.value.table_name = tableName;
-    serverLog.value.column_id = recordId.toLocaleString();
-    axios.post('server-log/create', serverLog.value)
-        .then((response) => {
-            toast.add({
-                severity: 'success', summary: 'Created',
-                detail: `${response.data.message}`,
-                life: 3000
-            });
-        })
-        .catch((error) => {
-            const errorMsg = error.response?.data?.errors
-                ? Object.values(error.response.data.errors).flat().join('\n')
-                : 'Failed to create record'
-            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
-        })
-        .finally(() => {
-            isLoading.value = false;
-        })
-}
-
 const fetchAnnouncements = (page) => {
     isLoading.value = true;
     axios.get(`/announcement/list/?page=${page}`, {
@@ -180,9 +148,6 @@ const deleteAnnouncement = (record) => {
         'Yes',
         'No',
         () => {
-            const actionDone = `Deleted the announcement titled ${record.title}`;
-            const tableName = "announcements";
-            createServerLog(actionDone, tableName, record.id);
             axios.delete(`/announcement/delete`, {
                 params: {
                     id: record.id

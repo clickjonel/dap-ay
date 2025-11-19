@@ -18,9 +18,6 @@ class ServerLogsController extends Controller
             ->simplePaginate(10);
         return response()->json($records, 200);
     }
-
-
-
     // public function createServerLog(Request $request)
     // {
     //     $validatedData = $request->validate([
