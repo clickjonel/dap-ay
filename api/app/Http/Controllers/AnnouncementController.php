@@ -43,7 +43,7 @@ class AnnouncementController extends Controller
             'date_start' => 'nullable|max:255',
             'date_end' => 'nullable|max:255',
             'title' => 'nullable|string|max:255',
-            'details' => 'nullable|string|max:255',
+            'details' => 'nullable|string|max:1000',
             'image_url_source' => 'nullable|string|max:255'
         ]);
         $record = Announcement::create($validatedData);

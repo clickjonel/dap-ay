@@ -27,7 +27,7 @@
           transition-opacity duration-300 ease-in-out
         ">
                 <div class='flex justify-center'>
-                    <img :src="determineImageToDisplay(currentPoster)" :alt = "determineAltImageToDisplay(currentPoster)" class="h-40 w-40"/>
+                    <img :src="determineImageToDisplay(currentPoster)" :alt = "determineAltImageToDisplay(currentPoster)" class="h-full w-full"/>
                 </div>
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-slate-700">{{ currentPoster.title }}</h3>
@@ -63,9 +63,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { Panel } from 'primevue';
 import axios from '@/utils/axios';
+import AnnouncementImage from '@/assets/images/announcement.gif';
 
 //variables
-const megaphoneImage = "https://img.freepik.com/premium-vector/important-announcement-megaphone-announces-news-vector-illustration_3482-13249.jpg";
 const wrapAround = true;
 const isLoading = ref(false);
 const posters = ref([]);
@@ -110,7 +110,7 @@ const fetchAnnouncements = () => {
 
 function determineImageToDisplay(poster){
     if(poster.image_url_source===null){
-        return megaphoneImage;
+        return AnnouncementImage;
     }
     return poster.image_url_source;
 }
