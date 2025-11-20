@@ -75,6 +75,8 @@ const announcement = ref({
     image_url_source: '',
 });
 
+
+console.log('currently logged in user',authStore.user)
 //functions
 function areRequiredFieldsEntered() {
     let wordsToConcatenate = '';
