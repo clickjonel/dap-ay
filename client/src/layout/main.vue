@@ -161,6 +161,10 @@
                     command: () => handleNavigation('/reports')
                 },
                 {
+                    label: 'Monthly User Reports',
+                    command: () => handleNavigation('/report/monthly/user')
+                },
+                {
                     label: 'Monthly Municipal Level Report',
                     command: () => handleNavigation('/report/monthly/municipal-level-report')
                 },

@@ -82,6 +82,13 @@
 
     const handledBarangays = ref([])
     const indicators = ref([])
+    const signatories = ref([
+        {
+            salutation:'Accomplished By:',
+            name:auth.user.full_name,
+            position:''
+        }
+    ])
 
     const report = ref({})
     

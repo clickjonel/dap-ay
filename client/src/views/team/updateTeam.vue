@@ -116,6 +116,19 @@
                     <InputText v-model="addMemberModal.member.position_name" class="w-full"/>
                     <label class="text-sm">Position Name</label>
                 </FloatLabel>
+                 <FloatLabel variant="on" class="w-full">
+                    <Select v-model="addMemberModal.member.role" 
+                        :options="[
+                            {role:'Team Leader'},
+                            {role:'Assistant Team Leader'},
+                            {role:'Member'},
+                        ]" 
+                        optionLabel="role"
+                        optionValue="role"
+                        class="w-full"
+                    />
+                    <label class="text-sm">Role</label>
+                </FloatLabel>
             </div>
 
             <div class="w-full flex justify-start items-start gap-4">
@@ -298,6 +311,7 @@
             doh_deployed:  addMemberModal.value.member.position.doh_deployed,
             name: addMemberModal.value.member.member_name,
             position: addMemberModal.value.member.position_name,
+            role: addMemberModal.value.member.role,
             pk_oriented: addMemberModal.value.member.pk_oriented,
             received_pk_kit: addMemberModal.value.member.received_pk_kit
         })

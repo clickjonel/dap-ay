@@ -16,6 +16,7 @@ class TeamMember extends Model
         'doh_deployed',
         'name',
         'position',
+        'role',
         'pk_oriented',
         'received_pk_kit'
     ];

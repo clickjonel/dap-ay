@@ -15,6 +15,7 @@ class TeamMemberController extends Controller
             'doh_deployed' => 'required|boolean',
             'name' => 'required|string',
             'position' => 'required|string',
+            'role' => 'required|string',
             'pk_oriented' => 'required|boolean',
             'received_pk_kit' => 'required|boolean' 
         ]);

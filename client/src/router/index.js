@@ -78,6 +78,14 @@ const routes = [
           }
         },
         {
+          path: '/report/monthly/user',
+          name: 'Monthly User Report',
+          component: () => import('@/views/report/userMonthlyReports.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/users',
           name: 'PK Users',
           component: () => import('@/views/user/users.vue'),

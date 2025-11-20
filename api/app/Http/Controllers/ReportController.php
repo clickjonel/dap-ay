@@ -123,4 +123,20 @@ class ReportController extends Controller
             'province' => $province
         ]);
     }
+
+    public function getUserMonthlyReport(Request $request)
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth   = Carbon::now()->endOfMonth();
+
+        $reports = $request->user()
+            ->reports()
+            ->with(['createdBy','barangay'])
+            ->whereBetween('start', [$startOfMonth, $endOfMonth])
+            ->whereBetween('end', [$startOfMonth, $endOfMonth])
+            ->simplePaginate(10);
+
+        return response()->json($reports, 200);
+    }
+
 }

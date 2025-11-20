@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('doh_deployed');
             $table->string('name');
             $table->string('position');
+            $table->string('role');
             $table->boolean('pk_oriented');
             $table->boolean('received_pk_kit');
         });
