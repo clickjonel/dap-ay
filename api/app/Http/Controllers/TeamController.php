@@ -23,7 +23,7 @@ class TeamController extends Controller
         $list = $query->when(isset($keyword), function($query) use ($keyword) {
                     $query->where('name', 'LIKE', "%{$keyword}%");
                 })
-                // ->with(['members.user','barangay.municipality','barangay.province'])
+                ->with(['members','barangays'])
                 ->simplePaginate(20);
 
         return response()->json($list,200);

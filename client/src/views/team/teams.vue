@@ -12,11 +12,19 @@
         <div class="w-full h-full flex flex-col justify-between items-start gap-2 overflow-y-auto">
             <div class="w-full h-full flex flex-col justify-start items-start text-sm">
                 <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB] sticky top-0 z-10">
-                    <span class="w-[80%] p-2">Team Name</span>
+                    <span class="w-[30%] p-2">Team Name</span>
+                    <span class="w-[25%] p-2">Team Member/s</span>
+                    <span class="w-[25%] p-2">Team Scope/s</span>
                     <span class="w-[20%] p-2">Actions</span>
                 </div>
                 <div v-for="team in teams.data" class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
-                    <span class="w-[80%] p-2">{{ team.name }}</span>
+                    <span class="w-[30%] p-2">{{ team.name }}</span>
+                    <span class="w-[25%] p-2 flex flex-col justify-start items-start">
+                        <span v-for="member in team.members" class="text-xs">{{ member.role }} - {{ member.name }}</span>
+                    </span>
+                    <span class="w-[25%] p-2 flex flex-col justify-start items-start">
+                        <span v-for="barangay in team.barangays" class="text-xs">{{ barangay.name }}</span>
+                    </span>
                     <span class="w-[20%] p-2 flex justify-start items-center gap-2">
                         <Button @click="router.push({path:`/team/update/${team.id}`})" v-tooltip="'Update Team'" icon="pi pi-cog" severity="secondary" rounded outlined class="!size-8"/>
                     </span>
