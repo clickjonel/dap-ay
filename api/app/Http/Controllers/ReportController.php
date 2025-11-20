@@ -131,12 +131,17 @@ class ReportController extends Controller
 
         $reports = $request->user()
             ->reports()
-            ->with(['createdBy','barangay'])
-            ->whereBetween('start', [$startOfMonth, $endOfMonth])
-            ->whereBetween('end', [$startOfMonth, $endOfMonth])
-            ->simplePaginate(10);
+            ->with(['createdBy', 'barangay','values.indicator'])
+            ->where(function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->whereBetween('start', [$startOfMonth, $endOfMonth])
+                ->orWhereBetween('end', [$startOfMonth, $endOfMonth]);
+            })
+            ->get();
 
-        return response()->json($reports, 200);
+        return response()->json([
+            'reports' => $reports,
+            'month' => Carbon::now()->format('F Y')
+        ], 200);
     }
 
 }
