@@ -110,6 +110,10 @@
                 {
                     label: 'Admin Dashboard',
                     command: () => handleNavigation('/dashboard')
+                },
+                {
+                    label: 'Secretariat Dashboard',
+                    command: () => handleNavigation('/dashboard/secretariat')
                 }
             ]
         },
