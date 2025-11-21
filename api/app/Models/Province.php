@@ -17,6 +17,12 @@ class Province extends Model
     {
         return $this->hasMany(Municipality::class,'province_id','id');
     }
+
+    public function barangays()
+    {
+        return $this->hasManyThrough(Barangay::class, Municipality::class);
+    }
+
     public function reports()
     {
         return $this->hasManyThrough(

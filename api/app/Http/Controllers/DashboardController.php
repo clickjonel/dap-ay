@@ -43,7 +43,26 @@ class DashboardController extends Controller
                 'barangayByPKStatus' => $barangayGrouped ,
                 'barangayTotal' => Barangay::count()
             ],
-            'indicatorsValueSum' => $indicatorsValueSum
+            'indicatorsValueSum' => $indicatorsValueSum,
+            'demographics' => $this->getDemographics()
        ]);
     }
+
+    public function getDemographics()
+    {
+        $provinces = Province::withCount(['municipalities', 'barangays'])
+        ->get()
+        ->map(function ($province) {
+            $province->pk_statuses = $province->barangays->groupBy('status')->map(fn($group) => $group->count());
+            return $province;
+        });
+
+        return [
+            'total_provinces' => $provinces->count(),
+            'total_municipalities' => $provinces->sum('municipalities_count'),
+            'total_barangays' => $provinces->sum('barangays_count'),
+            'provinces' => $provinces
+        ];
+    }
+
 }
