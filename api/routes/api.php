@@ -187,7 +187,7 @@ Route::group([
         'prefix' => '/announcement-viewer'
     ],function(){
         Route::post('/create',[AnnouncementViewerController::class,'createAnnouncementViewer']);
-        Route::delete('/delete',[AnnouncementViewerController::class,'deleteAnnouncementViewer']);
+        Route::delete('/delete-by-announcement-id',[AnnouncementViewerController::class,'deleteAnnouncementViewerByAnnouncementId']);
     });
 
 

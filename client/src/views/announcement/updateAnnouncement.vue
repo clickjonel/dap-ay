@@ -174,7 +174,7 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
-const handleAnnouncementViewer = () => {
+const handleAnnouncementViewer = () => {   
     const iterations = selectedTeamIds.value;
     if (iterations.length == 0) {
         return;
@@ -182,16 +182,13 @@ const handleAnnouncementViewer = () => {
     for (let i = 0; i < iterations.length; i++) {
         const payload = {
             ...announcementViewer.value,
-            announcement_id: 1,
+            announcement_id: announcement.value.id,
             team_id: iterations[i]
         };
         axios.post('announcement-viewer/create', payload)
             .then((response) => {
-                toast.add({
-                    severity: 'success', summary: 'Viewer(s) saved',
-                    detail: `${response.data.message} for ${response.data.data.title}`,
-                    life: 1000
-                });
+                const logMessage = `${response.data} for announcement viewer`;
+                console.log(`create log : `,logMessage);
             })
             .catch((error) => {
                 const errorMsg = error.response?.data?.errors
@@ -205,6 +202,26 @@ const handleAnnouncementViewer = () => {
     }
 
 }
+
+const deleteAnnouncementViewers = () => {
+    axios.delete(`/announcement-viewer/delete-by-announcement-id`, {
+        params: {
+            announcement_id: announcement.value.id
+        }
+    })
+        .then(() => {
+            const logMessage = `${response.data} for announcement viewer`;
+            console.log(`delete log : `,logMessage);
+        })
+        .catch((error) => {
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response?.data?.message || 'Error deleting announcement',
+                life: 1000
+            });
+        });
+}
 const updateAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
         isToDisplayMessageOnTheForm.value = true;
@@ -214,6 +231,7 @@ const updateAnnouncement = () => {
 
     isLoading.value = true;
     announcement.value.created_by_id = authStore.user?.id;
+    deleteAnnouncementViewers();
     handleAnnouncementViewer();
     const payload = {
         ...announcement.value,
