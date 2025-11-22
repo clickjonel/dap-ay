@@ -97,10 +97,10 @@ const announcement = ref({
     details: '',
     image_url_source: ''
 });
-const announcementViewer=ref({
-    id:null,
-    announcement_id:0,
-    team_id:0
+const announcementViewer = ref({
+    id: null,
+    announcement_id: 0,
+    team_id: 0
 });
 
 // Computed property for basic form validation
@@ -174,29 +174,36 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
-const handleAnnouncementViewer=()=>{
-    const payload = {
-        ...announcementViewer.value,
-        announcement_id: 1,
-        team_id: 1
-    };
-    axios.post('announcement-viewer/create', payload)
-        .then((response) => {
-            toast.add({
-                severity: 'success', summary: 'Viewer(s) saved',
-                detail: `${response.data.message} for ${response.data.data.title}`,
-                life: 3000
-            });
-        })
-        .catch((error) => {
-            const errorMsg = error.response?.data?.errors
-                ? Object.values(error.response.data.errors).flat().join('\n')
-                : error.response?.data?.message || 'Failed to update record'
-            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
-        })
-        .finally(() => {
-            
-        })
+const handleAnnouncementViewer = () => {
+    const iterations = selectedTeamIds.value;
+    if (iterations.length == 0) {
+        return;
+    }
+    for (let i = 0; i < iterations.length; i++) {
+        const payload = {
+            ...announcementViewer.value,
+            announcement_id: 1,
+            team_id: iterations[i]
+        };
+        axios.post('announcement-viewer/create', payload)
+            .then((response) => {
+                toast.add({
+                    severity: 'success', summary: 'Viewer(s) saved',
+                    detail: `${response.data.message} for ${response.data.data.title}`,
+                    life: 1000
+                });
+            })
+            .catch((error) => {
+                const errorMsg = error.response?.data?.errors
+                    ? Object.values(error.response.data.errors).flat().join('\n')
+                    : error.response?.data?.message || 'Failed to update record'
+                toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
+            })
+            .finally(() => {
+
+            })
+    }
+
 }
 const updateAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
