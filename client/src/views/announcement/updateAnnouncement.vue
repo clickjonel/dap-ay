@@ -6,8 +6,21 @@
 
     <div class="w-full min-h-screen flex flex-col justify-start items-start p-4 bg-gray-100 gap-4">
         <a href='/announcements' class='text-white bg-slate-800 hover:bg-red-500 p-1 rounded'>Return</a>
-        <span class="uppercase text-xl font-bold">Update Announcement</span>
-
+        <span class="uppercase text-xl font-bold">Announcement Update</span>
+        <div class='w-full flex justify-center'>
+            <h2 class='text-blue-700 font-bold text-xl text-center'>{{ announcement.title }}</h2>
+        </div>
+        <Panel header="Announcement Viewers" class="w-full">
+            <h2>Select what teams will be able to see this announcement: </h2>
+            <small class='text-orange-500'>The selection below is based on the teams you are assigned to. When none is
+                selected, the announcement is seen by all users of the system</small>
+            <div v-for="record in teams" :key="record.id">
+                <label>
+                    <input type="checkbox" :value="record.id" v-model="selectedTeamIds" />
+                    {{ record.name }}
+                </label>
+            </div>
+        </Panel>
         <Panel header="Announcement Details" class="w-full">
             <div v-if="isToDisplayMessageOnTheForm" class="w-full flex justify-center p-2 bg-yellow-100 rounded">
                 <strong class="text-red-500 text-center">{{ showMessageOnTheForm() }}</strong>
@@ -73,7 +86,8 @@ const route = useRoute();
 const message = ref('');
 const isToDisplayMessageOnTheForm = ref(false);
 const isLoading = ref(false);
-
+const teams = ref([]);
+const selectedTeamIds = ref([]);
 const announcement = ref({
     id: null,
     created_by_id: 0,
@@ -81,7 +95,12 @@ const announcement = ref({
     date_end: '',
     title: '',
     details: '',
-    image_url_source:''
+    image_url_source: ''
+});
+const announcementViewer=ref({
+    id:null,
+    announcement_id:0,
+    team_id:0
 });
 
 // Computed property for basic form validation
@@ -106,7 +125,7 @@ function areRequiredFieldsEntered() {
         wordsToConcatenate += 'Details, ';
         counter++;
     }
-    
+
     if (announcement.value.date_start === '' || announcement.value.date_start === null) {
         wordsToConcatenate += 'Date Start, '
         counter++;
@@ -130,15 +149,15 @@ function showMessageOnTheForm() {
 const fetchAnnouncement = async (id) => {
     isLoading.value = true;
     try {
-        const response = await axios.get(`announcement/find`,{
+        const response = await axios.get(`announcement/find`, {
             params: {
-                id:id
+                id: id
             }
-        });        
-        const data = response.data;        
+        });
+        const data = response.data;
         if (data) {
             announcement.value.id = data.id;
-            announcement.value.date_start = new Date(data.date_start); 
+            announcement.value.date_start = new Date(data.date_start);
             announcement.value.date_end = new Date(data.date_end);
             announcement.value.title = data.title;
             announcement.value.details = data.details;
@@ -155,6 +174,30 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
+const handleAnnouncementViewer=()=>{
+    const payload = {
+        ...announcementViewer.value,
+        announcement_id: 1,
+        team_id: 1
+    };
+    axios.post('announcement-viewer/create', payload)
+        .then((response) => {
+            toast.add({
+                severity: 'success', summary: 'Viewer(s) saved',
+                detail: `${response.data.message} for ${response.data.data.title}`,
+                life: 3000
+            });
+        })
+        .catch((error) => {
+            const errorMsg = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat().join('\n')
+                : error.response?.data?.message || 'Failed to update record'
+            toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 });
+        })
+        .finally(() => {
+            
+        })
+}
 const updateAnnouncement = () => {
     if (!areRequiredFieldsEntered()) {
         isToDisplayMessageOnTheForm.value = true;
@@ -164,19 +207,19 @@ const updateAnnouncement = () => {
 
     isLoading.value = true;
     announcement.value.created_by_id = authStore.user?.id;
-    
+    handleAnnouncementViewer();
     const payload = {
         ...announcement.value,
         date_start: announcement.value.date_start ? new Date(announcement.value.date_start).toISOString().split('T')[0] : null,
         date_end: announcement.value.date_end ? new Date(announcement.value.date_end).toISOString().split('T')[0] : null,
-    };    
+    };
     axios.put('announcement/update', payload)
         .then((response) => {
             toast.add({
                 severity: 'success', summary: 'Updated',
                 detail: `${response.data.message} for ${response.data.data.title}`,
                 life: 3000
-            });            
+            });
             router.push('/announcements')
         })
         .catch((error) => {
@@ -195,6 +238,7 @@ const updateAnnouncement = () => {
 onMounted(() => {
     authStore.initAuth();
     const announcementId = route.params.announcement_id;
+    teams.value = authStore.user.teams;
     if (announcementId) {
         announcement.value.id = announcementId; // Set the ID initially
         fetchAnnouncement(announcementId);
@@ -206,4 +250,8 @@ onMounted(() => {
 watch(message, () => {
     isToDisplayMessageOnTheForm.value = message.value !== '';
 }, { immediate: true });
+
+watch(selectedTeamIds, (newValue) => {
+    console.log('Selected Team IDs changed to:', newValue);
+}, { deep: true });
 </script>

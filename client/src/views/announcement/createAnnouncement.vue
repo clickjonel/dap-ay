@@ -39,13 +39,13 @@
                 </div>
             </div>
         </Panel>
-        <Button @click="createAnnouncement" label="Create Announcement" :disabled="announcement.length === 0" />
+    <Button @click="createAnnouncement" label="Create Announcement" :disabled="announcement.length === 0" />
     </div>
 </template>
 
 <script setup>
 
-import { ref, watch,onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import {
     Panel,
     FloatLabel,
@@ -76,7 +76,8 @@ const announcement = ref({
 });
 
 
-console.log('currently logged in user',authStore.user)
+
+console.log('currently logged in user', authStore.user)
 //functions
 function areRequiredFieldsEntered() {
     let wordsToConcatenate = '';
