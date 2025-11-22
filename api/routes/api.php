@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AnnouncementViewerController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayPriorityProgramController;
@@ -180,6 +181,13 @@ Route::group([
         Route::get('/find',[AnnouncementController::class,'readAnnouncement']);
         Route::put('/update',[AnnouncementController::class,'updateAnnouncement']);
         Route::delete('/delete',[AnnouncementController::class,'deleteAnnouncement']);
+    });
+
+    Route::group([
+        'prefix' => '/announcement-viewer'
+    ],function(){
+        Route::post('/create',[AnnouncementViewerController::class,'createAnnouncementViewer']);
+        Route::delete('/delete',[AnnouncementViewerController::class,'deleteAnnouncementViewer']);
     });
 
 
