@@ -188,6 +188,7 @@ Route::group([
     ],function(){
         Route::post('/create',[AnnouncementViewerController::class,'createAnnouncementViewer']);
         Route::delete('/delete-by-announcement-id',[AnnouncementViewerController::class,'deleteAnnouncementViewerByAnnouncementId']);
+        Route::get('/list-by-announcement-id',[AnnouncementViewerController::class,'readAnnouncementViewerByAnnouncementId']);
     });
 
 

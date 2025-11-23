@@ -12,4 +12,9 @@ class AnnouncementViewer extends Model
         'announcement_id',
         'team_id'
     ];
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id');
+    }
 }

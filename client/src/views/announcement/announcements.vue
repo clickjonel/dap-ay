@@ -17,29 +17,39 @@
             <div class="w-full h-full flex flex-col justify-start items-start text-sm">
                 <div class="w-full flex justify-start items-start font-medium uppercase bg-[#D3DDDB] sticky top-0">
                     <span class="w-[20%] p-2">Notes</span>
-                    <span class="w-[20%] p-2">Duration</span>
                     <span class="w-[20%] p-2">Title</span>
                     <span class="w-[30%] p-2">Details</span>
+                    <span class="w-[20%] p-2">Viewers</span>
                     <span class="w-[10%] p-2">Actions</span>
                 </div>
                 <div v-for="record in announcements.data"
                     class="w-full flex justify-start items-stretch font-light text-sm border-b bg-white hover:bg-[#F0FCFA]">
                     <span class="w-[20%] p-1 flex flex-col">
-                        <small>Created by:{{ record.user.full_name }}</small>
-                        <small>Created at: {{ displayReadableDateTime(record.created_at) }} </small>
-                    </span>
-                    <span class="w-[20%] p-1 flex flex-col">
-                        <small :class="determineStatusColor(determineStatus(record.date_start, record.date_end))">
-                            {{ determineStatus(record.date_start, record.date_end) }}
-                        </small>
-                        <small>Start:{{ displayReadableDate(record.date_start) }}</small>
-                        <small>End:{{ displayReadableDate(record.date_end) }}</small>
+                        <label>Created by:
+                            <small>{{ record.user.full_name }}</small>
+                        </label>
+                        <label>Created at:
+                            <small>{{ displayReadableDateTime(record.created_at) }} </small>
+                        </label>
+                        <label>Status:
+                            <small :class="determineStatusColor(determineStatus(record.date_start, record.date_end))">
+                                {{ determineStatus(record.date_start, record.date_end) }}
+                            </small>
+                        </label>
+                        <label>Duration:
+                            <small>{{ displayReadableDate(record.date_start) }} - </small>
+                            <small>{{ displayReadableDate(record.date_end) }}</small>
+                        </label>
+
                     </span>
                     <span class="w-[20%] p-1 flex items-center">
                         <img :src="record.image_url_source" alt="No Available Image" class="w-20 h-20" />
                         <strong>{{ record.title }}</strong>
                     </span>
                     <span class="w-[30%] p-1">{{ record.details }}</span>
+                    <span class="w-[30%] p-1">
+                        {{ fetchAnnouncementViewersByAnnouncementId(record.id) }}
+                    </span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"
                             v-tooltip="'Update Announcement'" icon="pi pi-pencil" size="small" severity="secondary"
@@ -172,6 +182,22 @@ const deleteAnnouncement = (record) => {
                 });
         })
 
+}
+
+async function fetchAnnouncementViewersByAnnouncementId(announcementId) {
+    const endpoint = '/announcement-viewer/list-by-announcement-id'; 
+    try {
+        const response = await axios.get(endpoint, {
+            params: {
+                announcement_id: announcementId
+            }
+        });
+        console.log('results of viewers', response.data[0].team.name);
+        return response.data[0].team.name; 
+    } catch (error) {
+        console.error("Error fetching viewers:", error);
+        return []; 
+    }
 }
 
 //effects
