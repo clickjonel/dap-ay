@@ -42,13 +42,13 @@
                         </label>
 
                     </span>
-                    <span class="w-[20%] p-1 flex items-center">
+                    <span class="w-[20%] p-1 flex flex-col items-center">
                         <img :src="record.image_url_source" alt="No Available Image" class="w-20 h-20" />
                         <strong>{{ record.title }}</strong>
                     </span>
                     <span class="w-[30%] p-1">{{ record.details }}</span>
                     <span class="w-[30%] p-1">
-                        {{ fetchAnnouncementViewersByAnnouncementId(record.id) }}
+                        <AnnouncementViewersPerAnnouncement :announcement-id='record.id'/>
                     </span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/announcement/update/${record.id}`)"
@@ -84,6 +84,7 @@ import { Button, FloatLabel, InputText } from 'primevue';
 import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+import AnnouncementViewersPerAnnouncement from './announcementViewersPerAnnouncement.vue';
 
 //variables
 const router = useRouter();
@@ -182,22 +183,6 @@ const deleteAnnouncement = (record) => {
                 });
         })
 
-}
-
-async function fetchAnnouncementViewersByAnnouncementId(announcementId) {
-    const endpoint = '/announcement-viewer/list-by-announcement-id'; 
-    try {
-        const response = await axios.get(endpoint, {
-            params: {
-                announcement_id: announcementId
-            }
-        });
-        console.log('results of viewers', response.data[0].team.name);
-        return response.data[0].team.name; 
-    } catch (error) {
-        console.error("Error fetching viewers:", error);
-        return []; 
-    }
 }
 
 //effects
