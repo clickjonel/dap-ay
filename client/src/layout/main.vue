@@ -106,6 +106,7 @@
         {
             label: 'Dashboards',
             icon: 'pi pi-chart-bar',
+            accessLevel:1,
             items:[
                 {
                     label: 'Admin Dashboard',
@@ -120,6 +121,7 @@
         {
             label: 'Program',
             icon: 'pi pi-table',
+            accessLevel:1,
             items:[
                 {
                     label: 'Programs',
@@ -134,27 +136,32 @@
         {
             label: 'Users',
             icon: 'pi pi-users',
-            command: () => handleNavigation('/users')
+            command: () => handleNavigation('/users'),
+            accessLevel:1,
         },
         {
             label: 'Teams',
             icon: 'pi pi-chart-bar',
-            command: () => handleNavigation('/teams')
+            command: () => handleNavigation('/teams'),
+            accessLevel:1,
         },
         {
             label: 'Indicators',
             icon: 'pi pi-wave-pulse',
-            command: () => handleNavigation('/indicators')
+            command: () => handleNavigation('/indicators'),
+            accessLevel:1,
         },
         {
             label: 'Logs',
             icon: 'pi pi-server',
-            command: () => handleNavigation('/server-logs')
+            command: () => handleNavigation('/server-logs'),
+            accessLevel:1,
         },
         {
             label: 'Barangays',
             icon: 'pi pi-map',
-            command: () => handleNavigation('/barangays')
+            command: () => handleNavigation('/barangays'),
+            accessLevel:1,
         },
         {
             label: 'Reports',
@@ -162,7 +169,7 @@
             items:[
                 {
                     label: 'All Reports',
-                    command: () => handleNavigation('/reports')
+                    command: () => handleNavigation('/reports'),
                 },
                 {
                     label: 'Monthly User Reports',
@@ -185,7 +192,8 @@
         {
             label: 'Announcements',
             icon: 'pi pi-volume-up',
-            command: () => handleNavigation('/announcements')
+            command: () => handleNavigation('/announcements'),
+            accessLevel:1,
         },
     ];
 

@@ -27,6 +27,7 @@
                     <span class="w-[15%] p-1">{{ brgy.latitude && brgy.longitude ? `${brgy.latitude} - ${brgy.longitude}` : 'Coordinates Not Set' }}</span>
                     <span class="w-[10%] p-1">
                         <Button @click="router.push(`/barangay/update/${brgy.id}`)" v-tooltip="'Manage Barangay'" icon="pi pi-cog" size="small" severity="secondary" rounded outlined/>
+                        {{ brgy.id }}
                     </span>
                 </div>
             </div>
