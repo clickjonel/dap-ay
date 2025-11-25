@@ -5,33 +5,54 @@ namespace App\Http\Controllers;
 use App\Models\Province;
 use App\Models\Report;
 use App\Models\ReportValue;
+use App\Models\ReportValueBreakdown;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function create(Request $request)
-    {
+public function create(Request $request)
+{
         $validated = $request->validate([
             'created_by' => 'required|numeric|exists:users,id',
             'start' => 'required|date',
             'end' => 'required|date',
             'barangay_id' => 'required|numeric|exists:barangays,id',
-            'values' => 'required|array'
+            'values' => 'required|array',
+            'values.*.id' => 'required|numeric|exists:indicators,id',
+            'values.*.value' => 'required|numeric',
+            'values.*.breakdowns' => 'nullable|array',
+            'values.*.breakdowns.*.name' => 'required|string',
+            'values.*.breakdowns.*.value' => 'required|numeric',
         ]);
 
-        $report = Report::create($validated);
+        $report = Report::create([
+            'created_by' => $validated['created_by'],
+            'start' => $validated['start'],
+            'end' => $validated['end'],
+            'barangay_id' => $validated['barangay_id'],
+        ]);
 
         foreach($validated['values'] as $value){
-            ReportValue::create([
+            $reportValue = ReportValue::create([
                 'report_id' => $report->id,
                 'indicator_id' => $value['id'],
                 'value' => $value['value'],
             ]);
+
+            // Check if breakdowns exist and create them
+            if(isset($value['breakdowns']) && is_array($value['breakdowns']) && count($value['breakdowns']) > 0){
+                foreach($value['breakdowns'] as $breakdown){
+                    ReportValueBreakdown::create([
+                        'report_value_id' => $reportValue->id,
+                        'name' => $breakdown['name'],
+                        'value' => $breakdown['value'],
+                    ]);
+                }
+            }
         }
 
-        return response()->json('Created Report Successfully',201);
-
+        return response()->json('Created Report Successfully', 201);
     }
 
     public function list(Request $request)

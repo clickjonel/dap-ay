@@ -5,7 +5,7 @@
             <!-- Links -->
             <div class="w-full flex flex-col justify-start items-center p-2">
                 <span class="p-2 ">Dap-ay Information System</span>
-                <PanelMenu :model="links" class="w-full text-sm" 
+                <PanelMenu :model="accessLinks" class="w-full text-sm" 
                      :pt="{
                         panel: { 
                             class: '!bg-transparent' 
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref,computed } from 'vue';
     import { Button,Popover,Card, PanelMenu } from 'primevue';
     import { useRoute,useRouter  } from 'vue-router';
     import { useAuthStore } from '@/stores/auth';
@@ -196,6 +196,23 @@
             accessLevel:1,
         },
     ];
+
+    const accessLinks = computed(() => {
+        const userAccessLevel = auth.user?.access_level;
+        
+        return links
+            .filter(link => !link.accessLevel || userAccessLevel === link.accessLevel)
+            .map(link => {
+                // Only process items if they exist
+                if (!link.items?.length) return link;
+                
+                const filteredItems = link.items.filter(
+                    item => !item.accessLevel || userAccessLevel === item.accessLevel
+                );
+                
+                return { ...link, items: filteredItems };
+            });
+    });
 
     const toggleMobileNavigationPopover = (event) => {
         mobileNavigationPopover.value.toggle(event)
