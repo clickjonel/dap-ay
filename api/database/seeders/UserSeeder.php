@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'prefix' => null,
                 'nickname' => $user->nickname,
                 'account_status' => 'Active',
-                'user_level' => 5
+                'user_level' => 4
             ]);
         }
 

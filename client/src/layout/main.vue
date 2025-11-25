@@ -5,7 +5,7 @@
             <!-- Links -->
             <div class="w-full flex flex-col justify-start items-center p-2">
                 <span class="p-2 ">Dap-ay Information System</span>
-                <PanelMenu :model="links" class="w-full text-sm" 
+                <PanelMenu :model="accessLinks" class="w-full text-sm" 
                      :pt="{
                         panel: { 
                             class: '!bg-transparent' 
@@ -47,7 +47,7 @@
         </div>
 
     </div>
-
+    
     <Popover ref="mobileNavigationPopover">
         <div class="flex flex-col gap-2 w-[300px]">
             <span class="font-semibold uppercase">Navigation Links</span>
@@ -106,7 +106,7 @@
         {
             label: 'Dashboards',
             icon: 'pi pi-chart-bar',
-            accessLevel:1,
+            accessLevels:[1,2,3],
             items:[
                 {
                     label: 'Admin Dashboard',
@@ -121,7 +121,7 @@
         {
             label: 'Program',
             icon: 'pi pi-table',
-            accessLevel:1,
+             accessLevels:[1,2,3],
             items:[
                 {
                     label: 'Programs',
@@ -137,35 +137,36 @@
             label: 'Users',
             icon: 'pi pi-users',
             command: () => handleNavigation('/users'),
-            accessLevel:1,
+             accessLevels:[1],
         },
         {
             label: 'Teams',
             icon: 'pi pi-chart-bar',
             command: () => handleNavigation('/teams'),
-            accessLevel:1,
+             accessLevels:[1,2,3],
         },
         {
             label: 'Indicators',
             icon: 'pi pi-wave-pulse',
             command: () => handleNavigation('/indicators'),
-            accessLevel:1,
+            accessLevels:[1,2],
         },
         {
             label: 'Logs',
             icon: 'pi pi-server',
             command: () => handleNavigation('/server-logs'),
-            accessLevel:1,
+             accessLevels:[1],
         },
         {
             label: 'Barangays',
             icon: 'pi pi-map',
             command: () => handleNavigation('/barangays'),
-            accessLevel:1,
+            accessLevels:[1,2,3],
         },
         {
             label: 'Reports',
             icon: 'pi pi-file-check',
+            accessLevels:[1,2,3,4],
             items:[
                 {
                     label: 'All Reports',
@@ -193,26 +194,25 @@
             label: 'Announcements',
             icon: 'pi pi-volume-up',
             command: () => handleNavigation('/announcements'),
-            accessLevel:1,
+             accessLevels:[1,2,3],
         },
     ];
 
-    // const accessLinks = computed(() => {
-    //     const userAccessLevel = auth.user?.access_level;
+    const accessLinks = computed(() => {
+        const userAccessLevel = auth.user?.user_level;
+        const hasAccess = (item) => !item.accessLevels || item.accessLevels.includes(userAccessLevel);
         
-    //     return links
-    //         .filter(link => !link.accessLevel || userAccessLevel === link.accessLevel)
-    //         .map(link => {
-    //             // Only process items if they exist
-    //             if (!link.items?.length) return link;
+        return links
+            .filter(hasAccess)
+            .map(link => {
+                // Only process items if they exist
+                if (!link.items?.length) return link;
                 
-    //             const filteredItems = link.items.filter(
-    //                 item => !item.accessLevel || userAccessLevel === item.accessLevel
-    //             );
+                const filteredItems = link.items.filter(hasAccess);
                 
-    //             return { ...link, items: filteredItems };
-    //         });
-    // });
+                return { ...link, items: filteredItems };
+            });
+    });
 
     const toggleMobileNavigationPopover = (event) => {
         mobileNavigationPopover.value.toggle(event)
