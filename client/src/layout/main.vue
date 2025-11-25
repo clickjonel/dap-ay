@@ -5,7 +5,7 @@
             <!-- Links -->
             <div class="w-full flex flex-col justify-start items-center p-2">
                 <span class="p-2 ">Dap-ay Information System</span>
-                <PanelMenu :model="links" class="w-full text-sm" 
+                <PanelMenu :model="accessLinks" class="w-full text-sm" 
                      :pt="{
                         panel: { 
                             class: '!bg-transparent' 
@@ -47,7 +47,7 @@
         </div>
 
     </div>
-
+    
     <Popover ref="mobileNavigationPopover">
         <div class="flex flex-col gap-2 w-[300px]">
             <span class="font-semibold uppercase">Navigation Links</span>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref,computed } from 'vue';
     import { Button,Popover,Card, PanelMenu } from 'primevue';
     import { useRoute,useRouter  } from 'vue-router';
     import { useAuthStore } from '@/stores/auth';
@@ -106,7 +106,7 @@
         {
             label: 'Dashboards',
             icon: 'pi pi-chart-bar',
-            accessLevel:1,
+            accessLevels:[1,2,3],
             items:[
                 {
                     label: 'Admin Dashboard',
@@ -121,7 +121,7 @@
         {
             label: 'Program',
             icon: 'pi pi-table',
-            accessLevel:1,
+             accessLevels:[1,2,3],
             items:[
                 {
                     label: 'Programs',
@@ -137,65 +137,100 @@
             label: 'Users',
             icon: 'pi pi-users',
             command: () => handleNavigation('/users'),
-            accessLevel:1,
+             accessLevels:[1],
         },
         {
             label: 'Teams',
             icon: 'pi pi-chart-bar',
             command: () => handleNavigation('/teams'),
-            accessLevel:1,
+             accessLevels:[1,2,3],
         },
         {
             label: 'Indicators',
             icon: 'pi pi-wave-pulse',
             command: () => handleNavigation('/indicators'),
-            accessLevel:1,
+            accessLevels:[1,2],
         },
         {
             label: 'Logs',
             icon: 'pi pi-server',
             command: () => handleNavigation('/server-logs'),
-            accessLevel:1,
+             accessLevels:[1],
         },
         {
             label: 'Barangays',
             icon: 'pi pi-map',
             command: () => handleNavigation('/barangays'),
-            accessLevel:1,
+            accessLevels:[1,2,3],
         },
         {
             label: 'Reports',
             icon: 'pi pi-file-check',
+            accessLevels:[1,2,3,4],
             items:[
                 {
                     label: 'All Reports',
                     command: () => handleNavigation('/reports'),
                 },
                 {
-                    label: 'Monthly User Reports',
-                    command: () => handleNavigation('/report/monthly/user')
+                    label: 'This Month',
+                    // command: () => handleNavigation('/report/monthly/user')
                 },
                 {
-                    label: 'Monthly Municipal Level Report',
-                    command: () => handleNavigation('/report/monthly/municipal-level-report')
+                    label: 'This Quarter',
+                    // command: () => handleNavigation('/report/monthly/user')
                 },
                 {
-                    label: 'Monthly Provincial Level Report',
-                    command: () => handleNavigation('/report/monthly/provincial-level-report')
+                    label: 'This Year',
+                    // command: () => handleNavigation('/report/monthly/user')
                 },
-                {
-                    label: 'Quarterly Report',
-                    // command: () => handleNavigation('/programs')
-                },
+                // {
+                //     label: 'Monthly User Reports',
+                //     command: () => handleNavigation('/report/monthly/user')
+                // },
+                // {
+                //     label: 'Monthly Municipal Level Report',
+                //     command: () => handleNavigation('/report/monthly/municipal-level-report')
+                // },
+                // {
+                //     label: 'Monthly Provincial Level Report',
+                //     command: () => handleNavigation('/report/monthly/provincial-level-report')
+                // },
+                // {
+                //     label: 'Quarterly Report',
+                //     // command: () => handleNavigation('/programs')
+                // },
             ]
         },
         {
             label: 'Announcements',
             icon: 'pi pi-volume-up',
             command: () => handleNavigation('/announcements'),
-            accessLevel:1,
+             accessLevels:[1,2,3],
+        },
+        {
+            label: 'Generate Reports',
+            icon: 'pi pi-file-pdf',
+            //command: () => handleNavigation('/announcements'),
+            accessLevels:[1,2,3,4],
         },
     ];
+
+    const accessLinks = computed(() => {
+        const userAccessLevel = auth.user?.user_level;
+        const hasAccess = (item) => !item.accessLevels || item.accessLevels.includes(userAccessLevel);
+        
+        return links
+            .filter(hasAccess)
+            .map(link => {
+                // Only process items if they exist
+                if (!link.items?.length) return link;
+                
+                const filteredItems = link.items.filter(hasAccess);
+                
+                return { ...link, items: filteredItems };
+            });
+    });
 
     const toggleMobileNavigationPopover = (event) => {
         mobileNavigationPopover.value.toggle(event)

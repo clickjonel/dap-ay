@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Barangay;
+use App\Models\BarangayPriorityProgram;
 use App\Models\Team;
 use App\Models\TeamBarangay;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -430,6 +431,12 @@ class AbraTeamSeeder extends Seeder
             foreach($team['barangays'] as $brgy){
 
                 Barangay::find($brgy)->update(['status' => 'Implementing PK']);
+                BarangayPriorityProgram::create([
+                    'barangay_id' => $brgy,
+                    'sub_program_id' => 1,
+                    'baseline' => null,
+                    'order' => 1,
+                ]);
 
                 TeamBarangay::create([
                     'team_id' => $teamCreated->id,

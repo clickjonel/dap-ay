@@ -134,7 +134,7 @@
             <div class="w-full flex justify-start items-start gap-4">
                 <FloatLabel variant="on" class="w-full">
                     <Select v-model="addMemberModal.member.user" 
-                        :options="usersStore.users" 
+                        :options="users" 
                         optionLabel="full_name"
                         class="w-full"
                         filter
@@ -217,7 +217,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted,computed } from 'vue';
     import { 
         Panel,
         FloatLabel,
@@ -240,6 +240,7 @@
     const usersStore = useUsersStore()
     const authStore = useAuthStore()
     const team = ref({})
+    const users = computed(() => usersStore.users || [])
 
     const addMemberModal = ref({
         show:false,
@@ -263,7 +264,7 @@
         { code: 7, position: 'Others', doh_deployed: false },
     ]
 
-    onMounted(async()=>{
+    onMounted(()=>{
        fetchTeam()
     })
 

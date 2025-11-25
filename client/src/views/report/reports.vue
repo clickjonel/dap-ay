@@ -1,7 +1,7 @@
 <template>
    <div class="w-full h-full flex flex-col justify-start items-start gap-4">
-        <div class="w-full flex justify-between items-center p-2">
-            <Button icon="pi pi-filter" severity="info" rounded outlined/>
+        <div v-if="auth.user.user_level === 4" class="w-full flex justify-end items-center p-2">
+            <!-- <Button icon="pi pi-filter" severity="info" rounded outlined/> -->
             <Button @click="router.push('/report/create')" label="Create Report" class="!bg-[#5A686A] !border-none"/>
         </div>
 
@@ -44,8 +44,10 @@
     import axios from '@/utils/axios';
     import { FloatLabel,InputText,Button } from 'primevue';
     import { useRouter } from 'vue-router';
+    import { useAuthStore } from '@/stores/auth';
 
     const router = useRouter()
+    const auth = useAuthStore()
     const keyword = ref('')
     const reports = ref([])
 
@@ -56,7 +58,7 @@
     const fetchReports = (page = 1) => {
          axios.get(`report/list?page=${page}`,{
             params:{
-                // keyword:keyword.value
+                keyword:keyword.value
             }
         })
         .then((response)=>{

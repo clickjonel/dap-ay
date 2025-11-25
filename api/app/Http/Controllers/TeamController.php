@@ -17,16 +17,29 @@ class TeamController extends Controller
     }
     public function list(Request $request)
     {
+        $provinceID = $request->user()->pdoho_province_id ?? null;
         $keyword = $request->keyword ?? '';
-    
-        $query = Team::query();
-        $list = $query->when(isset($keyword), function($query) use ($keyword) {
-                    $query->where('name', 'LIKE', "%{$keyword}%");
-                })
-                ->with(['members','barangays'])
-                ->simplePaginate(20);
 
-        return response()->json($list,200);
+        $list = Team::query()
+            ->when($provinceID, function($query) use ($provinceID) {
+                $query->whereHas('barangays', function($q) use ($provinceID) {
+                    $q->where('province_id', $provinceID);
+                })
+                // Also filter the loaded barangays to only show those from this province
+                ->with(['barangays' => function($q) use ($provinceID) {
+                    $q->where('province_id', $provinceID);
+                }]);
+            }, function($query) {
+                // If no province filter, load all barangays normally
+                $query->with('barangays.municipality.province');
+            })
+            ->when($keyword, function($query) use ($keyword) {
+                $query->where('name', 'LIKE', "%{$keyword}%");
+            })
+            ->with('members')
+            ->simplePaginate(20);
+
+        return response()->json($list, 200);
     }
 
     public function update(Request $request)

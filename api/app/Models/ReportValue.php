@@ -16,6 +16,11 @@ class ReportValue extends Model
         'value',
     ];
 
+    public function breakdowns()
+    {
+        return $this->hasMany(ReportValueBreakdown::class,'id');
+    }
+
     public function indicator()
     {
         return $this->belongsTo(Indicator::class,'indicator_id','id');
