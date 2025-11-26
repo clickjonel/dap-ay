@@ -72,9 +72,10 @@ public function create(Request $request)
                     $q->where('province_id', $provinceID);
                 });
             }
+
         }
-        
-        $list = $query->simplePaginate(15); 
+
+        $list = $query->orderBy('created_at','desc')->simplePaginate(15); 
         
         return response()->json($list);
     }

@@ -21,7 +21,7 @@ class BaguioTeamSeeder extends Seeder
             [
                 "name" => "Asin",
                 "barangays" => [313,386,385],
-                "members" => []
+                "members" => [],
             ],
             [
                 "name" => "Atab",

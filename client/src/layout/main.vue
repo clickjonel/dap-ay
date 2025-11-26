@@ -172,6 +172,18 @@
                     label: 'All Reports',
                     command: () => handleNavigation('/reports'),
                 },
+                {
+                    label: 'This Month',
+                    // command: () => handleNavigation('/report/monthly/user')
+                },
+                {
+                    label: 'This Quarter',
+                    // command: () => handleNavigation('/report/monthly/user')
+                },
+                {
+                    label: 'This Year',
+                    // command: () => handleNavigation('/report/monthly/user')
+                },
                 // {
                 //     label: 'Monthly User Reports',
                 //     command: () => handleNavigation('/report/monthly/user')
@@ -195,6 +207,12 @@
             icon: 'pi pi-volume-up',
             command: () => handleNavigation('/announcements'),
              accessLevels:[1,2,3],
+        },
+        {
+            label: 'Generate Reports',
+            icon: 'pi pi-file-pdf',
+            //command: () => handleNavigation('/announcements'),
+            accessLevels:[1,2,3,4],
         },
     ];
 
