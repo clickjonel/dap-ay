@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('nickname');
             $table->string('account_status')->default('unassigned');
             $table->smallInteger('user_level');
+            $table->smallInteger('pdoho_province_id')->nullable();
             $table->timestamps();
         });
 
