@@ -172,22 +172,22 @@
                     label: 'All Reports',
                     command: () => handleNavigation('/reports'),
                 },
-                {
-                    label: 'Monthly User Reports',
-                    command: () => handleNavigation('/report/monthly/user')
-                },
-                {
-                    label: 'Monthly Municipal Level Report',
-                    command: () => handleNavigation('/report/monthly/municipal-level-report')
-                },
-                {
-                    label: 'Monthly Provincial Level Report',
-                    command: () => handleNavigation('/report/monthly/provincial-level-report')
-                },
-                {
-                    label: 'Quarterly Report',
-                    // command: () => handleNavigation('/programs')
-                },
+                // {
+                //     label: 'Monthly User Reports',
+                //     command: () => handleNavigation('/report/monthly/user')
+                // },
+                // {
+                //     label: 'Monthly Municipal Level Report',
+                //     command: () => handleNavigation('/report/monthly/municipal-level-report')
+                // },
+                // {
+                //     label: 'Monthly Provincial Level Report',
+                //     command: () => handleNavigation('/report/monthly/provincial-level-report')
+                // },
+                // {
+                //     label: 'Quarterly Report',
+                //     // command: () => handleNavigation('/programs')
+                // },
             ]
         },
         {

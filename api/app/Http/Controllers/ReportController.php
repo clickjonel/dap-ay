@@ -57,18 +57,24 @@ public function create(Request $request)
 
     public function list(Request $request)
     {
-         $provinceID = $request->user->pdoho_province_id ?? null;
-    
         $query = Report::with(['barangay.municipality.province', 'createdBy']);
+
+        if($request->user()->user_level === 4){
+            $query->where('created_by', $request->user()->id);
+        }
+
+        else{
+            $provinceID = $request->user()->pdoho_province_id ?? null;
     
-        // If user has a province assigned, filter reports by that province
-        if ($provinceID) {
-            $query->whereHas('barangay', function($q) use ($provinceID) {
-                $q->where('province_id', $provinceID);
-            });
+            // If user has a province assigned, filter reports by that province
+            if ($provinceID) {
+                $query->whereHas('barangay', function($q) use ($provinceID) {
+                    $q->where('province_id', $provinceID);
+                });
+            }
         }
         
-        $list = $query->simplePaginate(15); // Add pagination limit
+        $list = $query->simplePaginate(15); 
         
         return response()->json($list);
     }
