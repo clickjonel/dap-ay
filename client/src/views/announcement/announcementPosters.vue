@@ -64,13 +64,14 @@ import { ref, computed, onMounted } from 'vue';
 import { Panel } from 'primevue';
 import axios from '@/utils/axios';
 import AnnouncementImage from '@/assets/images/announcement.gif';
-
+import { useAuthStore } from '@/stores/auth';
 //variables
 const wrapAround = true;
 const isLoading = ref(false);
 const posters = ref([]);
 const currentPosterIndex = ref(0);
-
+const authStore = useAuthStore();
+console.log('currently logged in user', authStore.user)
 //functions
 const currentPoster = computed(() => {
     return posters.value[currentPosterIndex.value];

@@ -174,7 +174,7 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
-const handleAnnouncementViewer = () => {   
+const handleAnnouncementViewer = () => {
     const iterations = selectedTeamIds.value;
     if (iterations.length == 0) {
         return;
@@ -188,7 +188,7 @@ const handleAnnouncementViewer = () => {
         axios.post('announcement-viewer/create', payload)
             .then((response) => {
                 const logMessage = `${response.data} for announcement viewer`;
-                console.log(`create log : `,logMessage);
+                console.log(`create log : `, logMessage);
             })
             .catch((error) => {
                 const errorMsg = error.response?.data?.errors
@@ -209,15 +209,15 @@ const deleteAnnouncementViewers = () => {
             announcement_id: announcement.value.id
         }
     })
-        .then(() => {
-            const logMessage = `${response.data} for announcement viewer`;
-            console.log(`delete log : `,logMessage);
+        .then((response) => { // <-- Add 'response' as the argument
+            const logMessage = `${response.data.message} for announcement viewer`; // <-- Access data from the response object
+            console.log(`delete log : `, logMessage);
         })
         .catch((error) => {
             toast.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: error.response?.data?.message || 'Error deleting announcement',
+                detail: error.response?.data?.message || 'Error deleting announcement viewers',
                 life: 1000
             });
         });
