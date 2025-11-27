@@ -97,7 +97,11 @@ const prevPoster = () => {
 
 const fetchAnnouncements = () => {
     isLoading.value = true;
-    axios.get(`/announcement/posters/list`)
+    axios.get(`/announcement-viewer/posters/list-based-on-teams`,{
+        params:{
+            team_viewers: [2]
+        }
+    })
         .then((response) => {
             posters.value = response.data.data;
         })
