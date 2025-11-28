@@ -12,9 +12,9 @@
         </div>
         <Panel header="Announcement Viewers" class="w-full">
             <h2>Select what teams will be able to see this announcement: </h2>
-            <small class='text-orange-500'>The selection below is based on the teams you are assigned to. When none is
+            <small class='text-orange-500'>The selection below is based on the teamsOfThisUser you are assigned to. When none is
                 selected, the announcement is seen by all users of the system</small>
-            <div v-for="record in teams" :key="record.id">
+            <div v-for="record in teamsOfThisUser" :key="record.id">
                 <label>
                     <input type="checkbox" :value="record.id" v-model="selectedTeamIds" />
                     {{ record.name }}
@@ -86,8 +86,9 @@ const route = useRoute();
 const message = ref('');
 const isToDisplayMessageOnTheForm = ref(false);
 const isLoading = ref(false);
-const teams = ref([]);
+const teamsOfThisUser = ref([]);
 const selectedTeamIds = ref([]);
+const viewers = ref([]);
 const announcement = ref({
     id: null,
     created_by_id: 0,
@@ -162,6 +163,7 @@ const fetchAnnouncement = async (id) => {
             announcement.value.title = data.title;
             announcement.value.details = data.details;
             announcement.value.image_url_source = data.image_url_source;
+            console.log('announcement ',announcement.value)
         } else {
             message.value = 'Announcement not found.';
         }
@@ -174,6 +176,22 @@ const fetchAnnouncement = async (id) => {
     }
 };
 
+const fetchViewers = async () => {        
+    const endpoint = '/announcement-viewer/list-by-announcement-id';
+    try {
+        const response = await axios.get(endpoint, {
+            params: {
+                announcement_id: route.params.announcement_id
+            }
+        })
+        console.log('response data ', response.data)
+        viewers.value = response.data;
+    } catch (e) {        
+        console.error("API Fetch Error:", e);
+    } finally {
+
+    }
+}
 const handleAnnouncementViewer = () => {
     const iterations = selectedTeamIds.value;
     if (iterations.length == 0) {
@@ -202,7 +220,6 @@ const handleAnnouncementViewer = () => {
     }
 
 }
-
 const deleteAnnouncementViewers = () => {
     axios.delete(`/announcement-viewer/delete-by-announcement-id`, {
         params: {
@@ -258,25 +275,36 @@ const updateAnnouncement = () => {
         })
 
 }
+function initializeSelectedTeams() {
+    const viewerTeamIds = viewers.value.map(viewer => viewer.team_id);    
+    const initiallyCheckedIds = teamsOfThisUser.value
+        .filter(team => viewerTeamIds.includes(team.id))        
+        .map(team => team.id);   
+    selectedTeamIds.value = initiallyCheckedIds;
+}
 
 //effects
-onMounted(() => {
+onMounted(async () => { 
     authStore.initAuth();
     const announcementId = route.params.announcement_id;
-    teams.value = authStore.user.teams;
+    teamsOfThisUser.value = authStore.user.teams;
+
     if (announcementId) {
-        announcement.value.id = announcementId; // Set the ID initially
-        fetchAnnouncement(announcementId);
+        announcement.value.id = announcementId;        
+        await fetchAnnouncement(announcementId);
+        await fetchViewers(); 
+        initializeSelectedTeams(); 
+        
     } else {
         message.value = 'No announcement ID provided in the route.';
     }
-})
+});
 
 watch(message, () => {
     isToDisplayMessageOnTheForm.value = message.value !== '';
 }, { immediate: true });
 
-watch(selectedTeamIds, (newValue) => {
-    console.log('Selected Team IDs changed to:', newValue);
-}, { deep: true });
+// watch(selectedTeamIds, (newValue) => {
+//     console.log('Selected Team IDs changed to:', newValue);
+// }, { deep: true });
 </script>

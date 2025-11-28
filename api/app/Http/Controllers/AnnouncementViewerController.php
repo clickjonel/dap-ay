@@ -40,7 +40,7 @@ class AnnouncementViewerController extends Controller
             ->get();
 
         return response()->json($records, 200);
-    }
+    }    
     public function createAnnouncementViewer(Request $request)
     {
         $validatedData = $request->validate([
