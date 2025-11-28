@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 class AnnouncementController extends Controller
 {
-    public function readAllAnnouncementWhereThereAreNoViewers()
+    public function readAllAnnouncementWhereThereAreNoViewersAssigned()
     {
         $today = Carbon::today();
         $records = Announcement::whereDoesntHave('viewers')

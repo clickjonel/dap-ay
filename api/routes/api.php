@@ -179,7 +179,7 @@ Route::group([
         Route::post('/create',[AnnouncementController::class,'createAnnouncement']);
         Route::get('/list',[AnnouncementController::class,'readAllAnnouncements']);
         Route::get('/posters/list',[AnnouncementController::class,'readAllAnnouncementForPosting']);
-        Route::get('/posters/list-without-viewers',[AnnouncementController::class,'readAllAnnouncementWhereThereAreNoViewers']);
+        Route::get('/posters/list-without-viewers-assigned',[AnnouncementController::class,'readAllAnnouncementWhereThereAreNoViewersAssigned']);
         Route::get('/find',[AnnouncementController::class,'readAnnouncement']);
         Route::put('/update',[AnnouncementController::class,'updateAnnouncement']);
         Route::delete('/delete',[AnnouncementController::class,'deleteAnnouncement']);

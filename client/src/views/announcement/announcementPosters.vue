@@ -27,7 +27,8 @@
           transition-opacity duration-300 ease-in-out
         ">
                 <div class='flex justify-center'>
-                    <img :src="determineImageToDisplay(currentPoster)" :alt = "determineAltImageToDisplay(currentPoster)" class="h-full w-full"/>
+                    <img :src="determineImageToDisplay(currentPoster)" :alt="determineAltImageToDisplay(currentPoster)"
+                        class="h-full w-full" />
                 </div>
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-slate-700">{{ currentPoster.title }}</h3>
@@ -60,7 +61,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted,watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { Panel } from 'primevue';
 import axios from '@/utils/axios';
 import AnnouncementImage from '@/assets/images/announcement.gif';
@@ -76,7 +77,6 @@ console.log('currently logged in user', authStore.user)
 const currentPoster = computed(() => {
     return posters.value[currentPosterIndex.value];
 });
-
 const nextPoster = () => {
     const newIndex = currentPosterIndex.value + 1;
     if (newIndex >= posters.value.length) {
@@ -85,7 +85,6 @@ const nextPoster = () => {
         currentPosterIndex.value = newIndex;
     }
 };
-
 const prevPoster = () => {
     const newIndex = currentPosterIndex.value - 1;
     if (newIndex < 0) {
@@ -94,44 +93,58 @@ const prevPoster = () => {
         currentPosterIndex.value = newIndex;
     }
 };
-
-const fetchAnnouncements = () => {
-    isLoading.value = true;
-    axios.get(`/announcement-viewer/posters/list-based-on-teams`,{
-        params:{
+const fetchAnnouncementsBasedOnTeams = () => {
+    axios.get(`/announcement-viewer/posters/list-based-on-teams`, {
+        params: {
             team_viewers: [2]
         }
     })
-        .then((response) => {
-            posters.value = response.data.data;
+        .then((response) => {            
+            posters.value=response.data.data            
         })
         .catch((error) => {
             console.log(error)
         })
         .finally(() => {
-            isLoading.value = false;
+
         })
 }
+const fetchAnnouncementsForAllTeams = () => {
+    axios.get(`/announcement/posters/list-without-viewers-assigned`)
+        .then((response) => {
+            posters.value = [...posters.value,...response.data.data];
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+        .finally(() => {
 
-function determineImageToDisplay(poster){
-    if(poster.image_url_source===null){
+        })
+}
+const fetchAnnouncements = () => {    
+    isLoading.value = true;
+    fetchAnnouncementsBasedOnTeams();
+    fetchAnnouncementsForAllTeams();    
+    isLoading.value = false;
+}
+function determineImageToDisplay(poster) {
+    if (poster.image_url_source === null) {
         return AnnouncementImage;
     }
     return poster.image_url_source;
 }
-function determineAltImageToDisplay(poster){
-    if(poster.image_url_source===null){
+function determineAltImageToDisplay(poster) {
+    if (poster.image_url_source === null) {
         return "No Image Provided";
     }
     return poster.title;
-    
+
 }
 //effects
 onMounted(() => {
     fetchAnnouncements();
 })
-
-watch(posters, () => {
-    console.log('posters at the moment',posters)
-}, { immediate: true });
+// watch(posters, () => {
+//     console.log('posters at the moment', posters)
+// }, { immediate: true });
 </script>
