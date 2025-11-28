@@ -22,4 +22,8 @@ class Announcement extends Model
     public function user(){
         return $this->belongsTo(User::class,'created_by_id','id');
     }
+
+    public function viewers(){
+        return $this->hasMany(AnnouncementViewer::class,'announcement_id');
+    }
 }

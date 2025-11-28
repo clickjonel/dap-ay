@@ -6,14 +6,26 @@ use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 class AnnouncementController extends Controller
-{   
+{
+    public function readAllAnnouncementWhereThereAreNoViewers()
+    {
+        $today = Carbon::today();
+        $records = Announcement::whereDoesntHave('viewers')
+        ->whereDate('date_start', '<=', $today)
+        ->whereDate('date_end', '>=', $today)
+        ->get();
 
+        return response()->json([
+            'message' => "Active records retrieved successfully",
+            'data' => $records
+        ], 200);
+    }
     public function readAllAnnouncementForPosting()
-    {        
-        $today = Carbon::today(); //get date today
+    {
+        $today = Carbon::today(); 
         $records = Announcement::whereDate('date_start', '<=', $today)
-                               ->whereDate('date_end', '>=', $today)
-                               ->get();
+            ->whereDate('date_end', '>=', $today)
+            ->get();
         return response()->json([
             'message' => "Active records retrieved successfully",
             'data' => $records
@@ -47,7 +59,7 @@ class AnnouncementController extends Controller
             'image_url_source' => 'nullable|string|max:255'
         ]);
         $record = Announcement::create($validatedData);
-        
+
         return response()->json([
             'message' => 'Record created successfully',
             'data' => $record
@@ -70,7 +82,7 @@ class AnnouncementController extends Controller
         return response()->json([
             'message' => 'Record updated successfully',
             'data' => $updatedRecord
-        ], 200);        
+        ], 200);
     }
     public function deleteAnnouncement(Request $request)
     {

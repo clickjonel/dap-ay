@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted,watch } from 'vue';
 import { Panel } from 'primevue';
 import axios from '@/utils/axios';
 import AnnouncementImage from '@/assets/images/announcement.gif';
@@ -130,4 +130,8 @@ function determineAltImageToDisplay(poster){
 onMounted(() => {
     fetchAnnouncements();
 })
+
+watch(posters, () => {
+    console.log('posters at the moment',posters)
+}, { immediate: true });
 </script>
