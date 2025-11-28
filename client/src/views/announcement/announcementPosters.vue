@@ -70,9 +70,10 @@ import { useAuthStore } from '@/stores/auth';
 const wrapAround = true;
 const isLoading = ref(false);
 const posters = ref([]);
+const teamIdsOfCurrentlyLoggedInUser = ref([]);
 const currentPosterIndex = ref(0);
 const authStore = useAuthStore();
-console.log('currently logged in user', authStore.user)
+
 //functions
 const currentPoster = computed(() => {
     return posters.value[currentPosterIndex.value];
@@ -93,10 +94,20 @@ const prevPoster = () => {
         currentPosterIndex.value = newIndex;
     }
 };
+
+function obtainTeamIdsForThisUser(){
+    const teams =  authStore.user.teams;    
+    let teamIds = [];    
+    for(let i=0;i<teams.length;i++){
+        teamIds.push(teams[i].id)
+    }    
+    return teamIds
+}
 const fetchAnnouncementsBasedOnTeams = () => {
+    teamIdsOfCurrentlyLoggedInUser.value = obtainTeamIdsForThisUser();
     axios.get(`/announcement-viewer/posters/list-based-on-teams`, {
         params: {
-            team_viewers: [2]
+            team_viewers: teamIdsOfCurrentlyLoggedInUser.value
         }
     })
         .then((response) => {            
