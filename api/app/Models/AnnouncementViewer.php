@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-
+use App\Trait\ServerLogTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class AnnouncementViewer extends Model
 {
+    use ServerLogTrait;
     protected $connection = 'dap-ay';
     protected $table = 'announcement_viewers';
     protected $fillable = [
