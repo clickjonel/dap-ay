@@ -1,6 +1,6 @@
 <template>
    <div class="w-full h-full flex flex-col justify-start items-start gap-4">
-        <div v-if="auth.user.user_level === 4" class="w-full flex justify-end items-center p-2">
+        <div v-if="auth.user.user_level === 4 || auth.user.user_level === 3" class="w-full flex justify-end items-center p-2">
             <!-- <Button icon="pi pi-filter" severity="info" rounded outlined/> -->
             <Button @click="router.push('/report/create')" label="Create Report" class="!bg-[#5A686A] !border-none"/>
         </div>

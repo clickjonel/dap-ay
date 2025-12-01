@@ -20,13 +20,17 @@ class DatabaseSeeder extends Seeder
             ProgramSeeder::class,
             ProvinceSeeder::class,
             IndicatorSeeder::class,
+
             BaguioTeamSeeder::class,
             BenguetTeamSeeder::class,
             AbraTeamSeeder::class,
             ApayaoTeamSeeder::class,
             IfugaoTeamSeeder::class,
             KalingaTeamSeeder::class,
-            MountainProvinceTeamSeeder::class
+            MountainProvinceTeamSeeder::class,
+
+            BaguioBarangayProfilesSeeder::class,
+            BaguioInitialReportsSeeder::class
         ]);
     }
 }

@@ -122,6 +122,17 @@ class BaguioTeamSeeder extends Seeder
                     'barangay_id' => $brgy,
                 ]);
 
+                TeamMember::create([
+                    'team_id' => $teamCreated->id,
+                    'user_id' => 835, //pdoho-benguet
+                    'doh_deployed' => false,
+                    'name' => 'PDOHO-Benguet',
+                    'position' => 'Admin - Benguet',
+                    'role' => 'Admin',
+                    'pk_oriented' => 0,
+                    'received_pk_kit' => 0
+                ]);
+
             }
 
         }
