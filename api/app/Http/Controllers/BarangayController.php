@@ -26,7 +26,12 @@ class BarangayController extends Controller
 
     public function list(Request $request)
     {
+        $provinceID = $request->user()->pdoho_province_id ?? null;
+
         $barangays = Barangay::query()
+                    ->when($provinceID, function($query) use ($provinceID, $request){
+                        $query->where('province_id', $provinceID);
+                    })
                     ->when(isset($request->keyword), function($query) use ($request){
                         $query->where('name','LIKE', "%{$request->keyword}%");
                     })

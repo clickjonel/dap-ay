@@ -30,7 +30,9 @@ class DatabaseSeeder extends Seeder
             MountainProvinceTeamSeeder::class,
 
             BaguioBarangayProfilesSeeder::class,
-            BaguioInitialReportsSeeder::class
+            BaguioInitialReportsSeeder::class,
+
+            AbraInitialReportsSeeder::class,
         ]);
     }
 }

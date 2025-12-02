@@ -44,16 +44,20 @@ class DashboardController extends Controller
                 'barangayTotal' => Barangay::count()
             ],
             'indicatorsValueSum' => $indicatorsValueSum,
-            'demographics' => $this->getDemographics()
+            'demographics' => $this->getDemographics(),
+            'indicatorTotalsPerProvince' => $this->getIndicatorTotalPerProvince()
        ]);
     }
 
     public function getDemographics()
     {
-        $provinces = Province::withCount(['municipalities', 'barangays'])
+        $provinces = Province::with(['reports.barangay'])->withCount(['municipalities', 'barangays'])
         ->get()
         ->map(function ($province) {
             $province->pk_statuses = $province->barangays->groupBy('status')->map(fn($group) => $group->count());
+            // $province->reports_by_municipality = $province->reports->groupBy(function($report) {
+            //     return $report->barangay->municipality->name;
+            // })->map(fn($group) => $group->count());
             return $province;
         });
 
@@ -63,6 +67,13 @@ class DashboardController extends Controller
             'total_barangays' => $provinces->sum('barangays_count'),
             'provinces' => $provinces
         ];
+    }
+
+    public function getIndicatorTotalPerProvince()
+    {
+        $provinces = Province::with(['reports.values.indicator'])->get();
+
+        return $provinces;
     }
 
 }

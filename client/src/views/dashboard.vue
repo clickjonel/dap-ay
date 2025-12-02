@@ -2,7 +2,7 @@
   
     <div class="w-full min-h-full h-full flex flex-col justify-start items-start gap-4 overflow-y-auto p-2">
 
-        <AnnouncementPosters/>
+        <AnnouncementPosters v-if="!loading"/>
         
         <Panel v-if="demographics" class="w-full">
             <template #header>
@@ -15,21 +15,26 @@
 
             <!-- Totatlities -->
             <div class="w-full grid grid-cols-3 gap-4 mb-4">
-                <Panel header="Total Provinces for CAR" class="w-full">
-                    <span class="text-5xl font-black">{{ demographics?.total_provinces }}</span>
+                <Panel v-if="!loading" header="Total Provinces for CAR" class="w-full">
+                    <span  class="text-5xl font-black">{{ demographics?.total_provinces }}</span>
                 </Panel>
-                <Panel header="Total Municipalities for CAR" class="w-full">
+                <Skeleton v-if="loading" class="w-full" width="100%" height="100px"/>
+
+                <Panel v-if="!loading" header="Total Municipalities for CAR" class="w-full">
                     <span class="text-5xl font-black">{{ demographics?.total_municipalities }}</span>
                 </Panel>
-                <Panel header="Total Barangays for CAR" class="w-full">
+                <Skeleton v-if="loading" class="w-full" width="100%" height="100px"/>
+
+                <Panel v-if="!loading" header="Total Barangays for CAR" class="w-full">
                     <span class="text-5xl font-black">{{ demographics?.total_barangays }}</span>
                 </Panel>
+                <Skeleton v-if="loading" class="w-full" width="100%" height="100px"/>
             </div>
 
             <span class="text-lg font-semibold">Provinces Demographics</span>
 
             <!-- Per Province -->
-            <div class="w-full grid grid-cols-4 gap-4 mb-4">
+            <div v-if="!loading" class="w-full grid grid-cols-4 gap-4 mb-4">
                 <Panel v-for="province in demographics.provinces" class="w-full">
                     <template #header>
                         <span>{{ province.name }}</span>
@@ -47,28 +52,20 @@
                     </div>
                 </Panel>
             </div>
+            <Skeleton v-if="loading" class="w-full" width="100%" height="400px"/>
 
-            <!-- <Panel header="Total Barangays for CAR" class="w-full">
-                <span class="text-5xl font-black">{{ barangayData.barangayTotal }}</span>
-            </Panel>
-            <div class="w-full grid grid-cols-3 gap-4 mt-4">
-                 <div v-for="status in barangayData.barangayByPKStatus">
-                    <Panel :header="status.status" class="w-full">
-                        <span class="text-2xl font-black">{{ status.count }}</span>
-                    </Panel>
-                 </div>
-            </div> -->
         </Panel>
 
-        <Panel header="Indicators" class="w-full">
+        <Panel v-if="!loading" header="Indicators" class="w-full">
            <div class="w-full grid grid-cols-2 justify-start items-start gap-4">
                 <Panel v-for="indicator in indicatorsValueSum" :header="indicator.name" class="w-full" style="background-color:azure">
                     <span class="text-5xl font-black">{{ indicator.values_sum }}</span>
                 </Panel>
            </div>
         </Panel>
+        <Skeleton v-if="loading" class="w-full" width="100%" height="400px"/>
 
-        <Panel header="Purokalusugan Teams" class="w-full">
+        <Panel v-if="!loading" header="Purokalusugan Teams" class="w-full">
             <Panel header="Total Teams Created" class="w-full">
                 <span class="text-5xl font-black">{{ teamData.total }}</span>
             </Panel>
@@ -80,14 +77,16 @@
                  </div>
             </div>
         </Panel>
+        <Skeleton v-if="loading" class="w-full" width="100%" height="400px"/>
 
     </div>
+
 
 </template>
 
 <script setup>
     import { ref,onMounted } from 'vue';
-    import { Panel, Button } from 'primevue';
+    import { Panel, Skeleton } from 'primevue';
     import AnnouncementPosters from './announcement/announcementPosters.vue';
     import axios from '@/utils/axios'
 
@@ -95,6 +94,8 @@
     const barangayData = ref({})
     const indicatorsValueSum = ref({})
     const demographics = ref(null)
+
+    const loading = ref(true)
 
     // const demographicsView = ref('Grid');
 
@@ -110,7 +111,15 @@
             barangayData.value = response.data.barangayData
             indicatorsValueSum.value = response.data.indicatorsValueSum
             demographics.value = response.data.demographics
-            console.log(demographics.value)
+            console.log(response.data.indicatorTotalsPerProvince)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        .finally(()=>{
+            setTimeout(()=>{
+                loading.value = false
+            },1000)   
         })
     })
 </script>
