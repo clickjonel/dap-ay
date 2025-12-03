@@ -26,13 +26,6 @@ return new class extends Migration
             $table->foreignId('indicator_id')->constrained('indicators','id');
             $table->integer('value');
         });
-
-        Schema::create('report_value_breakdowns', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('report_value_id')->constrained('reports','id');
-            $table->string('name');
-            $table->integer('value');
-        });
     }
 
     /**

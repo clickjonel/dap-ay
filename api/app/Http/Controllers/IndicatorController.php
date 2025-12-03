@@ -50,4 +50,20 @@ class IndicatorController extends Controller
 
          return response()->json($indicators,200);
     }
+
+    public function findIndicator(Request $request)
+    {
+        $validated = $request->validate([
+            'indicator_id' => 'required|numeric',
+            'relationships' => 'nullable|array'
+        ]);
+
+        $query = Indicator::query();
+        $query = $query->when(isset($validated['relationships']), function($query) use ($validated) {
+            $query->with($validated['relationships']);
+        });
+        $indicator = $query->find($validated['indicator_id']);
+
+        return response()->json($indicator,200);
+    }
 }

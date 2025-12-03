@@ -110,6 +110,14 @@ const routes = [
           }
         },
         {
+          path: '/indicator/manage/:indicator_id',
+          name: 'Manage Indicator',
+          component: () => import('@/views/indicator/manageIndicator.vue'),
+          meta:{
+            requiresAuth:true
+          }
+        },
+        {
           path: '/barangays',
           name: 'Barangays',
           component: () => import('@/views/barangay/barangays.vue'),

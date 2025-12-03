@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReportValueBreakdown extends Model
+class IndicatorDisaggregation extends Model
 {
     protected $connection = 'dap-ay';
-    protected $table = 'report_value_breakdowns';
+    protected $table = 'indicators';
     public $timestamps = false;
-
     protected $fillable = [
-        'report_value_id',
+        'indicator_id',
         'name',
-        'value',
+        'totalable',
+        'active'
     ];
 }

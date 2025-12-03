@@ -23,7 +23,7 @@
                     <span class="w-[20%] p-1">{{ indicator.type }}</span>
                     <span class="w-[20%] p-1">{{ indicator.active ? 'Active' : 'Inactive' }}</span>
                     <span class="w-[20%] p-1 flex justify-start items-center gap-2">
-                        <Button v-tooltip="'Manage Indicator'" icon="pi pi-cog" size="small" severity="secondary" rounded outlined/>
+                        <Button @click="router.push(`/indicator/manage/${indicator.id}`)" v-tooltip="'Manage Indicator'" icon="pi pi-cog" size="small" severity="secondary" rounded outlined/>
                     </span>
                 </div>
             </div>
@@ -47,18 +47,12 @@
     import { FloatLabel,InputText,Button,Dialog,Select } from 'primevue'
     import { useToast } from 'primevue';
     import axios from '@/utils/axios.js'
+    import { useRouter } from 'vue-router';
 
     const toast = useToast()
     const indicators = ref([])
     const keyword = ref('')
-    const createModal = ref({
-        show:false,
-        indicator:{
-            type:'',
-            name:''
-        },
-        createLoading:false
-    })
+    const router = useRouter()
 
     onMounted(()=>{
         fetchIndicators()

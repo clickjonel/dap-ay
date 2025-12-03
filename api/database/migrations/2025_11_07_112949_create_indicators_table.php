@@ -19,6 +19,14 @@ return new class extends Migration
             $table->boolean('active');
         });
 
+        Schema::create('indicator_disaggregations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('indicator_id')->constrained('indicators');
+            $table->string('name');
+            $table->boolean('totalable');
+            $table->boolean(column: 'active');
+        });
+
     }
 
     /**

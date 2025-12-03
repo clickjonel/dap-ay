@@ -164,6 +164,7 @@ Route::group([
         Route::get('/list',[IndicatorController::class,'list']);
         Route::post('/update',[IndicatorController::class,'update']);
         Route::get('/active',[IndicatorController::class,'getActiveIndicators']);
+        Route::get('/find',[IndicatorController::class,'findIndicator']);
     });
 
     Route::group([
