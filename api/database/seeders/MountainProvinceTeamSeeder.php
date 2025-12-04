@@ -175,7 +175,7 @@ class MountainProvinceTeamSeeder extends Seeder
 
             foreach($team['barangays'] as $brgy){
 
-                Barangay::find($brgy)->update(['status' => 'Implementing PK']);
+                Barangay::find($brgy)->update(['pk_status' => 'Monitoring PK Implementation']);
                 BarangayPriorityProgram::create([
                     'barangay_id' => $brgy,
                     'sub_program_id' => 1,

@@ -161,8 +161,10 @@ Route::group([
         'prefix' => '/indicator'
     ],function(){
         Route::post('/create',[IndicatorController::class,'create']);
+        Route::post('/disaggregation/create',[IndicatorController::class,'createDisaggregation']);
         Route::get('/list',[IndicatorController::class,'list']);
         Route::post('/update',[IndicatorController::class,'update']);
+        Route::post('/disaggregation/update',[IndicatorController::class,'updateDisaggregation']);
         Route::get('/active',[IndicatorController::class,'getActiveIndicators']);
         Route::get('/find',[IndicatorController::class,'findIndicator']);
     });

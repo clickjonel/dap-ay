@@ -24,6 +24,11 @@ class Indicator extends Model
         return $this->belongsTo(SubProgram::class,'sub_program_id');
     }
 
+    public function disaggregations()
+    {
+        return $this->hasMany(IndicatorDisaggregation::class,'indicator_id','id');
+    }
+
     public function reportValues()
     {
         return $this->hasMany(ReportValue::class, 'indicator_id','id');

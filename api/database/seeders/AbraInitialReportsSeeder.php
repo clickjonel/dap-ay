@@ -36,7 +36,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 40,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 'null',
                 'target_population' => 766
@@ -61,7 +61,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 7,
                 '18' => 0,
                 'barangay_id' => 65,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 225
@@ -86,7 +86,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 2,
                 'barangay_id' => 286,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => '57null'
@@ -111,7 +111,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 277,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 876
@@ -136,7 +136,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 31,
                 '18' => 1,
                 'barangay_id' => 188,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 582
@@ -161,7 +161,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 3,
                 'barangay_id' => 148,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 1465
@@ -186,7 +186,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 5,
                 '18' => 0,
                 'barangay_id' => 32,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 547
@@ -211,7 +211,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 2,
                 'barangay_id' => 287,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 6,
                 'target_purok' => 'null',
                 'target_population' => 535
@@ -236,7 +236,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 279,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 274
@@ -261,7 +261,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 21,
                 '18' => 0,
                 'barangay_id' => 170,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => '2null18'
@@ -286,7 +286,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 2,
                 'barangay_id' => 103,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => '28null'
@@ -311,7 +311,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 126,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 6,
                 'target_purok' => 6,
                 'target_population' => 881
@@ -336,7 +336,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 4,
                 'barangay_id' => 149,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 735
@@ -361,7 +361,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 266,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 9,
                 'target_purok' => 9,
                 'target_population' => '3nullnull'
@@ -386,7 +386,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 241,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -411,7 +411,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 222,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 'null',
                 'target_population' => 514
@@ -436,7 +436,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 157,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => 178
@@ -461,7 +461,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 203,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 7,
                 'target_purok' => 'null',
                 'target_population' => 1192
@@ -486,7 +486,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 297,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -511,7 +511,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 92,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 1,
                 'target_purok' => 1,
                 'target_population' => '39null'
@@ -536,7 +536,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 2,
                 'barangay_id' => 104,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => '1null12'
@@ -561,7 +561,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 22,
                 '18' => 0,
                 'barangay_id' => 66,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 'null',
                 'target_population' => 487
@@ -586,7 +586,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 79,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -611,7 +611,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 178,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -636,7 +636,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 71,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 'null',
                 'target_population' => 1382
@@ -661,7 +661,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 112,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => 896
@@ -686,7 +686,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 127,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 4,
                 'target_population' => 1216
@@ -711,7 +711,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 6,
                 '18' => 0,
                 'barangay_id' => 232,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 4,
                 'target_population' => 736
@@ -736,7 +736,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 206,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -761,7 +761,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 61,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -786,7 +786,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 46,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 7,
                 'target_purok' => 'null',
                 'target_population' => 1641
@@ -811,7 +811,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 1,
                 '18' => 0,
                 'barangay_id' => 36,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 4,
                 'target_population' => 519
@@ -836,7 +836,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 271,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 8,
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -861,7 +861,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 208,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 'null',
                 'target_population' => 747
@@ -886,7 +886,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 1,
                 '18' => 4,
                 'barangay_id' => 150,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => '1null71'
@@ -911,7 +911,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 20,
                 '18' => 1,
                 'barangay_id' => 191,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => '47null'
@@ -936,7 +936,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 2,
                 '18' => 0,
                 'barangay_id' => 37,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 296
@@ -961,7 +961,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 62,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -986,7 +986,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 2,
                 'barangay_id' => 248,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 1,
                 'target_purok' => 1,
                 'target_population' => 574
@@ -1011,7 +1011,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 284,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 'null',
                 'target_population' => 395
@@ -1036,7 +1036,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 162,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => 235
@@ -1061,7 +1061,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 82,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -1086,7 +1086,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 63,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -1111,7 +1111,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 2,
                 '18' => 1,
                 'barangay_id' => 180,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 1124
@@ -1136,7 +1136,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 133,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 553
@@ -1161,7 +1161,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 3,
                 '18' => 0,
                 'barangay_id' => 16,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 1,
                 'target_population' => 88
@@ -1186,7 +1186,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 225,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 'null',
                 'target_population' => 719
@@ -1211,7 +1211,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 96,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 8,
                 'target_purok' => 'null',
                 'target_population' => '157null'
@@ -1236,7 +1236,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 183,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 7,
                 'target_purok' => 7,
                 'target_population' => 675
@@ -1261,7 +1261,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 134,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 854
@@ -1286,7 +1286,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 4,
                 '18' => 0,
                 'barangay_id' => 234,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => '65null'
@@ -1311,7 +1311,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 19,
                 '18' => 0,
                 'barangay_id' => 15,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 1,
                 'target_population' => 355
@@ -1336,7 +1336,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 142,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 1,
                 'target_purok' => 1,
                 'target_population' => 415
@@ -1361,7 +1361,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 164,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 2,
                 'target_population' => 565
@@ -1386,7 +1386,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 97,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => '12null8'
@@ -1411,7 +1411,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 84,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -1436,7 +1436,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 1,
                 '18' => 1,
                 'barangay_id' => 73,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 963
@@ -1461,7 +1461,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 144,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => 811
@@ -1486,7 +1486,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 50,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 'null',
                 'target_population' => 1184
@@ -1511,7 +1511,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 119,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 2,
                 'target_population' => 343
@@ -1536,7 +1536,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 260,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 2,
                 'target_purok' => 'null',
                 'target_population' => '58null'
@@ -1561,7 +1561,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 75,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 673
@@ -1586,7 +1586,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 214,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => '4null9'
@@ -1611,7 +1611,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 235,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 6,
                 'target_purok' => 'null',
                 'target_population' => 712
@@ -1636,7 +1636,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 19,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 7,
                 'target_purok' => 7,
                 'target_population' => '2nullnull'
@@ -1661,7 +1661,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 11,
                 '18' => 0,
                 'barangay_id' => 67,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 4,
                 'target_population' => 396
@@ -1686,7 +1686,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 2,
                 '18' => 1,
                 'barangay_id' => 99,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 7,
                 'target_purok' => 7,
                 'target_population' => 3747
@@ -1711,7 +1711,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 135,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -1736,7 +1736,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 262,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 1,
                 'target_purok' => 'null',
                 'target_population' => '8null7'
@@ -1761,7 +1761,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 301,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 347
@@ -1786,7 +1786,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 254,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -1811,7 +1811,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 15,
                 '18' => 0,
                 'barangay_id' => 20,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 1,
                 'target_population' => '34null'
@@ -1861,7 +1861,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 18,
                 '18' => 0,
                 'barangay_id' => 199,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 1,
                 'target_purok' => 1,
                 'target_population' => '3nullnull'
@@ -1886,7 +1886,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 123,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 1668
@@ -1911,7 +1911,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 5,
                 '18' => 1,
                 'barangay_id' => 238,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => 681
@@ -1936,7 +1936,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 2,
                 '18' => 0,
                 'barangay_id' => 175,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 5,
                 'target_purok' => 5,
                 'target_population' => '158null'
@@ -1986,7 +1986,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 2,
                 '18' => 1,
                 'barangay_id' => 186,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 3,
                 'target_population' => 375
@@ -2011,7 +2011,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 0,
                 'barangay_id' => 257,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 'null',
                 'target_purok' => 'null',
                 'target_population' => 'null'
@@ -2036,7 +2036,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 295,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 284
@@ -2061,7 +2061,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 0,
                 '18' => 1,
                 'barangay_id' => 302,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 4,
                 'target_purok' => 4,
                 'target_population' => 779
@@ -2086,7 +2086,7 @@ class AbraInitialReportsSeeder extends Seeder
                 '17' => 10,
                 '18' => 1,
                 'barangay_id' => 230,
-                'status' => 'Implementing PK',
+                'status' => 'Monitoring PK Implementation',
                 'total_purok' => 3,
                 'target_purok' => 'null',
                 'target_population' => 516
@@ -2095,7 +2095,7 @@ class AbraInitialReportsSeeder extends Seeder
 
         foreach($barangays as $row){
             $brgy = Barangay::find($row['barangay_id'])->update([
-                'status' => $row['status'],
+                'pk_status' => $row['status'],
                 'total_purok' => $row['total_purok'] === 'null' ? null : $row['total_purok'],
                 'target_purok' => $row['target_purok'] === 'null' ? null : $row['target_purok'],
                 'target_population' => $row['target_population'] === 'null' ? null : $row['target_population'],

@@ -108,7 +108,7 @@ class BaguioTeamSeeder extends Seeder
             foreach($team['barangays'] as $brgy){
 
                 Barangay::find($brgy)->update([
-                    'status' => 'Implementing PK'
+                    'pk_status' => 'Monitoring PK Implementation'
                 ]);
                 BarangayPriorityProgram::create([
                     'barangay_id' => $brgy,

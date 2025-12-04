@@ -21,7 +21,7 @@ return new class extends Migration
 
         Schema::create('indicator_disaggregations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('indicator_id')->constrained('indicators');
+            $table->foreignId('indicator_id')->constrained('indicators','id');
             $table->string('name');
             $table->boolean('totalable');
             $table->boolean(column: 'active');
@@ -35,5 +35,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('indicators');
+        Schema::dropIfExists('indicator_disaggregations');
     }
 };

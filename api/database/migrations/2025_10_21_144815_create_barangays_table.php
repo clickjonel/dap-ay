@@ -20,8 +20,11 @@ return new class extends Migration
             $table->foreignId('municipality_id')->constrained('municipalities','id');
             $table->string('name');
 
-            //pk status
-            $table->string('status');
+            //pk statuses
+            $table->string('pk_status');
+            $table->boolean('is_gida');
+            $table->boolean('is_pk_site');
+            $table->integer('deployed_hrh');
 
             //geolocation details
             $table->string('latitude')->nullable();
@@ -31,10 +34,6 @@ return new class extends Migration
             $table->integer('total_purok')->nullable();
             $table->integer('target_purok')->nullable();
             $table->integer('target_population')->nullable();
-
-            // others
-            // $table->boolean('pk_oriented'); //Number or Boolean
-            // $table->boolean('pk_kit_received'); //Number or Boolean
 
         });
 

@@ -121,17 +121,18 @@
         {
             label: 'Program',
             icon: 'pi pi-table',
-             accessLevels:[1,2,3],
-            items:[
-                {
-                    label: 'Programs',
-                    command: () => handleNavigation('/programs')
-                },
-                {
-                    label: 'Sub Programs',
-                    // command: () => handleNavigation('/programs')
-                }
-            ]
+            accessLevels:[1,2,3],
+            command: () => handleNavigation('/programs')
+            // items:[
+            //     {
+            //         label: 'Programs',
+            //         command: () => handleNavigation('/programs')
+            //     },
+            //     {
+            //         label: 'Sub Programs',
+            //         // command: () => handleNavigation('/programs')
+            //     }
+            // ]
         },
         {
             label: 'Users',

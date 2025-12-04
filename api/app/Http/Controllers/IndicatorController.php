@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Indicator;
+use App\Models\IndicatorDisaggregation;
 use Illuminate\Http\Request;
 
 class IndicatorController extends Controller
@@ -66,4 +67,35 @@ class IndicatorController extends Controller
 
         return response()->json($indicator,200);
     }
+
+    public function updateDisaggregation(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|numeric',
+            'name' => 'required|string',
+            'totalable' => 'required|boolean',
+            'active' => 'required|boolean',
+        ]);
+
+        IndicatorDisaggregation::find($validated['id'])->update($validated);
+
+        return response()->json('Updated Indicator Disaggregation Successfully',201);
+
+    }
+
+    public function createDisaggregation(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'totalable' => 'required|boolean',
+            'active' => 'required|boolean',
+            'indicator_id' => 'required|numeric',
+        ]);
+
+        IndicatorDisaggregation::create($validated);
+
+        return response()->json('Created Indicator Disaggregation Successfully',201);
+
+    }
+
 }
