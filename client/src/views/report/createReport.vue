@@ -31,25 +31,51 @@
         <Panel header="Programs" class="w-full">
             <div class="w-full flex flex-col justify-start items-start gap-4">
 
-                <span class="my-4 italic font-light text-sm text-amber-600">Important: Fill up data by service of each program and disaggregated by Male, Female, Not Identified and 4Ps Benificiary.</span>
+                <span class="italic font-light text-sm text-amber-600">Important: Fill up data by service of each program and disaggregated by Male, Female, Not Identified and 4Ps Benificiary.</span>
 
-                <div v-for="(sub,index) in subPrograms" :key="sub.id" class="w-full flex flex-col justify-start items-start gap-2 bg-gray-100 p-4 rounded-2xl">
-                    <span class="text-sm font-medium uppercase bg-sky-200 px-2 rounded-full">{{ sub.name }}</span>
+                <Panel v-for="(sub,key) in subPrograms" :key="sub.id" :header="key" class="w-full" toggleable>
+                    <div class="w-full flex flex-col justify-start items-start gap-4">
+                        <div v-for="ind in sub" class="w-full flex flex-col justify-start items-start gap-2 p-2 bg-sky-100">
+                            <span>{{ ind.name }}</span>
+                            <div class="w-full grid grid-cols-4 gap-4">
+                                <FloatLabel variant="on" class="w-full">
+                                    <InputNumber v-model="ind.male" class="w-full"/>
+                                    <label class="text-sm">Male</label>
+                                </FloatLabel>
+                                <FloatLabel variant="on" class="w-full">
+                                    <InputNumber v-model="ind.female" class="w-full"/>
+                                    <label class="text-sm">Female</label>
+                                </FloatLabel>
+                                <FloatLabel variant="on" class="w-full">
+                                    <InputNumber v-model="ind.four_ps" class="w-full"/>
+                                    <label class="text-sm">4Ps</label>
+                                </FloatLabel>
+                                <FloatLabel variant="on" class="w-full">
+                                    <InputNumber v-model="ind.not_identified" class="w-full"/>
+                                    <label class="text-sm">Not Identified</label>
+                                </FloatLabel>
+                            </div>
+                        </div>
+                    </div>
+                </Panel>
+
+                <div class="w-full flex flex-col justify-start items-start gap-2 p-2 bg-gray-100">
+                    <span>Total number of individuals who availed more than 1 service</span>
                     <div class="w-full grid grid-cols-4 gap-4">
                         <FloatLabel variant="on" class="w-full">
-                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <InputNumber v-model="reportUnique.male" class="w-full"/>
                             <label class="text-sm">Male</label>
                         </FloatLabel>
                         <FloatLabel variant="on" class="w-full">
-                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <InputNumber v-model="reportUnique.female" class="w-full"/>
                             <label class="text-sm">Female</label>
                         </FloatLabel>
                         <FloatLabel variant="on" class="w-full">
-                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <InputNumber v-model="reportUnique.four_ps" class="w-full"/>
                             <label class="text-sm">4Ps</label>
                         </FloatLabel>
                         <FloatLabel variant="on" class="w-full">
-                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <InputNumber v-model="reportUnique.not_identified" class="w-full"/>
                             <label class="text-sm">Not Identified</label>
                         </FloatLabel>
                     </div>
@@ -103,27 +129,41 @@
     const subPrograms = ref([])
 
     const report = ref({})
+    const reportUnique = ref({
+        male:0,
+        female:0,
+        four_ps:0,
+        not_identified:0
+    })
     
 
     onMounted(() => {
         handledBarangays.value = auth.teams?.flatMap(team => team.barangays) || [];
-        getActiveSubPrograms()
+        getIndicatorsGrouped()
     })
 
-    const getActiveSubPrograms = () => {
-        axios.get('sub-program/selection', {
+    const getIndicatorsGrouped = () => {
+        axios.get('indicator/grouped-by-sub_programs', {
             params: {}
         })
         .then((response) => {
-          subPrograms.value = response.data.map(sub => {
-            return {
-                ...sub,
-                male:0,
-                female:0,
-                not_identified:0,
-                four_ps:0
-            }
-          })
+
+          const grouped = {};
+
+            Object.keys(response.data).forEach(subProgramName => {
+                grouped[subProgramName] = response.data[subProgramName].map(indicator => {
+                    return {
+                        ...indicator,
+                        male: 0,
+                        female: 0,
+                        four_ps: 0,
+                        not_identified: 0
+                    };
+                });
+            });
+
+            subPrograms.value = grouped;
+
         })
         .catch((error) => {
             console.log(error)
