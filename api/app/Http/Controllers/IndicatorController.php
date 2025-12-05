@@ -35,7 +35,7 @@ class IndicatorController extends Controller
             'id' => 'required|numeric',
             'name' => 'required|string',
             'active' => 'required|boolean',
-            'type' => 'required|string',
+            'type' => 'nullable|string',
         ]);
 
         Indicator::find($validated['id'])->update($validated);

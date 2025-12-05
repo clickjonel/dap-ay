@@ -32,7 +32,8 @@ class DatabaseSeeder extends Seeder
             //BaguioInitialReportsSeeder::class,
 
             //AbraInitialReportsSeeder::class,
-            GIDASeeder::class
+            GIDASeeder::class,
+            IndicatorSeeder::class,
         ]);
     }
 }

@@ -35,6 +35,9 @@ return new class extends Migration
             $table->integer('target_purok')->nullable();
             $table->integer('target_population')->nullable();
 
+            //activity totals
+            $table->integer('total_lsa_conducted')->default(0);//large scale activity
+            $table->integer('total_ssa_conducted')->default(0);//small scale activity
         });
 
         Schema::create('barangay_priority_programs', function (Blueprint $table) {

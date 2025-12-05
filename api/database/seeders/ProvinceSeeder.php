@@ -75,7 +75,9 @@ class ProvinceSeeder extends Seeder
                         'longitude' => null,
                         'total_purok' => null,
                         'target_purok' => null,
-                        'target_population' => null
+                        'target_population' => null,
+                        'total_lsa_conducted' => 0,//large scale activity
+                        'total_ssa_conducted' => 0,//small scale activity
                     ]);
                     
                 }

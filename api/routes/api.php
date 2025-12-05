@@ -134,29 +134,6 @@ Route::group([
         // Route::post('/update',[TeamController::class,'updateTeam']);
     });
 
-     // Activity
-    Route::group([
-        'prefix' => '/activity'
-    ],function(){
-        Route::get('/list',[ActivityController::class,'list']);
-        Route::post('/create',[ActivityController::class,'createActivity']);
-        Route::post('/update',[ActivityController::class,'updateActivity']);
-        Route::get('/find',[ActivityController::class,'findActivity']);
-
-        Route::post('/program/add',[ActivityController::class,'addProgram']);
-        Route::post('/program/delete',[ActivityController::class,'deleteActivityProgram']);
-
-        Route::post('/barangay/add',[ActivityController::class,'addBarangay']);
-        Route::post('/barangay/delete',[ActivityController::class,'deleteActivityBarangay']);
-
-        Route::post('/resource/add',[ActivityController::class,'addResource']);
-        Route::post('/resource/delete',[ActivityController::class,'deleteActivityResource']);
-
-        Route::post('/populate-indicators',[ActivityController::class,'populateIndicators']);
-
-        Route::get('/report',[ActivityController::class,'getActivityReportData']);
-    });
-
     // indicator
     Route::group([
         'prefix' => '/indicator'

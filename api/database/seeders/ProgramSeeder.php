@@ -190,6 +190,22 @@ class ProgramSeeder extends Seeder
                     ]
                 ]
             ],
+                        [
+                'name' => 'Adolescent Health and Development Program',
+                'code' => 'AHD',
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'sub_programs' => [
+                    [
+                        'name' => 'Adolescent Health and Development Program',
+                        'code' => 'AHD',
+                        'active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                ]
+            ],
         ];
 
         foreach ($programs as $programData) {

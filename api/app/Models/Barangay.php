@@ -21,7 +21,9 @@ class Barangay extends Model
         'longitude',
         'total_purok',
         'target_purok',
-        'target_population'
+        'target_population',
+        'total_lsa_conducted',//large scale activity
+        'total_ssa_conducted',//small scale activity
     ];
 
     public function municipality()
