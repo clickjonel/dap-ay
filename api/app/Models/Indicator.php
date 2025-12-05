@@ -13,7 +13,6 @@ class Indicator extends Model
         'name',
         'sub_program_id',
         'active',
-        'type',
     ];
      protected $casts = [
         'active' => 'boolean',
@@ -22,11 +21,6 @@ class Indicator extends Model
     public function subProgram()
     {
         return $this->belongsTo(SubProgram::class,'sub_program_id');
-    }
-
-    public function disaggregations()
-    {
-        return $this->hasMany(IndicatorDisaggregation::class,'indicator_id','id');
     }
 
     public function reportValues()

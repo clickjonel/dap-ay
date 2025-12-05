@@ -14,15 +14,7 @@
                         class="w-full" 
                         input-class="w-full"
                     />
-                    <label class="text-sm">Report Start</label>
-                </FloatLabel>
-                <FloatLabel variant="on" class="w-full">
-                    <DatePicker 
-                        v-model="report.end" 
-                        class="w-full" 
-                        input-class="w-full"
-                    />
-                    <label class="text-sm">Report End</label>
+                    <label class="text-sm">Report Date</label>
                 </FloatLabel>
                 <FloatLabel variant="on" class="w-full">
                     <Select v-model="report.barangay_id" 
@@ -36,29 +28,31 @@
            </div>
         </Panel>
 
-        <Panel header="Current Indicators" class="w-full">
+        <Panel header="Programs" class="w-full">
             <div class="w-full flex flex-col justify-start items-start gap-4">
 
-                <span class="my-4 italic font-light text-sm text-amber-600">Important: Indicators are initially set to zero, update indicator values as applicable. Include Breakdowns if possible, an icon next to the indicator will show once the indicator is more than 0. Check values inputted before submitting to ensure data correctness to avoid data mismatch.</span>
+                <span class="my-4 italic font-light text-sm text-amber-600">Important: Fill up data by service of each program and disaggregated by Male, Female, Not Identified and 4Ps Benificiary.</span>
 
-                <div v-for="(ind,index) in indicators" :key="index" class="w-full flex flex-col justify-start items-start gap-2 bg-gray-100 p-4 rounded-2xl">
-                    <div class="w-full flex justify-center items-center gap-4">
+                <div v-for="(sub,index) in subPrograms" :key="sub.id" class="w-full flex flex-col justify-start items-start gap-2 bg-gray-100 p-4 rounded-2xl">
+                    <span class="text-sm font-medium uppercase bg-sky-200 px-2 rounded-full">{{ sub.name }}</span>
+                    <div class="w-full grid grid-cols-4 gap-4">
                         <FloatLabel variant="on" class="w-full">
-                            <InputNumber v-model="ind.value" class="w-full"/>
-                            <label class="text-sm">{{ ind.name }}</label>
+                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <label class="text-sm">Male</label>
                         </FloatLabel>
-
-                        <Button 
-                            @click="openBreakdownModal(index)" 
-                            v-tooltip.left="'Add Breakdown of Total Inputted'" 
-                            icon="pi pi-plus" 
-                            rounded 
-                            outlined 
-                            severity="help" 
-                            size="small"
-                        />
+                        <FloatLabel variant="on" class="w-full">
+                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <label class="text-sm">Female</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on" class="w-full">
+                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <label class="text-sm">4Ps</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on" class="w-full">
+                            <InputNumber v-model="sub.male" class="w-full"/>
+                            <label class="text-sm">Not Identified</label>
+                        </FloatLabel>
                     </div>
-                    
                 </div>
 
             </div>
@@ -106,26 +100,30 @@
     })
 
     const handledBarangays = ref([])
-    const indicators = ref([])
+    const subPrograms = ref([])
 
     const report = ref({})
     
 
     onMounted(() => {
         handledBarangays.value = auth.teams?.flatMap(team => team.barangays) || [];
-        getActiveIndicators()
+        getActiveSubPrograms()
     })
 
-    const getActiveIndicators = () => {
-        axios.get('indicator/active', {
+    const getActiveSubPrograms = () => {
+        axios.get('sub-program/selection', {
             params: {}
         })
         .then((response) => {
-            indicators.value = response.data
-            indicators.value = indicators.value.map(ind => {
-                ind.value = 0;
-                return ind;
-            });
+          subPrograms.value = response.data.map(sub => {
+            return {
+                ...sub,
+                male:0,
+                female:0,
+                not_identified:0,
+                four_ps:0
+            }
+          })
         })
         .catch((error) => {
             console.log(error)
@@ -138,28 +136,28 @@
 
     const save = () => {
         // Validation
-        if (!report.value.start || !report.value.end || !report.value.barangay_id) {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all report details', life: 3000 });
-            return;
-        }
+        // if (!report.value.start || !report.value.end || !report.value.barangay_id) {
+        //     toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all report details', life: 3000 });
+        //     return;
+        // }
 
-        axios.post('report/create', {
-            values: indicators.value,
-            created_by: auth.user.id,
-            start: report.value.start,
-            end: report.value.end,
-            barangay_id: report.value.barangay_id ?? null
-        })
-        .then((response) => {
-            toast.add({ severity: 'success', summary: 'Report Submitted', detail: response.data, life: 3000 });
-            router.push('/reports')
-        })
-        .catch((error) => {
-            toast.add({ severity: 'error', summary: 'Error', detail: error.response?.data?.message, life: 3000 });
-        })
-        .finally(() => {
+        // axios.post('report/create', {
+        //     values: indicators.value,
+        //     created_by: auth.user.id,
+        //     start: report.value.start,
+        //     end: report.value.end,
+        //     barangay_id: report.value.barangay_id ?? null
+        // })
+        // .then((response) => {
+        //     toast.add({ severity: 'success', summary: 'Report Submitted', detail: response.data, life: 3000 });
+        //     router.push('/reports')
+        // })
+        // .catch((error) => {
+        //     toast.add({ severity: 'error', summary: 'Error', detail: error.response?.data?.message, life: 3000 });
+        // })
+        // .finally(() => {
 
-        })
+        // })
     }
 
 

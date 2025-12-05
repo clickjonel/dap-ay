@@ -27,4 +27,12 @@ class SubProgram extends Model
     {
         return $this->hasMany(Indicator::class, 'sub_program_id');
     }
+
+    //scopes
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
+    }
+
+    
 }

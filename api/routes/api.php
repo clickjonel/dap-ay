@@ -19,6 +19,7 @@ use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Models\Indicator;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -161,12 +162,11 @@ Route::group([
         'prefix' => '/indicator'
     ],function(){
         Route::post('/create',[IndicatorController::class,'create']);
-        Route::post('/disaggregation/create',[IndicatorController::class,'createDisaggregation']);
         Route::get('/list',[IndicatorController::class,'list']);
         Route::post('/update',[IndicatorController::class,'update']);
-        Route::post('/disaggregation/update',[IndicatorController::class,'updateDisaggregation']);
         Route::get('/active',[IndicatorController::class,'getActiveIndicators']);
         Route::get('/find',[IndicatorController::class,'findIndicator']);
+        Route::get('/grouped-by-sub_programs',[IndicatorController::class,'getIndicatorGroupedbySubProgram']);
     });
 
     Route::group([
@@ -227,3 +227,17 @@ Route::group([
     });
 
 });
+
+
+// Route::get('/test',function(){
+//     $indicators = Indicator::with(['subProgram'])->get();
+//      $indicators = $indicators->groupBy(function($indicator) {
+//         return $indicator->subProgram?->name ?? 'Others';
+//     });
+
+//     return response()->json([
+//         'status' => 'success',
+//         'data' => $indicators
+//     ]);
+
+// });

@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users','id');
-            $table->date('start');
-            $table->date('end');
+            $table->date('date')->nullable();
             $table->foreignId('barangay_id')->constrained('barangays','id');
             $table->timestamps();
         });

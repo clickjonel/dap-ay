@@ -68,34 +68,16 @@ class IndicatorController extends Controller
         return response()->json($indicator,200);
     }
 
-    public function updateDisaggregation(Request $request)
+    public function getIndicatorGroupedbySubProgram()
     {
-        $validated = $request->validate([
-            'id' => 'required|numeric',
-            'name' => 'required|string',
-            'totalable' => 'required|boolean',
-            'active' => 'required|boolean',
-        ]);
+        $indicators = Indicator::with(['subProgram'])->get();
+        $indicators = $indicators->groupBy(function($indicator) {
+            return $indicator->subProgram?->name ?? 'Other Indicators';
+        });
 
-        IndicatorDisaggregation::find($validated['id'])->update($validated);
-
-        return response()->json('Updated Indicator Disaggregation Successfully',201);
-
+        return response()->json($indicators,200);
     }
 
-    public function createDisaggregation(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'totalable' => 'required|boolean',
-            'active' => 'required|boolean',
-            'indicator_id' => 'required|numeric',
-        ]);
 
-        IndicatorDisaggregation::create($validated);
-
-        return response()->json('Created Indicator Disaggregation Successfully',201);
-
-    }
 
 }

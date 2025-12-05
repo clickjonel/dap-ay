@@ -2,19 +2,20 @@
   
     <div class="w-full min-h-full h-full flex flex-col justify-start items-start gap-4 overflow-y-auto p-2">
 
-        <AnnouncementPosters v-if="!loading"/>
+        
+
+
+        <!-- <AnnouncementPosters v-if="!loading"/>
         
         <Panel v-if="demographics" class="w-full">
             <template #header>
                 <div class="w-full flex justify-between items-center">
                     <span class="uppercase text-lg font-bold">Demographics</span>
-                    <!-- <Button @click="demographicsView = 'Chart'" v-if="demographicsView === 'Grid'" icon="pi pi-chart-pie" label="View Chart View" size="small"/>
-                    <Button @click="demographicsView = 'Grid'" v-if="demographicsView === 'Chart'" icon="pi pi-table" label="View Grid View" size="small"/> -->
                 </div>
-            </template>
+            </template> -->
 
             <!-- Totatlities -->
-            <div class="w-full grid grid-cols-3 gap-4 mb-4">
+            <!-- <div class="w-full grid grid-cols-3 gap-4 mb-4">
                 <Panel v-if="!loading" header="Total Provinces for CAR" class="w-full">
                     <span  class="text-5xl font-black">{{ demographics?.total_provinces }}</span>
                 </Panel>
@@ -31,10 +32,10 @@
                 <Skeleton v-if="loading" class="w-full" width="100%" height="100px"/>
             </div>
 
-            <span class="text-lg font-semibold">Provinces Demographics</span>
+            <span class="text-lg font-semibold">Provinces Demographics</span> -->
 
             <!-- Per Province -->
-            <div v-if="!loading" class="w-full grid grid-cols-4 gap-4 mb-4">
+            <!-- <div v-if="!loading" class="w-full grid grid-cols-4 gap-4 mb-4">
                 <Panel v-for="province in demographics.provinces" class="w-full">
                     <template #header>
                         <span>{{ province.name }}</span>
@@ -77,7 +78,7 @@
                  </div>
             </div>
         </Panel>
-        <Skeleton v-if="loading" class="w-full" width="100%" height="400px"/>
+        <Skeleton v-if="loading" class="w-full" width="100%" height="400px"/> -->
 
     </div>
 
@@ -100,26 +101,26 @@
     // const demographicsView = ref('Grid');
 
     onMounted(()=>{
-        axios.get('dashboard/admin',{
-            params:{
+        // axios.get('dashboard/admin',{
+        //     params:{
 
-            }
-        })
-        .then((response)=>{
-            console.log(response.data)
-            teamData.value = response.data.team
-            barangayData.value = response.data.barangayData
-            indicatorsValueSum.value = response.data.indicatorsValueSum
-            demographics.value = response.data.demographics
-            console.log(response.data.indicatorTotalsPerProvince)
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
-        .finally(()=>{
-            setTimeout(()=>{
-                loading.value = false
-            },1000)   
-        })
+        //     }
+        // })
+        // .then((response)=>{
+        //     console.log(response.data)
+        //     teamData.value = response.data.team
+        //     barangayData.value = response.data.barangayData
+        //     indicatorsValueSum.value = response.data.indicatorsValueSum
+        //     demographics.value = response.data.demographics
+        //     console.log(response.data.indicatorTotalsPerProvince)
+        // })
+        // .catch((error)=>{
+        //     console.log(error)
+        // })
+        // .finally(()=>{
+        //     setTimeout(()=>{
+        //         loading.value = false
+        //     },1000)   
+        // })
     })
 </script>

@@ -15,16 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('sub_program_id')->nullable()->constrained('sub_programs');
-            $table->string('type');
             $table->boolean('active');
-        });
-
-        Schema::create('indicator_disaggregations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('indicator_id')->constrained('indicators','id');
-            $table->string('name');
-            $table->boolean('totalable');
-            $table->boolean(column: 'active');
         });
 
     }
@@ -35,6 +26,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('indicators');
-        Schema::dropIfExists('indicator_disaggregations');
     }
 };

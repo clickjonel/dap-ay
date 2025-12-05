@@ -27,7 +27,7 @@ class User extends Authenticatable
         'nickname',
         'account_status',
         'user_level',
-        'pdoho_province_id'
+        'pdoho_province_id',
     ];
 
     public function getFullNameAttribute():string
