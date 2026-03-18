@@ -33,9 +33,9 @@ class AuthController extends Controller
             }
 
             return match ((int) $user->accessLevels->access_level) {
-                1 => redirect()->intended('/dashboard/access-level-one'), // Purok
-                2 => redirect()->intended('/dashboard/level-two'),        // Barangay
-                3 => redirect()->intended('/dashboard/level-three'),      // Municipal (Consolidation)
+                1 => redirect()->intended('/dashboard/access-level-one'), // admin
+                2 => redirect()->intended('/dashboard/access-level-two'),        // user
+                3 => redirect()->intended('/dashboard/level-three'),      // pdoho
                 
                 default => abort(404, 'Access Level Not Recognized'),
             };
@@ -45,4 +45,15 @@ class AuthController extends Controller
             'email' => 'The provided credentials do not match our health portal records.',
         ]);
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
+    }
+
 }

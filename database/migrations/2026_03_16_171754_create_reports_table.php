@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('total_clients');
             $table->integer('total_returning_clients');
             $table->unsignedBigInteger('barangay_id');
+            $table->text('remarks')->nullable();
+            $table->string('status')->nullable();
 
             $table->foreign('barangay_id')->references('id')->on('barangays')->onDelete('restrict');
             $table->timestamps();

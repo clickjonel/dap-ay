@@ -25,9 +25,9 @@ const navItems = [
         label: 'Dashboard',
         icon: 'hugeicons:dashboard-square-02',
         children: [
-            { label: 'User Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square'  },
-            { label: 'PDOHO Dashboard', href: '/dashboard/pdoho',            icon: 'hugeicons:building-03'  },
-            { label: 'Admin Dashboard', href: '/dashboard/admin',            icon: 'hugeicons:shield-user'  },
+            { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square'  },
+            { label: 'HRH Dashboard', href: '/dashboard/access-level-two',            icon: 'hugeicons:building-03'  },
+            { label: 'PDOHO Dashboard', href: '/dashboard/admin',            icon: 'hugeicons:shield-user'  },
         ],
     },
     {
@@ -312,24 +312,20 @@ const logout = () => {
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0 ml-4">
-                    <div class="relative">
-                        <Icon
-                            icon="hugeicons:search-01"
-                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            class="w-52 pl-9 pr-4 py-2 text-xs bg-slate-100 border border-transparent rounded-lg outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
-                        />
-                    </div>
+                    <button
+                        type="button"
+                        class="relative w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors flex-shrink-0"
+                        aria-label="Help"
+                    >
+                        <Icon icon="hugeicons:help-circle" class="text-base" />
+                    </button>
 
                     <button
                         type="button"
                         class="relative w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors flex-shrink-0"
-                        aria-label="Notifications"
+                        aria-label="Help"
                     >
-                        <Icon icon="hugeicons:notification-02" class="text-base" />
+                        <Icon icon="hugeicons:hotel-bell" class="text-base" />
                         <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full" />
                     </button>
                 </div>

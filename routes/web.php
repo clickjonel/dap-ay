@@ -31,7 +31,8 @@ Route::middleware('auth')->group(function () {
 
     //dashboard routes
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::get('access-level-one', [DashboardController::class, 'accessLevelOneDashboard'])->name('user');
+        Route::get('access-level-one', [DashboardController::class, 'accessLevelOneDashboard']);
+        Route::get('access-level-two', [DashboardController::class, 'accessLevelTwoDashboard']);
     });
 
     //program routes

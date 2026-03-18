@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAccessLevels::class,'user_id');
     }
+
+    public function teams()
+    {
+        return $this->hasManyThrough(Team::class, TeamMember::class, 'user_id', 'id', 'id', 'team_id');
+    }
 }
