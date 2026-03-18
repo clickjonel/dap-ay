@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             ProgramIndicatorDisaggregationsSeeder::class,
             UserSeeder::class,
             AbraUserSeeder::class,
-            BenguetUserSeeder::class
+            BenguetUserSeeder::class,
+            IfugaoUserSeeder::class,
         ]);
         
     }
