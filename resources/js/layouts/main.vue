@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import { usePage, router, Link } from '@inertiajs/vue3'
 import Popover from 'primevue/popover'
 import Divider from 'primevue/divider'
 import Toast from 'primevue/toast'
+import { ref } from 'vue'
 
 // ── Inertia page props ─────────────────────────────────
 const page = usePage()
@@ -25,81 +26,93 @@ const navItems = [
         label: 'Dashboard',
         icon: 'hugeicons:dashboard-square-02',
         children: [
-            { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square'  },
-            { label: 'HRH Dashboard', href: '/dashboard/access-level-two',            icon: 'hugeicons:building-03'  },
-            { label: 'PDOHO Dashboard', href: '/dashboard/admin',            icon: 'hugeicons:shield-user'  },
+            { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square', accessLevels: [1] },
+            { label: 'HRH Dashboard',    href: '/dashboard/access-level-two', icon: 'hugeicons:building-03', accessLevels: [2] },
+            { label: 'PDOHO Dashboard',  href: '/dashboard/admin',            icon: 'hugeicons:shield-user', accessLevels: [3] },
         ],
+        accessLevels: [1, 2, 3]
     },
     {
         id: 'program',
         label: 'Program',
         icon: 'hugeicons:folder-library',
         children: [
-            { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01' },
+            { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01' , accessLevels: [1,3]},
         ],
+        accessLevels: [1, 3]
     },
     {
         id: 'indicator',
         label: 'Indicator',
         icon: 'hugeicons:chart-increase',
         children: [
-            { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up' },
-            { label: 'Program Indicators', href: '/indicator/program', icon: 'hugeicons:analytics-up' },
+            { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
+            { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
         ],
+        accessLevels: [1, 3]
     },
     {
         id: 'disaggregation',
         label: 'Disaggregation',
         icon: 'hugeicons:chart-increase',
         children: [
-            { label: 'Disaggregations', href: '/disaggregations', icon: 'hugeicons:analytics-up' },
+            { label: 'Disaggregations', href: '/disaggregations', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
         ],
+        accessLevels: [1, 3]
     },
     {
         id: 'barangay',
         label: 'Barangay',
         icon: 'hugeicons:maps-location-01',
         children: [
-            { label: 'Barangays', href: '/barangays', icon: 'hugeicons:home-07' },
+            { label: 'Barangays', href: '/barangays', icon: 'hugeicons:home-07', accessLevels: [1,2,3] },
         ],
+        accessLevels: [1, 2, 3]
     },
     {
         id: 'team',
         label: 'Team',
         icon: 'hugeicons:user-multiple-02',
         children: [
-            { label: 'Teams', href: '/teams', icon: 'hugeicons:user-group' },
+            { label: 'Teams', href: '/teams', icon: 'hugeicons:user-group', accessLevels: [1,2,3] },
         ],
+        accessLevels: [1, 2, 3]
     },
     {
         id: 'report',
         label: 'Report',
         icon: 'hugeicons:file-02',
         children: [
-            { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done' },
+            { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1,2,3] },
         ],
+        accessLevels: [1, 2, 3]
     },
 ]
+
+// ── Access level ───────────────────────────────────────
+const userLevel = computed(() => user.value?.access_levels?.access_level)
+
+const visibleNavItems = computed(() =>
+    navItems
+        .filter(item => item.accessLevels.includes(userLevel.value))
+        .map(item => ({
+            ...item,
+            children: item.children.filter(child => child.accessLevels.includes(userLevel.value))
+        }))
+)
 
 // ── Active state derived from URL ──────────────────────
 const isActive = (href) => href !== '#' && page.url.startsWith(href)
 
 const activeLabel = computed(() => {
-    for (const item of navItems) {
+    for (const item of visibleNavItems.value) {
         const match = item.children.find(c => isActive(c.href))
         if (match) return match.label
     }
     return ''
 })
 
-// ── Sidebar state ──────────────────────────────────────
-// Auto-expand the group that contains the current URL
-const expandedMenus = ref(
-    navItems
-        .filter(item => item.children.some(c => isActive(c.href)))
-        .map(item => item.id)
-)
-
+// ── Popover ────────────────────────────────────────────
 const popoverRef = ref(null)
 
 // ── User popover menu ───────────────────────────────────
@@ -111,15 +124,6 @@ const userMenuItems = [
 ]
 
 // ── Helpers ─────────────────────────────────────────────
-const isExpanded = (id) => expandedMenus.value.includes(id)
-
-const toggleMenu = (id) => {
-    const idx = expandedMenus.value.indexOf(id)
-    idx > -1
-        ? expandedMenus.value.splice(idx, 1)
-        : expandedMenus.value.push(id)
-}
-
 const togglePopover = (event) => {
     popoverRef.value?.toggle(event)
 }
@@ -134,7 +138,6 @@ const logout = () => {
 
         <!-- ── Sidebar ───────────────────────────────────── -->
         <aside class="w-64 flex-shrink-0 flex flex-col h-full bg-white border-r border-slate-200">
-
             <!-- Brand -->
             <div class="flex items-center gap-3 px-5 h-16 border-b border-slate-100 flex-shrink-0">
                 <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200 flex-shrink-0">
@@ -148,67 +151,36 @@ const logout = () => {
 
             <!-- Nav -->
             <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5 scrollbar-none">
-                <div v-for="item in navItems" :key="item.id">
+                <div v-for="item in visibleNavItems" :key="item.id" class="mb-1">
 
-                    <!-- Parent toggle -->
-                    <button
-                        type="button"
-                        @click="toggleMenu(item.id)"
-                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-150"
-                        :class="isExpanded(item.id)
-                            ? 'bg-slate-100 text-slate-700'
-                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'"
-                    >
-                        <div class="flex items-center gap-3 min-w-0">
-                            <Icon
-                                :icon="item.icon"
-                                class="text-base flex-shrink-0 transition-colors"
-                                :class="isExpanded(item.id) ? 'text-indigo-500' : 'text-slate-400'"
-                            />
-                            <span class="text-xs font-semibold tracking-wide truncate">{{ item.label }}</span>
-                        </div>
-                        <Icon
-                            icon="hugeicons:arrow-right-01"
-                            class="text-xs flex-shrink-0 text-slate-300 transition-transform duration-200"
-                            :class="isExpanded(item.id) ? 'rotate-90' : ''"
-                        />
-                    </button>
+                    <!-- Section label -->
+                    <p class="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+                        {{ item.label }}
+                    </p>
 
-                    <!-- Children -->
-                    <Transition
-                        enter-active-class="transition-all duration-200 ease-out"
-                        enter-from-class="opacity-0 -translate-y-1"
-                        enter-to-class="opacity-100 translate-y-0"
-                        leave-active-class="transition-all duration-150 ease-in"
-                        leave-from-class="opacity-100 translate-y-0"
-                        leave-to-class="opacity-0 -translate-y-1"
-                    >
-                        <div
-                            v-show="isExpanded(item.id)"
-                            class="ml-4 mt-0.5 mb-1 pl-3 border-l-2 border-slate-100 space-y-0.5"
+                    <!-- Children (always visible) -->
+                    <div class="ml-4 pl-3 border-l-2 border-slate-100 space-y-0.5">
+                        <Link
+                            v-for="child in item.children"
+                            :key="child.label"
+                            :href="child.href"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors duration-150"
+                            :class="isActive(child.href)
+                                ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 font-medium'"
                         >
-                            <Link
-                                v-for="child in item.children"
-                                :key="child.label"
-                                :href="child.href"
-                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors duration-150"
-                                :class="isActive(child.href)
-                                    ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 font-medium'"
-                            >
-                                <span
-                                    class="w-1 h-1 rounded-full flex-shrink-0 transition-colors"
-                                    :class="isActive(child.href) ? 'bg-indigo-500' : 'bg-slate-300'"
-                                />
-                                <Icon
-                                    :icon="child.icon"
-                                    class="text-sm flex-shrink-0 transition-colors"
-                                    :class="isActive(child.href) ? 'text-indigo-500' : 'text-slate-400'"
-                                />
-                                <span class="truncate">{{ child.label }}</span>
-                            </Link>
-                        </div>
-                    </Transition>
+                            <span
+                                class="w-1 h-1 rounded-full flex-shrink-0 transition-colors"
+                                :class="isActive(child.href) ? 'bg-indigo-500' : 'bg-slate-300'"
+                            />
+                            <Icon
+                                :icon="child.icon"
+                                class="text-sm flex-shrink-0 transition-colors"
+                                :class="isActive(child.href) ? 'text-indigo-500' : 'text-slate-400'"
+                            />
+                            <span class="truncate">{{ child.label }}</span>
+                        </Link>
+                    </div>
 
                 </div>
             </nav>
@@ -323,7 +295,7 @@ const logout = () => {
                     <button
                         type="button"
                         class="relative w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors flex-shrink-0"
-                        aria-label="Help"
+                        aria-label="Notifications"
                     >
                         <Icon icon="hugeicons:hotel-bell" class="text-base" />
                         <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full" />
@@ -340,7 +312,7 @@ const logout = () => {
         </div>
 
         <Toast position="bottom-right" />
-        
+
     </div>
 </template>
 

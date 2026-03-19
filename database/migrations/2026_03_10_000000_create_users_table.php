@@ -34,7 +34,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             // $table->unsignedBigInteger('program_access_id')->nullable();//if user is program head
             $table->unsignedBigInteger('pdoho_access_id')->nullable();//if user is pdoho staff
-            $table->string('access_level');
+            $table->integer('access_level');
 
             $table->foreign('pdoho_access_id')->references('id')->on('provinces')->onDelete('restrict');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');

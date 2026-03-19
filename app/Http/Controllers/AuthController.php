@@ -34,8 +34,8 @@ class AuthController extends Controller
 
             return match ((int) $user->accessLevels->access_level) {
                 1 => redirect()->intended('/dashboard/access-level-one'), // admin
-                2 => redirect()->intended('/dashboard/access-level-two'),        // user
-                3 => redirect()->intended('/dashboard/level-three'),      // pdoho
+                2 => redirect()->intended('/dashboard/access-level-two'), // user
+                3 => redirect()->intended('/dashboard/level-three'), // pdoho
                 
                 default => abort(404, 'Access Level Not Recognized'),
             };
