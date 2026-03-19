@@ -27,6 +27,9 @@ class BarangayController extends Controller
                         ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userBarangayIDs) {
                             $query->whereIn('id', $userBarangayIDs);
                         })
+                        ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
+                            $query->where('province_id', $request->user()->accessLevels->pdoho_access_id);
+                        })
                         ->when($request->search, function ($query, $search) {
                             $query->where('name', 'like', "%{$search}%")
                                 ->orWhere('psgc_code', 'like', "%{$search}%");
