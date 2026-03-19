@@ -49,4 +49,5 @@ class Barangay extends Model
         return $this->hasMany(BarangayPriorityProgram::class,'barangay_id')->with('program');
     }
 
+
 }

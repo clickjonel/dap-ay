@@ -14,27 +14,39 @@ class BarangayController extends Controller
      */
     public function index(Request $request)
     {
+        $userBarangayIDs = $request->user()
+        ->teams()
+        ->with('barangays:id')
+        ->get()
+        ->pluck('barangays')
+        ->flatten()
+        ->pluck('id')
+        ->unique();
+
         $barangays = Barangay::query()
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('psgc_code', 'like', "%{$search}%");
-            })
-            ->with([
-                'province',
-                'municipality',
-                'pkProfile',
-                'organizationalIndicators',
-                'geography',
-                'population'
-            ])
-            ->orderBy('id','desc')
-            ->paginate(10)
-            ->withQueryString();
+                        ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userBarangayIDs) {
+                            $query->whereIn('id', $userBarangayIDs);
+                        })
+                        ->when($request->search, function ($query, $search) {
+                            $query->where('name', 'like', "%{$search}%")
+                                ->orWhere('psgc_code', 'like', "%{$search}%");
+                        })
+                        ->with([
+                            'province',
+                            'municipality',
+                            'pkProfile',
+                            'organizationalIndicators',
+                            'geography',
+                            'population'
+                        ])
+                        ->orderBy('id','desc')
+                        ->paginate(10)
+                        ->withQueryString();
 
         return inertia('barangay/barangays', [
             'barangays' => $barangays,
             'filters'   => $request->only('search'),
-            'provinces'      => Inertia::lazy(fn () => Province::with(['municipalities'])->orderBy('name')->get())
+            'provinces'      => Inertia::lazy(fn () => Province::with(['municipalities'])->orderBy('name')->get()),
         ]);
     }
 
