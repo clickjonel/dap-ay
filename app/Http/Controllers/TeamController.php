@@ -13,7 +13,12 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
+        $userTeamIDs = $request->user()->teams->pluck('id')->toArray();
+
         $teams = Team::query()
+            ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
+                $query->whereIn('id', $userTeamIDs);
+            })
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
