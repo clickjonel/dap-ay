@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KalingaUserSeeder extends Seeder
+class MPUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class KalingaUserSeeder extends Seeder
         $users = DB::connection('dohis')
             ->table('dohis_hrh_user as u')
             ->join('dohis_hrh_user_assignment as ua', 'ua.hrh_user_id', '=', 'u.hrh_user_id')
-            ->where('ua.section_id', 8)
+            ->where('ua.section_id', 9)
             ->select(
                 'u.email_address as email',
                 DB::raw("CONCAT(u.first_name, ' ', LEFT(u.middle_name,1), '. ', u.last_name) as full_name")
@@ -35,7 +35,7 @@ class KalingaUserSeeder extends Seeder
 
             if ($createdUser->wasRecentlyCreated) {
                 $createdUser->accessLevels()->create([
-                    'pdoho_access_id' => 4,
+                    'pdoho_access_id' => 5,
                     'access_level' => 2,
                 ]);
             }
