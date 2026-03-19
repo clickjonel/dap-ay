@@ -26,6 +26,11 @@ class ReportController extends Controller
             'barangay.province',
             'users'
         ])
+        ->when($request->user()->accessLevels->access_level === 2, function ($query, $search) use ($request) {
+            $query->whereHas('users', function ($q) use ($request) {
+                $q->where('user_id', $request->user()->id);
+            });
+        })
         ->when($request->search, function ($query, $search) {
             $query->whereHas('barangay', fn($q) => $q->where('name', 'like', "%{$search}%"))
                   ->orWhereHas('users', fn($q) => $q->where('name', 'like', "%{$search}%"));
