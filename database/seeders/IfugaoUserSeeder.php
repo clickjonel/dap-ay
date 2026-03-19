@@ -35,8 +35,8 @@ class IfugaoUserSeeder extends Seeder
 
             if ($createdUser->wasRecentlyCreated) {
                 $createdUser->accessLevels()->create([
-                    'pdoho_access_id' => 1,
-                    'access_level' => 3,
+                    'pdoho_access_id' => 3,
+                    'access_level' => 2,
                 ]);
             }
         }
