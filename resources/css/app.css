@@ -8,7 +8,7 @@
 
 @theme {
     --font-sans:
-        'Poppins', ui-sans-serif, system-ui, sans-serif,
+        /* 'Poppins', ui-sans-serif, system-ui, sans-serif, */
         'Lexend Deca', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';

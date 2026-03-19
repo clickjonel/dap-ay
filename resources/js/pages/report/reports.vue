@@ -5,6 +5,8 @@ import { Icon } from '@iconify/vue'
 import { useToast } from 'primevue/usetoast'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
+import Dialog from 'primevue/dialog'
+import Select from 'primevue/select'
 
 const toast = useToast()
 const search = ref('')
@@ -33,6 +35,37 @@ function deleteReport(id) {
         onSuccess: () => toast.add({ severity: 'success', summary: 'Deleted', life: 3000 }),
     })
 }
+
+// ── Status dialog ──────────────────────────────────────
+const statusDialog = ref(false)
+const selectedReport = ref(null)
+const selectedStatus = ref(null)
+const statusOptions = [
+    // add your statuses here, e.g.:
+    // { label: 'Pending',  value: 'pending'  },
+    // { label: 'Approved', value: 'approved' },
+    // { label: 'Rejected', value: 'rejected' },
+]
+
+// function openStatusDialog(report) {
+//     selectedReport.value = report
+//     selectedStatus.value = report.status ?? null
+//     statusDialog.value = true
+// }
+
+// function submitStatus() {
+//     if (!selectedStatus.value) return
+//     router.patch(`reports/${selectedReport.value.id}/status`, { status: selectedStatus.value }, {
+//         preserveScroll: true,
+//         onSuccess: () => {
+//             toast.add({ severity: 'success', summary: 'Status updated', life: 3000 })
+//             statusDialog.value = false
+//         },
+//         onError: () => {
+//             toast.add({ severity: 'error', summary: 'Failed to update status', life: 3000 })
+//         },
+//     })
+// }
 </script>
 
 <template>
@@ -188,6 +221,13 @@ function deleteReport(id) {
                             >
                                 <Icon icon="hugeicons:pencil-edit-02" class="text-sm" />
                             </button>
+                            <!-- <button
+                                @click="openStatusDialog(report)"
+                                class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                                title="Set Status"
+                            >
+                                <Icon icon="hugeicons:task-done-01" class="text-sm" />
+                            </button> -->
                         </div>
                     </td>
                 </tr>
@@ -218,6 +258,70 @@ function deleteReport(id) {
             </div>
         </div>
     </div>
+
+    <!-- ── Status Dialog ──────────────────────────────── -->
+    <Dialog
+        v-model:visible="statusDialog"
+        modal
+        :draggable="false"
+        header="Set Report Status"
+        class="w-full max-w-sm"
+    >
+        <div class="flex flex-col gap-4 pt-1">
+
+            <!-- Report info -->
+            <div class="flex items-center gap-2.5 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                    <Icon icon="hugeicons:location-04" class="text-indigo-400 text-sm" />
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-semibold text-slate-700 truncate">
+                        {{ selectedReport?.barangay?.name ?? '—' }}
+                    </p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        {{ selectedReport?.date
+                            ? new Date(selectedReport.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            : '—' }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Status dropdown -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-slate-600">Status</label>
+                <Select
+                    v-model="selectedStatus"
+                    :options="statusOptions"
+                    option-label="label"
+                    option-value="value"
+                    placeholder="Select a status..."
+                    class="w-full text-xs"
+                />
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <template #footer>
+            <div class="flex justify-end gap-2">
+                <button
+                    type="button"
+                    @click="statusDialog = false"
+                    class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    :disabled="!selectedStatus"
+                    @click="submitStatus"
+                    class="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    Save Status
+                </button>
+            </div>
+        </template>
+    </Dialog>
 
 </div>
 </template>
