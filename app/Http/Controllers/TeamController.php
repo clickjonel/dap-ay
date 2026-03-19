@@ -19,6 +19,9 @@ class TeamController extends Controller
             ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
                 $query->whereIn('id', $userTeamIDs);
             })
+            // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
+            //     $query->whereIn('id', $userTeamIDs);
+            // })
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })

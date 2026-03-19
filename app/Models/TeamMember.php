@@ -19,4 +19,10 @@ class TeamMember extends Model
     protected $casts = [
         'pk_oriented' => 'boolean',
     ];
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+    
 }
