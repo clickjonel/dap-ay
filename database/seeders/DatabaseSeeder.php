@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             AbraUserSeeder::class,
             BenguetUserSeeder::class,
             IfugaoUserSeeder::class,
+            KalingaUserSeeder::class,
+            ApayaoUserSeeder::class,
+            MPUserSeeder::class,
         ]);
         
     }

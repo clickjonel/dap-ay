@@ -11,6 +11,8 @@ class Report extends Model
         'total_clients',
         'total_returning_clients',
         'date',
+        'remarks',
+        'status'
     ];
 
     public function barangay()
