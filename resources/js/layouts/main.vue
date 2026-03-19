@@ -1,136 +1,139 @@
 <script setup>
-import { computed } from 'vue'
-import { Icon } from '@iconify/vue'
-import { usePage, router, Link } from '@inertiajs/vue3'
-import Popover from 'primevue/popover'
-import Divider from 'primevue/divider'
-import Toast from 'primevue/toast'
-import { ref } from 'vue'
+    import { computed } from 'vue'
+    import { Icon } from '@iconify/vue'
+    import { usePage, router, Link } from '@inertiajs/vue3'
+    import Popover from 'primevue/popover'
+    import Divider from 'primevue/divider'
+    import Toast from 'primevue/toast'
+    import { ref, provide } from 'vue'
 
-// ── Inertia page props ─────────────────────────────────
-const page = usePage()
-const user = computed(() => page.props?.auth?.user)
-const userInitials = computed(() =>
-    user.value.name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-)
+    // ── Inertia page props ─────────────────────────────────
+    const page = usePage()
+    const user = computed(() => page.props?.auth?.user)
+    const userInitials = computed(() =>
+        user.value.name
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2)
+    )
 
-// ── Navigation ─────────────────────────────────────────
-const navItems = [
-    {
-        id: 'dashboard',
-        label: 'Dashboard',
-        icon: 'hugeicons:dashboard-square-02',
-        children: [
-            { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square', accessLevels: [1] },
-            { label: 'HRH Dashboard',    href: '/dashboard/access-level-two', icon: 'hugeicons:building-03', accessLevels: [2] },
-            { label: 'PDOHO Dashboard',  href: '/dashboard/admin',            icon: 'hugeicons:shield-user', accessLevels: [3] },
-        ],
-        accessLevels: [1, 2, 3]
-    },
-    {
-        id: 'program',
-        label: 'Program',
-        icon: 'hugeicons:folder-library',
-        children: [
-            { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01' , accessLevels: [1,3]},
-        ],
-        accessLevels: [1, 3]
-    },
-    {
-        id: 'indicator',
-        label: 'Indicator',
-        icon: 'hugeicons:chart-increase',
-        children: [
-            { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
-            { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
-        ],
-        accessLevels: [1, 3]
-    },
-    {
-        id: 'disaggregation',
-        label: 'Disaggregation',
-        icon: 'hugeicons:chart-increase',
-        children: [
-            { label: 'Disaggregations', href: '/disaggregations', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
-        ],
-        accessLevels: [1, 3]
-    },
-    {
-        id: 'barangay',
-        label: 'Barangay',
-        icon: 'hugeicons:maps-location-01',
-        children: [
-            { label: 'Barangays', href: '/barangays', icon: 'hugeicons:home-07', accessLevels: [1,2,3] },
-        ],
-        accessLevels: [1, 2, 3]
-    },
-    {
-        id: 'team',
-        label: 'Team',
-        icon: 'hugeicons:user-multiple-02',
-        children: [
-            { label: 'Teams', href: '/teams', icon: 'hugeicons:user-group', accessLevels: [1,2,3] },
-        ],
-        accessLevels: [1, 2, 3]
-    },
-    {
-        id: 'report',
-        label: 'Report',
-        icon: 'hugeicons:file-02',
-        children: [
-            { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1,2,3] },
-        ],
-        accessLevels: [1, 2, 3]
-    },
-]
+    // ── Navigation ─────────────────────────────────────────
+    const navItems = [
+        {
+            id: 'dashboard',
+            label: 'Dashboard',
+            icon: 'hugeicons:dashboard-square-02',
+            children: [
+                { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square', accessLevels: [1] },
+                { label: 'HRH Dashboard',    href: '/dashboard/access-level-two', icon: 'hugeicons:building-03', accessLevels: [2] },
+                { label: 'PDOHO Dashboard',  href: '/dashboard/admin',            icon: 'hugeicons:shield-user', accessLevels: [3] },
+            ],
+            accessLevels: [1, 2, 3]
+        },
+        {
+            id: 'program',
+            label: 'Program',
+            icon: 'hugeicons:folder-library',
+            children: [
+                { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01' , accessLevels: [1,3]},
+            ],
+            accessLevels: [1, 3]
+        },
+        {
+            id: 'indicator',
+            label: 'Indicator',
+            icon: 'hugeicons:chart-increase',
+            children: [
+                { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
+                { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
+            ],
+            accessLevels: [1, 3]
+        },
+        {
+            id: 'disaggregation',
+            label: 'Disaggregation',
+            icon: 'hugeicons:chart-increase',
+            children: [
+                { label: 'Disaggregations', href: '/disaggregations', icon: 'hugeicons:analytics-up', accessLevels: [1,3] },
+            ],
+            accessLevels: [1, 3]
+        },
+        {
+            id: 'barangay',
+            label: 'Barangay',
+            icon: 'hugeicons:maps-location-01',
+            children: [
+                { label: 'Barangays', href: '/barangays', icon: 'hugeicons:home-07', accessLevels: [1,2,3] },
+            ],
+            accessLevels: [1, 2, 3]
+        },
+        {
+            id: 'team',
+            label: 'Team',
+            icon: 'hugeicons:user-multiple-02',
+            children: [
+                { label: 'Teams', href: '/teams', icon: 'hugeicons:user-group', accessLevels: [1,2,3] },
+            ],
+            accessLevels: [1, 2, 3]
+        },
+        {
+            id: 'report',
+            label: 'Report',
+            icon: 'hugeicons:file-02',
+            children: [
+                { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1,2,3] },
+            ],
+            accessLevels: [1, 2, 3]
+        },
+    ]
 
-// ── Access level ───────────────────────────────────────
-const userLevel = computed(() => user.value?.access_levels?.access_level)
+    // ── Access level ───────────────────────────────────────
+    const userLevel = computed(() => user.value?.access_levels?.access_level)
 
-const visibleNavItems = computed(() =>
-    navItems
-        .filter(item => item.accessLevels.includes(userLevel.value))
-        .map(item => ({
-            ...item,
-            children: item.children.filter(child => child.accessLevels.includes(userLevel.value))
-        }))
-)
+    //provide user data to child components
+    provide('user', user);
 
-// ── Active state derived from URL ──────────────────────
-const isActive = (href) => href !== '#' && page.url.startsWith(href)
+    const visibleNavItems = computed(() =>
+        navItems
+            .filter(item => item.accessLevels.includes(userLevel.value))
+            .map(item => ({
+                ...item,
+                children: item.children.filter(child => child.accessLevels.includes(userLevel.value))
+            }))
+    )
 
-const activeLabel = computed(() => {
-    for (const item of visibleNavItems.value) {
-        const match = item.children.find(c => isActive(c.href))
-        if (match) return match.label
+    // ── Active state derived from URL ──────────────────────
+    const isActive = (href) => href !== '#' && page.url.startsWith(href)
+
+    const activeLabel = computed(() => {
+        for (const item of visibleNavItems.value) {
+            const match = item.children.find(c => isActive(c.href))
+            if (match) return match.label
+        }
+        return ''
+    })
+
+    // ── Popover ────────────────────────────────────────────
+    const popoverRef = ref(null)
+
+    // ── User popover menu ───────────────────────────────────
+    const userMenuItems = [
+        { label: 'My Profile',       icon: 'hugeicons:user-circle',     badge: null },
+        { label: 'Account Settings', icon: 'hugeicons:settings-01',     badge: null },
+        { label: 'Notifications',    icon: 'hugeicons:notification-02', badge: 3    },
+        { label: 'Help & Support',   icon: 'hugeicons:help-circle',     badge: null },
+    ]
+
+    // ── Helpers ─────────────────────────────────────────────
+    const togglePopover = (event) => {
+        popoverRef.value?.toggle(event)
     }
-    return ''
-})
 
-// ── Popover ────────────────────────────────────────────
-const popoverRef = ref(null)
-
-// ── User popover menu ───────────────────────────────────
-const userMenuItems = [
-    { label: 'My Profile',       icon: 'hugeicons:user-circle',     badge: null },
-    { label: 'Account Settings', icon: 'hugeicons:settings-01',     badge: null },
-    { label: 'Notifications',    icon: 'hugeicons:notification-02', badge: 3    },
-    { label: 'Help & Support',   icon: 'hugeicons:help-circle',     badge: null },
-]
-
-// ── Helpers ─────────────────────────────────────────────
-const togglePopover = (event) => {
-    popoverRef.value?.toggle(event)
-}
-
-const logout = () => {
-    router.post('/logout')
-}
+    const logout = () => {
+        router.post('/logout')
+    }
 </script>
 
 <template>

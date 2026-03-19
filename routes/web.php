@@ -68,14 +68,14 @@ Route::middleware('auth')->group(function () {
 
     //team routes
     Route::resource('teams', TeamController::class);
-    Route::get('/teams/{team}/members', [TeamMemberController::class, 'index']); //manage members page
-    Route::post('/teams/{team}/members', [TeamMemberController::class, 'store']);//add member
-    Route::put('/teams/{team}/members/{member}', [TeamMemberController::class, 'update']);//update member
-    Route::delete('/teams/{team}/members/{team_member}', [TeamMemberController::class, 'destroy']);//remove member
+    // Route::get('/teams/{team}/members', [TeamMemberController::class, 'index']); //manage members page
+    // Route::post('/teams/{team}/members', [TeamMemberController::class, 'store']);//add member
+    // Route::put('/teams/{team}/members/{member}', [TeamMemberController::class, 'update']);//update member
+    // Route::delete('/teams/{team}/members/{team_member}', [TeamMemberController::class, 'destroy']);//remove member
 
-    Route::get('teams/{team}/barangays', [TeamBarangayController::class, 'index']);//manage barangays page
-    Route::post('teams/{team}/barangays', [TeamBarangayController::class, 'store']);//add barangay
-    Route::delete('/teams/{team}/barangays/{barangay}', [TeamBarangayController::class, 'destroy']);//remove barangay
+    // Route::get('teams/{team}/barangays', [TeamBarangayController::class, 'index']);//manage barangays page
+    // Route::post('teams/{team}/barangays', [TeamBarangayController::class, 'store']);//add barangay
+    // Route::delete('/teams/{team}/barangays/{barangay}', [TeamBarangayController::class, 'destroy']);//remove barangay
 
     //report routes
     Route::resource('reports', ReportController::class);
