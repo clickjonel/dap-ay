@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('province_id');
             $table->unsignedBigInteger('municipality_id');
+            $table->text('mov_link')->nullable();
 
             //set province foriegn key
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('restrict');

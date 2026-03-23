@@ -30,15 +30,18 @@
         name: '',
         is_active: true,
         pk_kit: false,
+        eo_link: '',
     })
 
     const openTeamModal = (mode, team = null) => {
         teamModal.value.mode = mode
         teamModal.value.team = team
 
-        if(mode === 'edit' && team) {
-            form.name = team.name
+        if (mode === 'edit' && team) {
+            form.name      = team.name
             form.is_active = team.is_active
+            form.pk_kit    = team.pk_kit
+            form.eo_link   = team.eo_link ?? ''
         } else {
             form.reset()
         }
@@ -255,6 +258,18 @@
                     <p class="text-[11px] text-slate-400 mt-0.5">Team was given PK KIT</p>
                 </div>
                 <ToggleSwitch v-model="form.pk_kit" />
+            </div>
+
+            <!-- EO Link -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-slate-600">Execitive Order Link</label>
+                <InputText
+                    v-model="form.eo_link"
+                    placeholder="e.g. https://example.com/eo"
+                    class="!text-sm !py-2"
+                    :class="form.errors.eo_link ? '!border-red-400' : ''"
+                />
+                <p v-if="form.errors.eo_link" class="text-[11px] text-red-500">{{ form.errors.eo_link }}</p>
             </div>
 
             <!-- Actions -->

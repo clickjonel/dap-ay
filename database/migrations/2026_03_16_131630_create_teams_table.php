@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('is_active');
             $table->boolean('pk_kit');
+            $table->text('eo_link')->nullable();
         });
     }
 

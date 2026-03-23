@@ -59,6 +59,7 @@ class ReportController extends Controller
         })->get();
        $indicators = ProgramIndicator::with(['program', 'disaggregations'])
             ->where('is_active', true)
+            ->orderBy('program_id','asc')
             ->get()
             ->map(function ($indicator) {
                 return [

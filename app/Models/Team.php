@@ -9,7 +9,8 @@ class Team extends Model
     protected $fillable = [
         'name',
         'is_active',
-        'pk_kit'
+        'pk_kit',
+        'eo_link'
     ];
     public $timestamps = false;
     public $casts = [

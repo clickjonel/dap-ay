@@ -19,6 +19,7 @@
         name:      props.team.name      ?? '',
         is_active: props.team.is_active ?? true,
         pk_kit:    props.team.pk_kit    ?? false,
+        eo_link:   props.team.eo_link   ?? '',   // ✅ add this
     })
 
     const submit = () => {
@@ -98,6 +99,18 @@
                                 </div>
                                 <ToggleSwitch v-model="form.pk_kit" />
                             </div>
+                        </div>
+
+                        <!-- EO Link -->
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-slate-600">EO Link</label>
+                            <InputText
+                                v-model="form.eo_link"
+                                placeholder="e.g. https://example.com/eo"
+                                class="!text-sm !py-2"
+                                :class="form.errors.eo_link ? '!border-red-400' : ''"
+                            />
+                            <p v-if="form.errors.eo_link" class="text-[11px] text-red-500">{{ form.errors.eo_link }}</p>
                         </div>
 
                         <!-- Actions -->

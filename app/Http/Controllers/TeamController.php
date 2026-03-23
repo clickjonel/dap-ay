@@ -13,10 +13,10 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
-        $userTeamIDs = $request->user()->teams->pluck('id')->toArray();
+        $userTeamIDs = $request->user()->teams->pluck('id')->toArray() ?? [];
 
         $teams = Team::query()
-            ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
+            ->when($request->user()->accessLevels->access_level === 2 && !empty($userTeamIDs), function ($query) use ($userTeamIDs) {
                 $query->whereIn('id', $userTeamIDs);
             })
             // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
@@ -55,6 +55,7 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'is_active' => 'required|boolean',
             'pk_kit' => 'required|boolean',
+            'eo_link' => 'nullable',
         ]);
 
         Team::create($validated);
@@ -95,6 +96,7 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'is_active' => 'required|boolean',
             'pk_kit' => 'required|boolean',
+            'eo_link' => 'nullable',
         ]);
 
         $team->update($validated);

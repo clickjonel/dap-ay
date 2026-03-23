@@ -11,7 +11,8 @@ class Barangay extends Model
         'psgc_code',
         'name',
         'province_id',
-        'municipality_id'
+        'municipality_id',
+        'mov_link'
     ];
 
     public function province()

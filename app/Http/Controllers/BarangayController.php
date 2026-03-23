@@ -73,9 +73,10 @@ class BarangayController extends Controller
             'name'            => 'required|string|max:255',
             'province_id'     => 'required|exists:provinces,id',
             'municipality_id' => 'required|exists:municipalities,id',
+            'mov_link' => 'nullable',
         ]);
 
-        Barangay::create($request->only('psgc_code', 'name', 'province_id', 'municipality_id'));
+        Barangay::create($request->only('psgc_code', 'name', 'province_id', 'municipality_id','mov_link'));
 
         return redirect()->route('barangays.index')->with('success', 'Barangay created successfully.');
 
@@ -114,9 +115,10 @@ class BarangayController extends Controller
             'name'            => 'required|string|max:255',
             'province_id'     => 'required|exists:provinces,id',
             'municipality_id' => 'required|exists:municipalities,id',
+            'mov_link' => 'nullable',
         ]);
 
-        $barangay->update($request->only('psgc_code', 'name', 'province_id', 'municipality_id'));
+        $barangay->update($request->only('psgc_code', 'name', 'province_id', 'municipality_id','mov_link'));
 
         // return redirect()->route('barangays')->with('success', 'Barangay updated successfully.');
     }

@@ -20,6 +20,7 @@ const form = useForm({
     name:         props.barangay.name         || '',
     province:     props.barangay.province     || null,
     municipality: props.barangay.municipality || null,
+    mov_link:     props.barangay.mov_link     || '',
 })
 
 const onProvinceChange = () => {
@@ -33,6 +34,7 @@ const submit = () => {
             name:            data.name,
             province_id:     data.province?.id     ?? null,
             municipality_id: data.municipality?.id ?? null,
+            mov_link:          data.mov_link       || null,
         }))
         .put(`/barangays/${props.barangay.id}`, {
             preserveScroll: true,
@@ -153,6 +155,18 @@ const submit = () => {
                         />
                         <p v-if="form.errors.municipality" class="text-[11px] text-red-500">{{ form.errors.municipality }}</p>
                         <p v-else-if="!form.province" class="text-[11px] text-slate-400">Select a province first.</p>
+                    </div>
+
+                    <!-- MOV Link -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-semibold text-slate-600">MOV Link</label>
+                        <InputText
+                            v-model="form.mov_link"
+                            placeholder="e.g. https://example.com/mov"
+                            class="!text-sm !py-2"
+                            :class="form.errors.mov_link ? '!border-red-400' : ''"
+                        />
+                        <p v-if="form.errors.mov_link" class="text-[11px] text-red-500">{{ form.errors.mov_link }}</p>
                     </div>
 
                     <!-- Actions -->
