@@ -1,6 +1,6 @@
 <script setup>
     import Main from '@/layouts/main.vue'
-    import { ref, computed } from 'vue'
+    import { ref, inject } from 'vue'
     import { useForm } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
     import Dialog from 'primevue/dialog'
@@ -10,7 +10,7 @@
     import { useToast } from 'primevue/usetoast'
     import { router } from '@inertiajs/vue3'
 
-
+    const user = inject('user')
     const toast = useToast()
     const search = ref('')
     defineOptions({ layout: Main })
@@ -85,9 +85,9 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-lg font-bold text-slate-800 leading-none">Teams</h1>
-            <p class="text-xs text-slate-400 mt-1">Showing teams where you are a member of.</p>
-            <p class="text-xs text-slate-400 mt-1">Showing teams which are on your jurisdiction.</p>
-            <p class="text-xs text-slate-400 mt-1">Showing all teams within the region.</p>
+            <p v-if="user.access_levels.access_level === 2" class="text-xs text-slate-400 mt-1">Showing teams where you are a member of.</p>
+            <p v-if="user.access_levels.access_level === 3" class="text-xs text-slate-400 mt-1">Showing teams which are on your jurisdiction.</p>
+            <p v-if="user.access_levels.access_level === 1" class="text-xs text-slate-400 mt-1">Showing all teams within the region.</p>
         </div>
         <button
             type="button"
