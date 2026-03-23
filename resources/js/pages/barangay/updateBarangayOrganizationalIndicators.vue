@@ -19,7 +19,9 @@ const form = useForm({
         organizational_indicator_id: i.id,
         barangay_indicator_id:       i.barangay_indicator_id ?? null,
         name:                        i.indicator_name,
-        value:                       i.value ?? '',
+        value:                       i.value           ?? '',
+        facility_based:              i.facility_based  ?? '',
+        community_based:             i.community_based ?? '',
     }))
 })
 
@@ -27,10 +29,12 @@ const submit = () => {
     form
         .transform(data => ({
             barangay_id: data.barangay_id,
-            indicators:  data.indicators.map(({ organizational_indicator_id, barangay_indicator_id, value }) => ({
+            indicators:  data.indicators.map(({ organizational_indicator_id, barangay_indicator_id, value, facility_based, community_based }) => ({
                 organizational_indicator_id,
                 barangay_indicator_id,
                 value,
+                facility_based,
+                community_based,
             }))
         }))
         .put(`/barangay/organizational-indicator/${props.barangay.id}`, {
@@ -96,12 +100,33 @@ const submit = () => {
                         <p class="text-xs font-semibold text-slate-700 leading-snug">{{ indicator.name }}</p>
                     </div>
 
-                    <!-- Value input -->
-                    <input
-                        v-model="indicator.value"
-                        type="text"
-                        class="w-full px-3 py-2 text-sm font-light bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
-                    />
+                    <!-- Inputs -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Total</span>
+                            <input
+                                v-model="indicator.value"
+                                type="text"
+                                class="w-full px-3 py-2 text-sm font-light bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Facility Based</span>
+                            <input
+                                v-model.number="indicator.facility_based"
+                                type="text"
+                                class="w-full px-3 py-2 text-sm font-light bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Community Based</span>
+                            <input
+                                v-model.number="indicator.community_based"
+                                type="text"
+                                class="w-full px-3 py-2 text-sm font-light bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Actions -->

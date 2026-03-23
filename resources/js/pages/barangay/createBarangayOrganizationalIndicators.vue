@@ -18,7 +18,9 @@ const form = useForm({
     indicators: props.org_indicators.map(i => ({
         organizational_indicator_id: i.id,
         name:                        i.indicator_name,
-        value:                       i.value ?? '',
+        value:                       i.value            ?? '',
+        facility_based:              i.facility_based   ?? '',
+        community_based:             i.community_based  ?? '',
     }))
 })
 
@@ -26,9 +28,11 @@ const submit = () => {
     form
         .transform(data => ({
             barangay_id: data.barangay_id,
-            indicators:  data.indicators.map(({ organizational_indicator_id, value }) => ({
+            indicators:  data.indicators.map(({ organizational_indicator_id, value, facility_based, community_based }) => ({
                 organizational_indicator_id,
                 value,
+                facility_based,
+                community_based,
             }))
         }))
         .post(`/barangay/organizational-indicator`, {
@@ -95,13 +99,32 @@ const submit = () => {
                         <p class="text-xs font-semibold text-slate-700 leading-snug">{{ indicator.name }}</p>
                     </div>
 
-                    <!-- Value input -->
+                    <!-- Value inputs -->
                     <div class="flex items-center gap-2 shrink-0">
-                        <input
-                            v-model.number="indicator.value"
-                            type="text"
-                            class="w-20 px-2 py-1.5 text-sm text-center font-semibold bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
-                        />
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Total</span>
+                            <input
+                                v-model.number="indicator.value"
+                                type="text"
+                                class="w-20 px-2 py-1.5 text-sm text-center font-semibold bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Facility</span>
+                            <input
+                                v-model.number="indicator.facility_based"
+                                type="text"
+                                class="w-20 px-2 py-1.5 text-sm text-center font-semibold bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-400 font-medium">Community</span>
+                            <input
+                                v-model.number="indicator.community_based"
+                                type="text"
+                                class="w-20 px-2 py-1.5 text-sm text-center font-semibold bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                            />
+                        </div>
                     </div>
                 </div>
 

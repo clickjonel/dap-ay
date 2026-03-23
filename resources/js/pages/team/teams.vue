@@ -85,7 +85,9 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-lg font-bold text-slate-800 leading-none">Teams</h1>
-            <p class="text-xs text-slate-400 mt-1">Manage teams and their members.</p>
+            <p class="text-xs text-slate-400 mt-1">Showing teams where you are a member of.</p>
+            <p class="text-xs text-slate-400 mt-1">Showing teams which are on your jurisdiction.</p>
+            <p class="text-xs text-slate-400 mt-1">Showing all teams within the region.</p>
         </div>
         <button
             type="button"

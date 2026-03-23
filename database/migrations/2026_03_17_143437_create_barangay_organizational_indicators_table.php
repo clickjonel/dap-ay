@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('barangay_id');
             $table->unsignedBigInteger('org_indicator_id');
-            $table->string('value');
+            $table->string('value')->nullable();
+            $table->integer('facility_based')->nullable();
+            $table->integer('community_based')->nullable();
 
             $table->foreign('barangay_id')->references('id')->on('barangays')->onDelete('restrict');
             $table->foreign('org_indicator_id')->references('id')->on('organizational_indicators')->onDelete('restrict');

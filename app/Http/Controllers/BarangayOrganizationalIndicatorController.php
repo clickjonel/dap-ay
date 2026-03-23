@@ -37,17 +37,21 @@ class BarangayOrganizationalIndicatorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'barangay_id' => 'required|exists:barangays,id',
-            'indicators' => 'required|array',
-            'indicators.*.organizational_indicator_id' => 'required|exists:organizational_indicators,id',
-            'indicators.*.value' => 'nullable|string',
+            'barangay_id'                                      => 'required|exists:barangays,id',
+            'indicators'                                       => 'required|array',
+            'indicators.*.organizational_indicator_id'         => 'required|exists:organizational_indicators,id',
+            'indicators.*.value'                               => 'nullable|string',
+            'indicators.*.facility_based'                      => 'nullable|integer',
+            'indicators.*.community_based'                     => 'nullable|integer',
         ]);
 
         foreach ($validated['indicators'] as $indicatorData) {
             BarangayOrganizationalIndicator::create([
-                'barangay_id' => $validated['barangay_id'],
-                'org_indicator_id' => $indicatorData['organizational_indicator_id'],
-                'value' => $indicatorData['value'] ?? null,
+                'barangay_id'     => $validated['barangay_id'],
+                'org_indicator_id'  => $indicatorData['organizational_indicator_id'],
+                'value'             => $indicatorData['value']           ?? null,
+                'facility_based'    => $indicatorData['facility_based']  ?? null,
+                'community_based'   => $indicatorData['community_based'] ?? null,
             ]);
         }
 
@@ -74,10 +78,12 @@ class BarangayOrganizationalIndicatorController extends Controller
                 ->firstWhere('org_indicator_id', $indicator->id);
 
             return [
-                'id'                         => $indicator->id,
-                'indicator_name'             => $indicator->indicator_name,
-                'value'                      => $existing?->value ?? '',
-                'barangay_indicator_id'      => $existing?->id ?? null, // null = new, has id = existing
+                'id'                     => $indicator->id,
+                'indicator_name'         => $indicator->indicator_name,
+                'value'                  => $existing?->value           ?? '',
+                'facility_based'         => $existing?->facility_based  ?? '',
+                'community_based'        => $existing?->community_based ?? '',
+                'barangay_indicator_id'  => $existing?->id              ?? null,
             ];
         });
 
@@ -93,11 +99,13 @@ class BarangayOrganizationalIndicatorController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'barangay_id'                                      => 'required|exists:barangays,id',
-            'indicators'                                       => 'required|array',
-            'indicators.*.organizational_indicator_id'         => 'required|exists:organizational_indicators,id',
-            'indicators.*.barangay_indicator_id'               => 'nullable|exists:barangay_organizational_indicators,id',
-            'indicators.*.value'                               => 'nullable|string',
+            'barangay_id'                                  => 'required|exists:barangays,id',
+            'indicators'                                   => 'required|array',
+            'indicators.*.organizational_indicator_id'     => 'required|exists:organizational_indicators,id',
+            'indicators.*.barangay_indicator_id'           => 'nullable|exists:barangay_organizational_indicators,id',
+            'indicators.*.value'                           => 'nullable|string',
+            'indicators.*.facility_based'                  => 'nullable|integer',  // ✅
+            'indicators.*.community_based'                 => 'nullable|integer',  // ✅
         ]);
 
         $barangay = Barangay::findOrFail($validated['barangay_id']);
@@ -105,11 +113,17 @@ class BarangayOrganizationalIndicatorController extends Controller
         foreach ($validated['indicators'] as $item) {
             if (!empty($item['barangay_indicator_id'])) {
                 BarangayOrganizationalIndicator::where('id', $item['barangay_indicator_id'])
-                    ->update(['value' => $item['value'] ?? 0]);
+                    ->update([
+                        'value'           => $item['value']           ?? null,
+                        'facility_based'  => $item['facility_based']  ?? null,  // ✅
+                        'community_based' => $item['community_based'] ?? null,  // ✅
+                    ]);
             } else {
                 $barangay->organizationalIndicators()->create([
                     'org_indicator_id' => $item['organizational_indicator_id'],
-                    'value'            => $item['value'] ?? null,
+                    'value'            => $item['value']           ?? null,
+                    'facility_based'   => $item['facility_based']  ?? null,  // ✅
+                    'community_based'  => $item['community_based'] ?? null,  // ✅
                 ]);
             }
         }

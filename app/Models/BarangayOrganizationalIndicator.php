@@ -10,6 +10,8 @@ class BarangayOrganizationalIndicator extends Model
         'barangay_id',
         'org_indicator_id',
         'value',
+        'facility_based',
+        'community_based',
     ];
     public $timestamps = false;
 
