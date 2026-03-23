@@ -28,7 +28,7 @@
             children: [
                 { label: 'Admin Dashboard',  href: '/dashboard/access-level-one', icon: 'hugeicons:user-square', accessLevels: [1] },
                 { label: 'HRH Dashboard',    href: '/dashboard/access-level-two', icon: 'hugeicons:building-03', accessLevels: [2] },
-                { label: 'PDOHO Dashboard',  href: '/dashboard/admin',            icon: 'hugeicons:shield-user', accessLevels: [3] },
+                { label: 'PDOHO Dashboard',  href: '/dashboard/access-level-three',            icon: 'hugeicons:shield-user', accessLevels: [3] },
             ],
             accessLevels: [1, 2, 3]
         },

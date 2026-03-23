@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Program;
 use App\Models\ProgramIndicator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -67,5 +68,16 @@ class ProgramIndicatorSeeder extends Seeder
                 'program_id' => $indicator['program']
             ]);
         }
+
+        $programs = Program::get();
+        foreach($programs as $program){
+            ProgramIndicator::create([
+                'indicator_name' => "Number of clients served related to {$program->name}",
+                'is_active' => true,
+                'program_id' => $program->id
+            ]);
+        }
+
+        
     }
 }

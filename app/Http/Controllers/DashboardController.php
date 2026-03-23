@@ -41,4 +41,9 @@ class DashboardController extends Controller
             ],
         ]);
     }
+
+    public function accessLevelThreeDashboard()
+    {
+        return inertia('dashboard/accessLevelThreeDashboard');
+    }
 }

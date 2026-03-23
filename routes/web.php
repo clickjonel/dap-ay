@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('access-level-one', [DashboardController::class, 'accessLevelOneDashboard']);
         Route::get('access-level-two', [DashboardController::class, 'accessLevelTwoDashboard']);
+        Route::get('access-level-three', [DashboardController::class, 'accessLevelThreeDashboard']);
     });
 
     //program routes
