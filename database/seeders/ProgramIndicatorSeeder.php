@@ -72,7 +72,7 @@ class ProgramIndicatorSeeder extends Seeder
         $programs = Program::get();
         foreach($programs as $program){
             ProgramIndicator::create([
-                'indicator_name' => "Number of clients served related to {$program->name}",
+                'indicator_name' => "Number of clients served with other services related to {$program->name}",
                 'is_active' => true,
                 'program_id' => $program->id
             ]);
