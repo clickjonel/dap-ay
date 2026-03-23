@@ -14,6 +14,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProgramIndicatorController;
 use App\Http\Controllers\ProgramIndicatorDisaggregationController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\PurokalusuganActivityController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeamBarangayController;
 use App\Http\Controllers\TeamController;
@@ -80,6 +81,8 @@ Route::middleware('auth')->group(function () {
 
     //report routes
     Route::resource('reports', ReportController::class);
+
+    Route::resource('pk-activities', PurokalusuganActivityController::class);
     
 
 });

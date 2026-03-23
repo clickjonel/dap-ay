@@ -15,41 +15,47 @@ class BarangayController extends Controller
     public function index(Request $request)
     {
         $userBarangayIDs = $request->user()
-        ->teams()
-        ->with('barangays:id')
-        ->get()
-        ->pluck('barangays')
-        ->flatten()
-        ->pluck('id')
-        ->unique();
+            ->teams()
+            ->with('barangays:id')
+            ->get()
+            ->pluck('barangays')
+            ->flatten()
+            ->pluck('id')
+            ->unique();
 
         $barangays = Barangay::query()
-                        ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userBarangayIDs) {
-                            $query->whereIn('id', $userBarangayIDs);
-                        })
-                        ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
-                            $query->where('province_id', $request->user()->accessLevels->pdoho_access_id);
-                        })
-                        ->when($request->search, function ($query, $search) {
-                            $query->where('name', 'like', "%{$search}%")
-                                ->orWhere('psgc_code', 'like', "%{$search}%");
-                        })
-                        ->with([
-                            'province',
-                            'municipality',
-                            'pkProfile',
-                            'organizationalIndicators',
-                            'geography',
-                            'population'
-                        ])
-                        ->orderBy('id','desc')
-                        ->paginate(10)
-                        ->withQueryString();
+            ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userBarangayIDs) {
+                $query->whereIn('id', $userBarangayIDs);
+            })
+            ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
+                $query->where('province_id', $request->user()->accessLevels->pdoho_access_id);
+            })
+            ->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('psgc_code', 'like', "%{$search}%");
+            });
+
+        // ── JSON response for async search (activity form, etc.) ──
+        if ($request->boolean('only_search')) {
+            return response()->json(
+                $barangays->select('id', 'name', 'municipality_id', 'province_id')
+                    ->with(['municipality:id,name', 'province:id,name'])
+                    ->limit(20)
+                    ->get()
+            );
+        }
+
+        // ── Normal Inertia response ──
+        $paginated = $barangays
+            ->with(['province', 'municipality', 'pkProfile', 'organizationalIndicators', 'geography', 'population'])
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return inertia('barangay/barangays', [
-            'barangays' => $barangays,
+            'barangays' => $paginated,
             'filters'   => $request->only('search'),
-            'provinces'      => Inertia::lazy(fn () => Province::with(['municipalities'])->orderBy('name')->get()),
+            'provinces' => Inertia::lazy(fn () => Province::with(['municipalities'])->orderBy('name')->get()),
         ]);
     }
 
