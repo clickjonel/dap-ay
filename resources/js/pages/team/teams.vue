@@ -1,14 +1,12 @@
 <script setup>
     import Main from '@/layouts/main.vue'
     import { ref, inject } from 'vue'
-    import { useForm } from '@inertiajs/vue3'
+    import { useForm, router } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
     import Dialog from 'primevue/dialog'
     import InputText from 'primevue/inputtext'
-    import Select from 'primevue/select'
     import ToggleSwitch from 'primevue/toggleswitch'
     import { useToast } from 'primevue/usetoast'
-    import { router } from '@inertiajs/vue3'
 
     const user = inject('user')
     const toast = useToast()
@@ -16,27 +14,17 @@
     defineOptions({ layout: Main })
 
     const props = defineProps({
-        teams: { type: Object, default: () => [] },
-        filters:   { type: Object, default: () => ({}) },
+        teams:   { type: Object, default: () => ({}) },
+        filters: { type: Object, default: () => ({}) },
     })
 
-    const teamModal = ref({
-        visible:false,
-        mode:'create',
-        team:null
-    })
+    const teamModal = ref({ visible: false, mode: 'create', team: null })
 
-    const form = useForm({
-        name: '',
-        is_active: true,
-        pk_kit: false,
-        eo_link: '',
-    })
+    const form = useForm({ name: '', is_active: true, pk_kit: false, eo_link: '' })
 
     const openTeamModal = (mode, team = null) => {
         teamModal.value.mode = mode
         teamModal.value.team = team
-
         if (mode === 'edit' && team) {
             form.name      = team.name
             form.is_active = team.is_active
@@ -45,46 +33,39 @@
         } else {
             form.reset()
         }
-
         teamModal.value.visible = true
     }
 
     const submitTeam = () => {
-        if(teamModal.value.mode === 'create') {
+        if (teamModal.value.mode === 'create') {
             form.post('/teams', {
                 onSuccess: () => {
-                    toast.add({ severity: 'success', summary: 'Team Created', detail: 'Team has been created successfully. Update necessary details using the update form.', life: 2000 })
+                    toast.add({ severity: 'success', summary: 'Team Created', detail: 'Team has been created successfully.', life: 2000 })
                     teamModal.value.visible = false
                     form.reset()
                 },
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Failed to create team' })
-                }
+                onError: () => toast.add({ severity: 'error', summary: 'Failed to create team' }),
             })
-        } 
-        else if(teamModal.value.mode === 'edit' && teamModal.value.team) {
+        } else if (teamModal.value.mode === 'edit' && teamModal.value.team) {
             form.put(`/teams/${teamModal.value.team.id}`, {
                 onSuccess: () => {
                     toast.add({ severity: 'success', summary: 'Team Updated', detail: 'Team has been updated successfully.', life: 2000 })
                     teamModal.value.visible = false
                     form.reset()
                 },
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Failed to update team' })
-                }
+                onError: () => toast.add({ severity: 'error', summary: 'Failed to update team' }),
             })
         }
     }
-
 </script>
 
 <template>
-<div class="h-full flex flex-col gap-5">
+<div class="h-full flex flex-col gap-4 lg:gap-5">
 
     <!-- ── Page header ──────────────────────────────── -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-start sm:items-center justify-between gap-3">
         <div>
-            <h1 class="text-lg font-bold text-slate-800 leading-none">Teams</h1>
+            <h1 class="text-base lg:text-lg font-bold text-slate-800 leading-none">Teams</h1>
             <p v-if="user.access_levels.access_level === 2" class="text-xs text-slate-400 mt-1">Showing teams where you are a member of.</p>
             <p v-if="user.access_levels.access_level === 3" class="text-xs text-slate-400 mt-1">Showing teams which are on your jurisdiction.</p>
             <p v-if="user.access_levels.access_level === 1" class="text-xs text-slate-400 mt-1">Showing all teams within the region.</p>
@@ -92,16 +73,17 @@
         <button
             type="button"
             @click="openTeamModal('create')"
-            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200"
+            class="flex items-center gap-2 px-3 py-2 lg:px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200 shrink-0"
         >
             <Icon icon="hugeicons:plus-sign" class="text-sm" />
-            New Team
+            <span class="hidden sm:inline">New Team</span>
+            <span class="sm:hidden">New</span>
         </button>
     </div>
 
     <!-- ── Filters ───────────────────────────────────── -->
     <div class="flex items-center gap-3">
-        <div class="relative flex-1 max-w-xs">
+        <div class="relative flex-1 sm:max-w-xs">
             <Icon icon="hugeicons:search-01" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" />
             <input
                 v-model="search"
@@ -110,111 +92,152 @@
                 class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
             />
         </div>
-
-        <div class="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
+        <div class="ml-auto flex items-center gap-1.5 text-xs text-slate-400 shrink-0">
             <Icon icon="hugeicons:list-view" class="text-sm" />
-            <span>{{ teams.length }} teams</span>
+            <span>{{ props.teams.data?.length ?? 0 }} <span class="hidden sm:inline">teams</span></span>
         </div>
     </div>
 
-    <!-- ── Table ─────────────────────────────────────── -->
-    <div class="bg-white rounded-xl border border-slate-200 overflow-y-auto flex-1">
-        <table class="w-full text-left">
-            <thead class="bg-slate-100 border-b border-slate-100 sticky top-0">
-                <tr>
-                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
-                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Team Name</th>
-                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Members</th>
-                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Scope</th>
-                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
+    <!-- ── Mobile cards / Desktop table ──────────────── -->
+    <div class="flex-1 min-h-0 overflow-y-auto">
 
-                <!-- Empty state -->
-                <tr v-if="props.teams.data.length === 0">
-                    <td colspan="5" class="px-5 py-16 text-center">
-                        <div class="flex flex-col items-center gap-2">
-                            <Icon icon="hugeicons:folder-02" class="text-3xl text-slate-300" />
-                            <p class="text-sm font-medium text-slate-400">No teams found</p>
-                            <p class="text-xs text-slate-300">Try adjusting your search or create a new team.</p>
-                        </div>
-                    </td>
-                </tr>
+        <!-- Mobile card list -->
+        <div class="flex flex-col gap-3 md:hidden">
 
-                <tr
-                    v-for="(team, index) in props.teams.data"
-                    :key="team.id"
-                    class="hover:bg-slate-50/70 transition-colors"
-                    :class="!team.is_active ? 'opacity-60' : ''"
-                >
-                    <td class="px-5 py-3.5 text-[11px] text-slate-300 font-bold tabular-nums">
-                        {{ String(index + 1).padStart(2, '0') }}
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                                <Icon icon="hugeicons:add-team" class="text-sm text-indigo-500" />
+            <div v-if="!props.teams.data?.length" class="flex flex-col items-center gap-2 py-16">
+                <Icon icon="hugeicons:folder-02" class="text-3xl text-slate-300" />
+                <p class="text-sm font-medium text-slate-400">No teams found</p>
+                <p class="text-xs text-slate-300">Try adjusting your search or create a new team.</p>
+            </div>
+
+            <div
+                v-for="team in props.teams.data"
+                :key="team.id"
+                class="bg-white rounded-xl border border-slate-200 px-4 py-3.5"
+                :class="!team.is_active ? 'opacity-60' : ''"
+            >
+                <!-- Team name row -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                        <Icon icon="hugeicons:add-team" class="text-base text-indigo-500" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-700 truncate">{{ team.name }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            <span v-if="team.pk_kit" class="inline-flex items-center gap-1 text-indigo-500">
+                                <Icon icon="hugeicons:package-01" class="text-xs" /> PK Kit
+                            </span>
+                            <span v-else class="text-slate-300">No PK Kit</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action buttons row -->
+                <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
+                    <button
+                        type="button"
+                        @click="router.visit(`/teams/${team.id}/edit`)"
+                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                    >
+                        <Icon icon="hugeicons:pencil-edit-01" class="text-xs" />
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        @click="router.visit(`/teams/${team.id}/members`)"
+                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                    >
+                        <Icon icon="hugeicons:user-group" class="text-xs" />
+                        Members
+                    </button>
+                    <button
+                        type="button"
+                        @click="router.visit(`/teams/${team.id}/barangays`)"
+                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                    >
+                        <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" />
+                        Barangays
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop table -->
+        <div class="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100 sticky top-0">
+                    <tr>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Team Name</th>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Members</th>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Scope</th>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+
+                    <tr v-if="!props.teams.data?.length">
+                        <td colspan="5" class="px-5 py-16 text-center">
+                            <div class="flex flex-col items-center gap-2">
+                                <Icon icon="hugeicons:folder-02" class="text-3xl text-slate-300" />
+                                <p class="text-sm font-medium text-slate-400">No teams found</p>
+                                <p class="text-xs text-slate-300">Try adjusting your search or create a new team.</p>
                             </div>
-                            <span class="text-sm font-medium text-slate-700">{{ team.name }}</span>
-                        </div>
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <!-- <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 rounded-full text-[11px] font-medium text-slate-600">
-                            <Icon icon="hugeicons:folder-library" class="text-xs text-slate-400" />
-                            {{ team.group?.name }}
-                        </span> -->
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <!-- <span
-                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold"
-                            :class="program.is_active
-                                ? 'bg-emerald-50 text-emerald-700'
-                                : 'bg-slate-100 text-slate-500'"
-                        >
-                            <span
-                                class="w-1.5 h-1.5 rounded-full"
-                                :class="program.is_active ? 'bg-emerald-500' : 'bg-slate-400'"
-                            />
-                            {{ program.is_active ? 'Active' : 'Disabled' }}
-                        </span> -->
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <div class="flex items-center justify-end gap-1.5">
+                        </td>
+                    </tr>
 
-                            <button
-                                type="button"
-                                @click="router.visit(`/teams/${team.id}/edit`)"
-                                class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                            >
-                                <Icon icon="hugeicons:pencil-edit-01" class="text-xs" />
-                                Edit
-                            </button>
+                    <tr
+                        v-for="(team, index) in props.teams.data"
+                        :key="team.id"
+                        class="hover:bg-slate-50/70 transition-colors"
+                        :class="!team.is_active ? 'opacity-60' : ''"
+                    >
+                        <td class="px-5 py-3.5 text-[11px] text-slate-300 font-bold tabular-nums">
+                            {{ String(index + 1).padStart(2, '0') }}
+                        </td>
+                        <td class="px-5 py-3.5">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                                    <Icon icon="hugeicons:add-team" class="text-sm text-indigo-500" />
+                                </div>
+                                <span class="text-sm font-medium text-slate-700">{{ team.name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-5 py-3.5"></td>
+                        <td class="px-5 py-3.5"></td>
+                        <td class="px-5 py-3.5">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button
+                                    type="button"
+                                    @click="router.visit(`/teams/${team.id}/edit`)"
+                                    class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                >
+                                    <Icon icon="hugeicons:pencil-edit-01" class="text-xs" />
+                                    Edit
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="router.visit(`/teams/${team.id}/members`)"
+                                    class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                >
+                                    <Icon icon="hugeicons:user-group" class="text-xs" />
+                                    Members
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="router.visit(`/teams/${team.id}/barangays`)"
+                                    class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                >
+                                    <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" />
+                                    Barangays
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
 
-                            <button
-                                type="button"
-                                @click="router.visit(`/teams/${team.id}/members`)"
-                                class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                            >
-                                <Icon icon="hugeicons:user-group" class="text-xs" />
-                                Members
-                            </button>
-
-                            <button
-                                type="button"
-                                @click="router.visit(`/teams/${team.id}/barangays`)"
-                                class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                            >
-                                <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" />
-                                Barangays
-                            </button>
-
-                        </div>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- ── Create / Edit Modal ────────────────────────── -->
@@ -222,21 +245,20 @@
         v-model:visible="teamModal.visible"
         :header="teamModal.mode === 'create' ? 'New Team' : 'Edit Team'"
         modal
-        :style="{ width: '420px' }"
+        :style="{ width: '95vw', maxWidth: '420px' }"
         :pt="{
-            header: { class: 'border-b border-slate-100 !py-4 !px-5' },
-            title: { class: '!text-sm !font-bold !text-slate-800' },
+            header:  { class: 'border-b border-slate-100 !py-4 !px-5' },
+            title:   { class: '!text-sm !font-bold !text-slate-800' },
             content: { class: '!p-5' },
         }"
     >
         <form @submit.prevent="submitTeam" class="flex flex-col gap-4">
 
-            <!-- Name -->
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-semibold text-slate-600">Team Name <span class="text-red-400">*</span></label>
                 <InputText
                     v-model="form.name"
-                    placeholder="e.g. Breast Cancer"
+                    placeholder="e.g. Team Alpha"
                     class="!text-sm !py-2"
                     :class="form.errors.name ? '!border-red-400' : ''"
                     autofocus
@@ -244,7 +266,6 @@
                 <p v-if="form.errors.name" class="text-[11px] text-red-500">{{ form.errors.name }}</p>
             </div>
 
-            <!-- Active toggle -->
             <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
                 <div>
                     <p class="text-xs font-semibold text-slate-700">Active</p>
@@ -253,7 +274,6 @@
                 <ToggleSwitch v-model="form.is_active" />
             </div>
 
-            <!-- PK KIT toggle -->
             <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
                 <div>
                     <p class="text-xs font-semibold text-slate-700">PK KIT</p>
@@ -262,9 +282,8 @@
                 <ToggleSwitch v-model="form.pk_kit" />
             </div>
 
-            <!-- EO Link -->
             <div class="flex flex-col gap-1.5">
-                <label class="text-xs font-semibold text-slate-600">Execitive Order Link</label>
+                <label class="text-xs font-semibold text-slate-600">Executive Order Link</label>
                 <InputText
                     v-model="form.eo_link"
                     placeholder="e.g. https://example.com/eo"
@@ -274,7 +293,6 @@
                 <p v-if="form.errors.eo_link" class="text-[11px] text-red-500">{{ form.errors.eo_link }}</p>
             </div>
 
-            <!-- Actions -->
             <div class="flex items-center justify-end gap-2 pt-1">
                 <button
                     type="button"
@@ -295,9 +313,6 @@
 
         </form>
     </Dialog>
-  
 
 </div>
-
-
 </template>
