@@ -96,6 +96,16 @@
             ],
             accessLevels: [1, 3]
         },
+
+        {
+            id: 'Generate',
+            label: 'Generate Reports',
+            icon: 'hugeicons:file-02',
+            children: [
+                { label: 'Quarterly Large Scale Report', href: '/generate/quarterly-large-scale-report', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+            ],
+            accessLevels: [1, 3]
+        },
     ]
 
     // ── Access level ───────────────────────────────────────

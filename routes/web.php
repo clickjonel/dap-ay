@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangayPopulationController;
 use App\Http\Controllers\BarangayPriorityProgramController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisaggregationController;
+use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\OrganizationalIndicatorController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProgramIndicatorController;
@@ -82,7 +83,12 @@ Route::middleware('auth')->group(function () {
     //report routes
     Route::resource('reports', ReportController::class);
 
+    //purokalusugan activity routes
     Route::resource('pk-activities', PurokalusuganActivityController::class);
+
+
+    //generation of report routes
+    Route::get('generate/quarterly-large-scale-report', [GenerateReportController::class, 'generateQuarterlyLargeScaleReport']);
     
 
 });

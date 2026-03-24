@@ -18,4 +18,9 @@ class PurokalusuganActivityBarangay extends Model
         return $this->belongsTo(Barangay::class);
     }
 
+    public function pkActivity()
+    {
+        return $this->belongsTo(PurokalusuganActivity::class, 'pk_activity_id');
+    }
+
 }
