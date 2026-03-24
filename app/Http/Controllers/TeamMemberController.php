@@ -23,7 +23,7 @@ class TeamMemberController extends Controller
 
         return Inertia::render('team/manageMembers', [
             'team'    => $team,
-            'members' => $team->members,
+            'members' => $team->members->load(['user']),
             'users' => $users
         ]);
     }

@@ -108,9 +108,8 @@
     }
 
     // linked user label helper
-    const linkedUser = (user_id) => {
-        const user = props.users.find(u => u.id === user_id)
-        return user ? user.name : 'No linked user'
+    const linkedUser = (member) => {
+        return member.user ? member.user.name : 'No linked user'
     }
 </script>
 
@@ -199,7 +198,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-semibold text-slate-700">{{ member.name }}</p>
-                                    <p class="text-[10px] text-slate-400">{{ linkedUser(member.user_id) }}</p>
+                                    <p class="text-[10px] text-slate-400">{{ linkedUser(member) }}</p>
                                 </div>
                             </div>
                         </td>
