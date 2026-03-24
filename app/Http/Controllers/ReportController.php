@@ -31,6 +31,11 @@ class ReportController extends Controller
                 $q->where('user_id', $request->user()->id);
             });
         })
+        ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
+            $query->whereHas('barangay', function ($q) use ($request) {
+                $q->where('province_id', $request->user()->accessLevels->pdoho_access_id);
+            });
+        })
         ->when($request->search, function ($query, $search) {
             $query->whereHas('barangay', fn($q) => $q->where('name', 'like', "%{$search}%"))
                   ->orWhereHas('users', fn($q) => $q->where('name', 'like', "%{$search}%"));
@@ -50,13 +55,24 @@ class ReportController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $barangays = Barangay::with(['municipality'])->where('province_id', $user->accessLevels->pdoho_access_id)->get()->map(fn($b) => [
-            'id'   => $b->id,
-            'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
-        ]);;
-        $users = User::whereHas('accessLevels', function ($query) use ($user) {
-            $query->where('pdoho_access_id', $user->accessLevels->pdoho_access_id);
-        })->get();
+        $barangays = Barangay::query()
+                        ->with(['municipality'])
+                         ->when($user->accessLevels->access_level === 2, function($query) use ($user) {
+                            $query->where('province_id', $user->accessLevels->pdoho_access_id);
+                        })
+                        ->get()
+                        ->map(fn($b) => [
+                            'id'   => $b->id,
+                            'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
+                        ]);;
+        $users = User::query()
+            ->when($user->accessLevels->access_level === 2, function ($query) use ($user) {
+                $query->whereHas('accessLevels', function ($q) use ($user) {
+                    $q->where('pdoho_access_id', $user->accessLevels->pdoho_access_id);
+                });
+            })
+            ->get();
+
        $indicators = ProgramIndicator::with(['program', 'disaggregations'])
             ->where('is_active', true)
             ->orderBy('program_id','asc')
@@ -167,14 +183,27 @@ class ReportController extends Controller
             'values.indicator',
             'values.disaggregations.disaggregation'
         ])->findOrFail($id);
+
         $user = Auth::user();
-        $barangays = Barangay::with(['municipality'])->where('province_id', $user->accessLevels->pdoho_access_id)->get()->map(fn($b) => [
-            'id'   => $b->id,
-            'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
-        ]);;
-        $users = User::whereHas('accessLevels', function ($query) use ($user) {
-            $query->where('pdoho_access_id', $user->accessLevels->pdoho_access_id);
-        })->get();
+
+        $barangays = Barangay::query()
+                        ->with(['municipality'])
+                        ->when($user->accessLevels->access_level === 2, function($query) use ($user) {
+                            $query->where('province_id', $user->accessLevels->pdoho_access_id);
+                        })
+                        ->get()
+                        ->map(fn($b) => [
+                            'id'   => $b->id,
+                            'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
+                        ]);
+
+        $users = User::query()
+            ->when($user->accessLevels->access_level === 2, function ($query) use ($user) {
+                $query->whereHas('accessLevels', function ($q) use ($user) {
+                    $q->where('pdoho_access_id', $user->accessLevels->pdoho_access_id);
+                });
+            })
+            ->get();
 
         return Inertia::render('report/updateReport', [
             'report' => $report,
