@@ -17,10 +17,10 @@ class TeamController extends Controller
 
         $teams = Team::query()
             ->with(['members','barangays'])
-            ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
-                $query->whereIn('id', $userTeamIDs);
-            })
-            // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
+            // ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
+            //     $query->whereIn('id', $userTeamIDs);
+            // })
+            // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($userTeamIDs) {
             //     $query->whereIn('id', $userTeamIDs);
             // })
             ->when($request->search, function ($query, $search) {
