@@ -95,5 +95,7 @@ Route::middleware('auth')->group(function () {
     //user routes
     Route::get('account-settings', [UserController::class, 'accountSettings']);
     Route::put('password-update', [UserController::class, 'updatePassword']);
+    Route::get('users', [UserController::class, 'getUsers']);
+    Route::put('users/{user}', [UserController::class, 'resetPassword']);
 
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -38,4 +39,31 @@ class UserController extends Controller
 
         return back();
     }
+
+    public function getUsers(Request $request)
+    {
+        $users = User::query()
+                    ->with(['accessLevels.province'])
+                    ->when($request->search, function ($query, $search) {
+                        $query->where('name', 'like', "%{$search}%")
+                              ->orWhere('email', 'like', "%{$search}%");
+                    })
+                    ->orderBy('id', 'desc')
+                    ->paginate(10)
+                    ->withQueryString();
+
+        return Inertia::render('user/users', [
+            'users' => $users,
+        ]);
+    }
+
+    public function resetPassword(User $user)
+    {
+        $user->update([
+            'password' => '12345',
+        ]);
+
+        return back();
+    }
+
 }

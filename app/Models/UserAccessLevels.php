@@ -11,4 +11,14 @@ class UserAccessLevels extends Model
         'access_level',
     ]; 
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'pdoho_access_id');
+    }
 }

@@ -102,6 +102,15 @@
             accessLevels: [1, 3]
         },
         {
+            id: 'User',
+            label: 'User Management',
+            icon: 'hugeicons:file-02',
+            children: [
+                { label: 'Users', href: '/users', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+            ],
+            accessLevels: [1, 3]
+        },
+        {
             id: 'Generate',
             label: 'Generate Reports',
             icon: 'hugeicons:file-02',
