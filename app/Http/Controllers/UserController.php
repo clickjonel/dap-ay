@@ -43,11 +43,17 @@ class UserController extends Controller
 
     public function getUsers(Request $request)
     {
+        $user = $request->user();
         $users = User::query()
                     ->with(['accessLevels.province'])
                     ->when($request->search, function ($query, $search) {
                         $query->where('name', 'like', "%{$search}%")
                               ->orWhere('email', 'like', "%{$search}%");
+                    })
+                    ->when($user->accessLevels->access_level === 3, function ($query) use ($user) {
+                        $query->whereHas('accessLevels', function ($query) use ($user) {
+                            $query->where('pdoho_access_id', $user->accessLevels->pdoho_access_id);
+                        });
                     })
                     ->orderBy('id', 'desc')
                     ->paginate(10)

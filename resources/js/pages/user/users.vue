@@ -5,7 +5,7 @@ import { useForm, router } from '@inertiajs/vue3'
 import { Icon } from '@iconify/vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
-import Select from 'primevue/select' // Import the Select component
+import Select from 'primevue/select' 
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 
@@ -17,12 +17,13 @@ const toast = useToast()
 const props = defineProps({
     users:     { type: Object, default: () => ({}) },
     filters:   { type: Object, default: () => ({}) },
-    provinces: { type: Array,  default: () => [] }, // Add provinces prop from Laravel
+    provinces: { type: Array,  default: () => [] },
 })
 
 // ── Search & Pagination ──────────────────────────────────
 const search = ref(props.filters.search ?? '')
 let searchTimeout = null
+
 const onSearch = (e) => {
     search.value = e.target.value
     clearTimeout(searchTimeout)
@@ -35,7 +36,10 @@ const onSearch = (e) => {
 
 const goToPage = (url) => {
     if (!url) return
-    router.get(url, { search: search.value }, { preserveState: true, preserveScroll: true })
+    router.get(url, { search: search.value }, { 
+        preserveState: true, 
+        preserveScroll: true 
+    })
 }
 
 // ── Create User Modal ──────────────────────────────────
@@ -43,7 +47,7 @@ const showCreateModal = ref(false)
 const form = useForm({
     name: '',
     email: '',
-    province_id: null, // Add this to your form state
+    province_id: null,
 })
 
 const openCreateModal = () => {
@@ -113,53 +117,74 @@ const accessLevelColor = (level) => ({
             </div>
             <div class="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
                 <Icon icon="hugeicons:list-view" class="text-sm" />
-                <span>{{ props.users.total ?? 0 }} users</span>
+                <span>{{ props.users.total ?? 0 }} users total</span>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 overflow-y-auto flex-1 flex flex-col">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-100 border-b border-slate-100 sticky top-0 z-10">
-                    <tr>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">User</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Province</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Access Level</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    <tr v-for="(u, index) in props.users.data" :key="u.id" class="hover:bg-slate-50/70 transition-colors">
-                        <td class="px-5 py-3.5 text-[11px] text-slate-300 font-bold tabular-nums w-10">
-                            {{ String(index + 1).padStart(2, '0') }}
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
-                                    {{ u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) }}
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex-1 flex flex-col">
+            <div class="overflow-y-auto flex-1">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-100 border-b border-slate-100 sticky top-0 z-10">
+                        <tr>
+                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
+                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">User</th>
+                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Province</th>
+                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Access Level</th>
+                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <tr v-for="(u, index) in props.users.data" :key="u.id" class="hover:bg-slate-50/70 transition-colors">
+                            <td class="px-5 py-3.5 text-[11px] text-slate-300 font-bold tabular-nums w-10">
+                                {{ String((props.users.current_page - 1) * props.users.per_page + index + 1).padStart(2, '0') }}
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
+                                        {{ u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) }}
+                                    </div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="text-sm font-semibold text-slate-700 truncate">{{ u.name }}</span>
+                                        <span class="text-[10px] text-slate-400 truncate">{{ u.email }}</span>
+                                    </div>
                                 </div>
-                                <div class="flex flex-col min-w-0">
-                                    <span class="text-sm font-semibold text-slate-700 truncate">{{ u.name }}</span>
-                                    <span class="text-[10px] text-slate-400 truncate">{{ u.email }}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3.5 text-[11px] text-slate-600 font-medium">
-                            {{ u.access_levels?.province?.name ?? '—' }}
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ring-1" :class="accessLevelColor(u.access_levels?.access_level)">
-                                {{ accessLevelLabel(u.access_levels?.access_level) }}
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5 text-right">
-                            <button @click="resetPassword(u.id)" class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
-                                <Icon icon="hugeicons:reset-password" class="text-sm" />
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            </td>
+                            <td class="px-5 py-3.5 text-[11px] text-slate-600 font-medium">
+                                {{ u.access_levels?.province?.name ?? '—' }}
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ring-1" :class="accessLevelColor(u.access_levels?.access_level)">
+                                    {{ accessLevelLabel(u.access_levels?.access_level) }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-3.5 text-right">
+                                <button @click="resetPassword(u.id)" class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                                    <Icon icon="hugeicons:reset-password" class="text-sm" />
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="props.users.last_page > 1" class="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50/50">
+                <span class="text-xs text-slate-400 font-medium">
+                    Showing {{ props.users.from }}–{{ props.users.to }} of {{ props.users.total }}
+                </span>
+                <div class="flex gap-1">
+                    <button
+                        v-for="link in props.users.links"
+                        :key="link.label"
+                        :disabled="!link.url || link.active"
+                        @click="goToPage(link.url)"
+                        class="px-3 py-1.5 text-[11px] font-bold rounded-lg border transition-all disabled:opacity-40"
+                        :class="link.active 
+                            ? 'bg-indigo-600 text-white border-indigo-600' 
+                            : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'"
+                        v-html="link.label"
+                    />
+                </div>
+            </div>
         </div>
 
         <Dialog v-model:visible="showCreateModal" header="Create New User" :modal="true" :draggable="false" class="w-full max-w-md mx-4">
@@ -191,7 +216,7 @@ const accessLevelColor = (level) => ({
                 </div>
 
                 <div class="flex justify-end gap-2 mt-4 pt-4 border-t border-slate-100">
-                    <button type="button" @click="showCreateModal = false" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-lg transition-colors">Cancel</button>
+                    <button type="button" @click="showCreateModal = false" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-lg">Cancel</button>
                     <button type="submit" :disabled="form.processing" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg disabled:opacity-50 transition-all">
                         <Icon v-if="form.processing" icon="hugeicons:loading-03" class="animate-spin" />
                         Save User
