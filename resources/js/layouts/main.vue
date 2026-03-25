@@ -144,10 +144,10 @@
 
     // ── User menu ──────────────────────────────────────────
     const userMenuItems = [
-        { label: 'My Profile',       icon: 'hugeicons:user-circle',     badge: null },
-        { label: 'Account Settings', icon: 'hugeicons:settings-01',     badge: null },
-        { label: 'Notifications',    icon: 'hugeicons:notification-02', badge: 3    },
-        { label: 'Help & Support',   icon: 'hugeicons:help-circle',     badge: null },
+        { label: 'My Profile',       icon: 'hugeicons:user-circle',     href: '/profile',       badge: null },
+        { label: 'Account Settings', icon: 'hugeicons:settings-01',     href: '/account-settings',      badge: null },
+        { label: 'Notifications',    icon: 'hugeicons:notification-02', href: '/notifications', badge: 3    },
+        { label: 'Help & Support',   icon: 'hugeicons:help-circle',     href: '/help',          badge: null },
     ]
 
     const logout = () => router.post('/logout')
@@ -307,7 +307,13 @@
                     </div>
                 </div>
                 <div class="py-1">
-                    <button v-for="item in userMenuItems" :key="item.label" type="button" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group">
+                    <button
+                        v-for="item in userMenuItems"
+                        :key="item.label"
+                        type="button"
+                        @click="router.visit(item.href)"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group"
+                    >
                         <Icon :icon="item.icon" class="text-base text-slate-400 group-hover:text-indigo-500 transition-colors flex-shrink-0" />
                         <span class="flex-1 text-left text-xs font-medium text-slate-600 group-hover:text-slate-900 transition-colors truncate">{{ item.label }}</span>
                         <span v-if="item.badge" class="inline-flex items-center justify-center min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex-shrink-0">
@@ -376,16 +382,16 @@
 </template>
 
 <style scoped>
-.scrollbar-none::-webkit-scrollbar { display: none; }
-.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-.fade-enter-active,
-.fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from,
-.fade-leave-to { opacity: 0; }
+    .fade-enter-active,
+    .fade-leave-active { transition: opacity 0.2s ease; }
+    .fade-enter-from,
+    .fade-leave-to { opacity: 0; }
 
-.slide-enter-active,
-.slide-leave-active { transition: transform 0.25s ease; }
-.slide-enter-from,
-.slide-leave-to { transform: translateX(-100%); }
+    .slide-enter-active,
+    .slide-leave-active { transition: transform 0.25s ease; }
+    .slide-enter-from,
+    .slide-leave-to { transform: translateX(-100%); }
 </style>

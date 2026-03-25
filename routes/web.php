@@ -20,6 +20,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeamBarangayController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -90,5 +91,9 @@ Route::middleware('auth')->group(function () {
     //generation of report routes
     Route::get('generate/quarterly-large-scale-report', [GenerateReportController::class, 'generateQuarterlyLargeScaleReport']);
     
+
+    //user routes
+    Route::get('account-settings', [UserController::class, 'accountSettings']);
+    Route::put('password-update', [UserController::class, 'updatePassword']);
 
 });
