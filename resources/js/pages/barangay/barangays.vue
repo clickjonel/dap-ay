@@ -1,10 +1,11 @@
 <script setup>
     import Main from '@/layouts/main.vue'
-    import { ref } from 'vue'
+    import { ref, inject } from 'vue'
     import { router } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
 
     defineOptions({ layout: Main })
+    const user = inject('user')
 
     const props = defineProps({
         barangays: { type: Object, default: () => ({}) },
@@ -49,6 +50,7 @@
                 <p class="text-xs text-slate-400 mt-1">Manage barangays and their data.</p>
             </div>
             <button
+                v-if="user.access_levels.access_level !== 2"
                 type="button"
                 @click="router.visit('/barangays/create')"
                 class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200"

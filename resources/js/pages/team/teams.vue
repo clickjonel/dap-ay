@@ -8,16 +8,42 @@
     import ToggleSwitch from 'primevue/toggleswitch'
     import { useToast } from 'primevue/usetoast'
 
+    defineOptions({ layout: Main })
+
     const user = inject('user')
     const toast = useToast()
-    const search = ref('')
-    defineOptions({ layout: Main })
 
     const props = defineProps({
         teams:   { type: Object, default: () => ({}) },
         filters: { type: Object, default: () => ({}) },
     })
 
+    // ── Search ─────────────────────────────────────────────
+    const search = ref(props.filters.search ?? '')
+
+    let searchTimeout = null
+    const onSearch = (e) => {
+        search.value = e.target.value
+        clearTimeout(searchTimeout)
+        searchTimeout = setTimeout(() => {
+            router.get('/teams', { search: search.value }, {
+                preserveState:  true,
+                preserveScroll: true,
+                replace:        true,
+            })
+        }, 400)
+    }
+
+    // ── Pagination ─────────────────────────────────────────
+    const goToPage = (url) => {
+        if (!url) return
+        router.get(url, { search: search.value }, {
+            preserveState:  true,
+            preserveScroll: true,
+        })
+    }
+
+    // ── Modal ──────────────────────────────────────────────
     const teamModal = ref({ visible: false, mode: 'create', team: null })
     const form = useForm({ name: '', is_active: true, pk_kit: false, eo_link: '' })
 
@@ -59,12 +85,12 @@
 </script>
 
 <template>
-<div class="h-full flex flex-col gap-5 lg:gap-6">
+<div class="h-full flex flex-col gap-5">
 
     <!-- ── Page header ──────────────────────────────── -->
-    <div class="flex items-start sm:items-center justify-between gap-3">
+    <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-base lg:text-lg font-bold text-slate-800 leading-none tracking-tight">Teams</h1>
+            <h1 class="text-lg font-bold text-slate-800 leading-none">Teams</h1>
             <p v-if="user.access_levels.access_level === 2" class="text-xs text-slate-400 mt-1">Showing teams where you are a member.</p>
             <p v-if="user.access_levels.access_level === 3" class="text-xs text-slate-400 mt-1">Showing teams within your jurisdiction.</p>
             <p v-if="user.access_levels.access_level === 1" class="text-xs text-slate-400 mt-1">Showing all teams within the region.</p>
@@ -72,229 +98,173 @@
         <button
             type="button"
             @click="openTeamModal('create')"
-            class="flex items-center gap-2 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-semibold rounded-lg transition-all shadow-sm shadow-indigo-200 shrink-0"
+            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200"
         >
             <Icon icon="hugeicons:plus-sign" class="text-sm" />
-            <span class="hidden sm:inline">New Team</span>
-            <span class="sm:hidden">New</span>
+            New Team
         </button>
     </div>
 
-    <!-- ── Toolbar ───────────────────────────────────── -->
+    <!-- ── Filters ───────────────────────────────────── -->
     <div class="flex items-center gap-3">
-        <div class="relative flex-1 sm:max-w-xs">
+        <div class="relative flex-1 max-w-xs">
             <Icon icon="hugeicons:search-01" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" />
             <input
-                v-model="search"
+                :value="search"
+                @input="onSearch"
                 type="text"
-                placeholder="Search teams…"
-                class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-300"
+                placeholder="Search teams..."
+                class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
             />
         </div>
-        <!-- Count pill -->
-        <div class="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-[11px] font-semibold text-slate-500 shrink-0 tabular-nums">
-            <Icon icon="hugeicons:add-team" class="text-sm text-slate-400" />
-            {{ props.teams.data?.length ?? 0 }} teams
+        <div class="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
+            <Icon icon="hugeicons:list-view" class="text-sm" />
+            <span>{{ props.teams.total ?? 0 }} teams</span>
         </div>
     </div>
 
-    <!-- ── Mobile cards / Desktop table ──────────────── -->
-    <div class="flex-1 min-h-0 overflow-y-auto">
+    <!-- ── Table ─────────────────────────────────────── -->
+    <div class="bg-white rounded-xl border border-slate-200 overflow-y-auto flex-1 flex flex-col">
+        <table class="w-full text-left">
+            <thead class="bg-slate-100 border-b border-slate-100 sticky top-0">
+                <tr>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Team Name</th>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Members</th>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Barangays</th>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">EO Link</th>
+                    <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
 
-        <!-- ── Mobile card list ── -->
-        <div class="flex flex-col gap-2.5 md:hidden">
-            <div v-if="!props.teams.data?.length" class="flex flex-col items-center gap-2 py-16">
-                <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-1">
-                    <Icon icon="hugeicons:folder-02" class="text-xl text-slate-300" />
-                </div>
-                <p class="text-sm font-semibold text-slate-400">No teams found</p>
-                <p class="text-xs text-slate-300">Adjust your search or create a new team.</p>
-            </div>
-
-            <div
-                v-for="team in props.teams.data"
-                :key="team.id"
-                class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 transition-opacity"
-                :class="!team.is_active ? 'opacity-50' : ''"
-            >
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0 ring-1 ring-indigo-100">
-                        <Icon icon="hugeicons:add-team" class="text-base text-indigo-500" />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-slate-700 truncate uppercase tracking-wide">{{ team.name }}</p>
-                        <div class="flex items-center gap-2 mt-0.5">
-                            <span class="text-[11px] text-slate-400">{{ team.members.length }} members · {{ team.barangays.length }} barangays</span>
+                <!-- Empty state -->
+                <tr v-if="!props.teams.data?.length">
+                    <td colspan="6" class="px-5 py-16 text-center">
+                        <div class="flex flex-col items-center gap-2">
+                            <Icon icon="hugeicons:folder-02" class="text-3xl text-slate-300" />
+                            <p class="text-sm font-medium text-slate-400">No teams found</p>
+                            <p class="text-xs text-slate-300">Try adjusting your search or create a new team.</p>
                         </div>
-                    </div>
-                    <!-- Status dot -->
-                    <span
-                        class="w-2 h-2 rounded-full shrink-0"
-                        :class="team.is_active ? 'bg-emerald-400' : 'bg-slate-300'"
-                    />
-                </div>
+                    </td>
+                </tr>
 
-                <!-- Badges row -->
-                <div class="flex items-center gap-1.5 mt-2.5">
-                    <span v-if="team.pk_kit" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-semibold ring-1 ring-indigo-100">
-                        <Icon icon="hugeicons:package-01" class="text-[10px]" /> PK Kit
-                    </span>
-                    <span v-if="team.eo_link" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-[10px] font-semibold ring-1 ring-amber-100">
-                        <Icon icon="hugeicons:link-01" class="text-[10px]" /> EO Link
-                    </span>
-                    <span v-if="!team.is_active" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 text-[10px] font-semibold">
-                        Inactive
-                    </span>
-                </div>
+                <tr
+                    v-for="(team, index) in props.teams.data"
+                    :key="team.id"
+                    class="hover:bg-slate-50/70 transition-colors"
+                    :class="!team.is_active ? 'opacity-60' : ''"
+                >
+                    <!-- # -->
+                    <td class="px-5 py-3.5 text-[11px] text-slate-300 font-bold tabular-nums w-10">
+                        {{ String(index + 1).padStart(2, '0') }}
+                    </td>
 
-                <!-- Action buttons -->
-                <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-                    <button
-                        type="button"
-                        @click="openTeamModal('edit', team)"
-                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:pencil-edit-01" class="text-xs" /> Edit
-                    </button>
-                    <button
-                        type="button"
-                        @click="router.visit(`/teams/${team.id}/members`)"
-                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:user-group" class="text-xs" /> Members
-                    </button>
-                    <button
-                        type="button"
-                        @click="router.visit(`/teams/${team.id}/barangays`)"
-                        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" /> Barangays
-                    </button>
-                </div>
-            </div>
-        </div>
+                    <!-- Team name -->
+                    <td class="px-5 py-3.5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                                <Icon icon="hugeicons:add-team" class="text-sm text-indigo-500" />
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-sm font-semibold text-slate-700 truncate uppercase">{{ team.name }}</span>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span
+                                        class="inline-flex items-center gap-1 text-[10px] font-semibold"
+                                        :class="team.is_active ? 'text-emerald-500' : 'text-slate-400'"
+                                    >
+                                        <span class="w-1.5 h-1.5 rounded-full" :class="team.is_active ? 'bg-emerald-400' : 'bg-slate-300'" />
+                                        {{ team.is_active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                    <span v-if="team.pk_kit" class="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-400">
+                                        <Icon icon="hugeicons:package-01" class="text-[10px]" /> PK Kit
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
 
-        <!-- ── Desktop table ── -->
-        <div class="hidden md:block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm shadow-slate-100">
+                    <!-- Members -->
+                    <td class="px-5 py-3.5 text-xs text-slate-500">
+                        {{ team.members.length }} members
+                    </td>
 
-            <!-- Table header -->
-            <div class="grid grid-cols-[3rem_1fr_10rem_10rem_14rem_14rem] border-b border-slate-100 bg-slate-50/80 px-2">
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">#</div>
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Team</div>
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Members</div>
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Scope</div>
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">EO Link</div>
-                <div class="px-3 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right">Actions</div>
-            </div>
+                    <!-- Barangays -->
+                    <td class="px-5 py-3.5 text-xs text-slate-500">
+                        {{ team.barangays.length }} barangays
+                    </td>
 
-            <!-- Empty state -->
-            <div v-if="!props.teams.data?.length" class="flex flex-col items-center gap-2 py-20">
-                <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-1">
-                    <Icon icon="hugeicons:folder-02" class="text-xl text-slate-300" />
-                </div>
-                <p class="text-sm font-semibold text-slate-400">No teams found</p>
-                <p class="text-xs text-slate-300">Adjust your search or create a new team.</p>
-            </div>
+                    <!-- EO Link -->
+                    <td class="px-5 py-3.5">
+                        <a
+                            v-if="team.eo_link"
+                            :href="team.eo_link"
+                            target="_blank"
+                            class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 hover:underline"
+                        >
+                            <Icon icon="hugeicons:link-01" class="text-xs shrink-0" />
+                            View EO
+                        </a>
+                        <span v-else class="text-xs text-slate-300">—</span>
+                    </td>
 
-            <!-- Rows -->
-            <div
-                v-for="(team, index) in props.teams.data"
-                :key="team.id"
-                class="grid grid-cols-[3rem_1fr_10rem_10rem_14rem_14rem] items-center px-2 border-b border-slate-50 last:border-0 hover:bg-indigo-50/40 transition-colors group"
-                :class="!team.is_active ? 'opacity-50' : ''"
-            >
-                <!-- # -->
-                <div class="px-3 py-4 text-[11px] text-slate-300 font-bold tabular-nums">
-                    {{ String(index + 1).padStart(2, '0') }}
-                </div>
-
-                <!-- Team name + badges -->
-                <div class="px-3 py-4 flex items-center gap-3 min-w-0">
-                    <div class="w-8 h-8 rounded-xl bg-indigo-50 ring-1 ring-indigo-100 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 transition-colors">
-                        <Icon icon="hugeicons:add-team" class="text-sm text-indigo-500" />
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[13px] font-bold text-slate-700 uppercase tracking-wide truncate leading-none">{{ team.name }}</p>
-                        <div class="flex items-center gap-1.5 mt-1.5">
-                            <!-- Status badge -->
-                            <span
-                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide"
-                                :class="team.is_active
-                                    ? 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100'
-                                    : 'bg-slate-100 text-slate-400'"
+                    <!-- Actions -->
+                    <td class="px-5 py-3.5" @click.stop>
+                        <div class="flex items-center justify-end gap-1">
+                            <button
+                                type="button"
+                                @click="openTeamModal('edit', team)"
+                                class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                                title="Edit Team"
                             >
-                                <span class="w-1 h-1 rounded-full" :class="team.is_active ? 'bg-emerald-500' : 'bg-slate-400'" />
-                                {{ team.is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                            <!-- PK Kit badge -->
-                            <span v-if="team.pk_kit" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 text-[9px] font-bold uppercase tracking-wide ring-1 ring-indigo-100">
-                                <Icon icon="hugeicons:package-01" class="text-[9px]" /> PK Kit
-                            </span>
+                                <Icon icon="hugeicons:pencil-edit-02" class="text-sm" />
+                            </button>
+                            <button
+                                type="button"
+                                @click="router.visit(`/teams/${team.id}/members`)"
+                                class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                                title="Manage Members"
+                            >
+                                <Icon icon="hugeicons:user-group" class="text-sm" />
+                            </button>
+                            <button
+                                type="button"
+                                @click="router.visit(`/teams/${team.id}/barangays`)"
+                                class="p-1.5 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                                title="Manage Barangays"
+                            >
+                                <Icon icon="hugeicons:map-pinpoint-01" class="text-sm" />
+                            </button>
                         </div>
-                    </div>
-                </div>
+                    </td>
+                </tr>
 
-                <!-- Members -->
-                <div class="px-3 py-4">
-                    <div class="flex items-center gap-1.5">
-                        <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 border border-slate-100">
-                            <Icon icon="hugeicons:user-group" class="text-[11px] text-slate-400" />
-                            <span class="text-[11px] font-semibold text-slate-600 tabular-nums">{{ team.members.length }}</span>
-                        </div>
-                    </div>
-                </div>
+            </tbody>
+        </table>
 
-                <!-- Scope / Barangays -->
-                <div class="px-3 py-4">
-                    <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 border border-slate-100 w-fit">
-                        <Icon icon="hugeicons:map-pinpoint-01" class="text-[11px] text-slate-400" />
-                        <span class="text-[11px] font-semibold text-slate-600 tabular-nums">{{ team.barangays.length }}</span>
-                    </div>
-                </div>
-
-                <!-- EO Link -->
-                <div class="px-3 py-4">
-                    <a
-                        v-if="team.eo_link"
-                        :href="team.eo_link"
-                        target="_blank"
-                        class="inline-flex items-center gap-1.5 text-[11px] font-medium text-indigo-500 hover:text-indigo-700 hover:underline truncate max-w-[11rem]"
-                    >
-                        <Icon icon="hugeicons:link-01" class="text-xs shrink-0" />
-                        <span class="truncate">View EO</span>
-                    </a>
-                    <span v-else class="text-[11px] text-slate-300 italic">—</span>
-                </div>
-
-                <!-- Actions -->
-                <div class="px-3 py-4 flex items-center justify-end gap-1.5">
-                    <button
-                        type="button"
-                        @click="openTeamModal('edit', team)"
-                        class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:pencil-edit-01" class="text-xs" />
-                        Edit
-                    </button>
-                    <button
-                        type="button"
-                        @click="router.visit(`/teams/${team.id}/members`)"
-                        class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:user-group" class="text-xs" />
-                        Members
-                    </button>
-                    <button
-                        type="button"
-                        @click="router.visit(`/teams/${team.id}/barangays`)"
-                        class="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                    >
-                        <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" />
-                        Barangays
-                    </button>
-                </div>
+        <!-- ── Pagination ─────────────────────────────── -->
+        <div
+            v-if="props.teams.last_page > 1"
+            class="flex items-center justify-between px-5 py-3 border-t border-slate-100 mt-auto"
+        >
+            <span class="text-xs text-slate-400">
+                Showing {{ props.teams.from }}–{{ props.teams.to }} of {{ props.teams.total }}
+            </span>
+            <div class="flex gap-1">
+                <button
+                    v-for="link in props.teams.links"
+                    :key="link.label"
+                    :disabled="!link.url || link.active"
+                    @click="goToPage(link.url)"
+                    class="px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                    :class="link.active
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50'"
+                    v-html="link.label"
+                />
             </div>
         </div>
+
     </div>
 
     <!-- ── Create / Edit Modal ────────────────────────── -->
