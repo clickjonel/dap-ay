@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Program;
 use App\Models\PurokalusuganActivity;
 use App\Models\PurokalusuganActivityBarangay;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -49,6 +50,34 @@ class GenerateReportController extends Controller
             'barangays'   => $barangays,
         ]);
 
+    }
+
+    public function generateApprovedReportSubmissions(Request $request)
+    {
+        $validated = $request->validate([
+            'start' => 'nullable|date',
+            'end' => 'nullable|date|after_or_equal:start',
+        ]);
+
+        $start = $validated['start'] ?? now()->startOfMonth()->toDateString();
+        $end = $validated['end'] ?? now()->endOfMonth()->toDateString();
+
+        $reports = Report::query()
+            ->where('status', 'approved')
+            ->with([
+                'barangay.municipality',
+                'barangay.province',
+                'users',
+                'values.indicator.program',
+                'values.disaggregations.disaggregation'
+            ])
+            ->where('status', 'approved')
+            ->whereBetween('date', [$start, $end])
+            ->get();
+
+        return Inertia::render('generate/generateApprovedReportSubmissions', [
+            'reports' => $reports,
+        ]);
     }
 
 }
