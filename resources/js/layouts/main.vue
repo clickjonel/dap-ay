@@ -1,10 +1,11 @@
 <script setup>
-    import { computed, ref } from 'vue'
+    import { computed, ref, onMounted } from 'vue'
     import { Icon } from '@iconify/vue'
     import { usePage, router, Link } from '@inertiajs/vue3'
     import Popover from 'primevue/popover'
     import Divider from 'primevue/divider'
     import Toast from 'primevue/toast'
+    import Dialog from 'primevue/dialog'
     import { provide } from 'vue'
 
     // ── Inertia page props ─────────────────────────────────
@@ -160,6 +161,35 @@
     ]
 
     const logout = () => router.post('/logout')
+
+    // ── Announcement dialog ────────────────────────────────
+    // Change this key + date whenever you publish a new announcement.
+    // Users who clicked "Got it" on a previous announcement will see the new one.
+    const ANNOUNCEMENT_KEY = 'dapay_announcement_april10_2026'
+
+    const showAnnouncement = ref(false)
+
+    onMounted(() => {
+        const dismissed = localStorage.getItem(ANNOUNCEMENT_KEY)
+        if (!dismissed) {
+            showAnnouncement.value = true
+        }
+    })
+
+    const dismissAnnouncement = () => {
+        localStorage.setItem(ANNOUNCEMENT_KEY, 'dismissed')
+        showAnnouncement.value = false
+    }
+
+    const remindLater = () => {
+        // Closes for this session only — does NOT write to localStorage,
+        // so the dialog will reappear on the next page load.
+        showAnnouncement.value = false
+    }
+
+    const announcementDate = new Date().toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+    })
 </script>
 
 <template>
@@ -385,6 +415,102 @@
             </main>
 
         </div>
+
+        <!-- ── Announcement Dialog ────────────────────────── -->
+        <Dialog
+            v-model:visible="showAnnouncement"
+            modal
+            :closable="false"
+            :style="{ width: '440px', padding: '0', borderRadius: '16px', overflow: 'hidden' }"
+            :pt="{
+                root: { style: 'border-radius: 16px; overflow: hidden; padding: 0;' },
+                header: { style: 'display: none;' },
+                content: { style: 'padding: 0;' },
+            }"
+        >
+            <!-- Colored header band -->
+            <div class="bg-indigo-600 px-6 py-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(255,255,255,0.15);">
+                        <Icon icon="hugeicons:notification-02" class="text-white text-base" />
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-semibold leading-none">System Announcement</p>
+                        <p class="text-indigo-200 text-[10px] mt-1">{{ announcementDate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="px-6 pt-5 pb-0">
+                <p class="text-slate-500 text-xs leading-relaxed mb-4">
+                    Please be reminded of the following upcoming deadlines. Ensure all submissions are completed on time to avoid any delays in report processing.
+                </p>
+
+                <!-- Deadline cards -->
+                <div class="space-y-3 mb-4">
+                    <!-- Reports deadline -->
+                    <div class="border border-slate-100 rounded-xl p-3 flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                            <Icon icon="hugeicons:note-done" class="text-indigo-600 text-base" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-700 text-xs font-semibold mb-1">Encoding of Reports</p>
+                            <p class="text-slate-400 text-[11px] leading-relaxed mb-2">
+                                Report submissions must be encoded and finalized by the specified deadline to ensure inclusion in the quarterly report.
+                            </p>
+                            <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-[11px] font-medium px-2.5 py-1 rounded-full">
+                                <Icon icon="hugeicons:calendar-03" class="text-[11px] flex-shrink-0" />
+                                Deadline: April 10, 2026
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Teams deadline -->
+                    <div class="border border-slate-100 rounded-xl p-3 flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                            <Icon icon="hugeicons:user-group" class="text-indigo-600 text-base" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-700 text-xs font-semibold mb-1">Encoding of Teams</p>
+                            <p class="text-slate-400 text-[11px] leading-relaxed mb-2">
+                                Please ensure that all team-related data is accurately encoded and finalized by the deadline to facilitate smooth report generation.
+                            </p>
+                            <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-[11px] font-medium px-2.5 py-1 rounded-full">
+                                <Icon icon="hugeicons:calendar-03" class="text-[11px] flex-shrink-0" />
+                                Deadline: April 10, 2026
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info note -->
+                <div class="bg-slate-50 rounded-lg p-3 flex gap-2 mb-5">
+                    <Icon icon="hugeicons:information-circle" class="text-indigo-400 text-sm flex-shrink-0 mt-0.5" />
+                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                        Please make sure to review all the information and complete the necessary details to ensure a smooth transition and report generation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer actions -->
+            <div class="px-6 pb-5 flex gap-2">
+                <button
+                    type="button"
+                    @click="remindLater"
+                    class="flex-1 py-2.5 rounded-lg border border-slate-200 text-xs text-slate-500 hover:bg-slate-50 transition-colors font-medium"
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    @click="dismissAnnouncement"
+                    class="flex-1 py-2.5 rounded-lg bg-indigo-600 text-xs text-white font-semibold hover:bg-indigo-700 transition-colors"
+                >
+                    Got it
+                </button>
+            </div>
+        </Dialog>
 
         <Toast position="bottom-right" />
     </div>
