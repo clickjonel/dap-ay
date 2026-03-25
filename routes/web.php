@@ -97,5 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::put('password-update', [UserController::class, 'updatePassword']);
     Route::get('users', [UserController::class, 'getUsers']);
     Route::put('users/{user}', [UserController::class, 'resetPassword']);
+    Route::post('users/create', [UserController::class, 'createUser']);
 
 });

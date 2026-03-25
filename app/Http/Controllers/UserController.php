@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Province;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -54,6 +55,7 @@ class UserController extends Controller
 
         return Inertia::render('user/users', [
             'users' => $users,
+            'provinces' => Province::all(['id', 'name']),
         ]);
     }
 
@@ -64,6 +66,28 @@ class UserController extends Controller
         ]);
 
         return back();
+    }
+
+    public function createUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'province_id' => 'required|exists:provinces,id',
+        ]);
+
+        $userCreated = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => '12345',
+        ]);
+        $userCreated->accessLevels()->create([
+            'pdoho_access_id' => $validated['province_id'],
+            'access_level' => 2,
+        ]);
+
+        return back();
+
     }
 
 }

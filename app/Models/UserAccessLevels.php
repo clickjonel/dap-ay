@@ -8,6 +8,7 @@ class UserAccessLevels extends Model
 {
     protected $fillable = [
         'user_id',
+        'pdoho_access_id',
         'access_level',
     ]; 
     public $timestamps = false;
