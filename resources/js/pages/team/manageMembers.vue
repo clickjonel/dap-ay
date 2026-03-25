@@ -94,7 +94,6 @@
 
 <template>
     <div class="h-full flex flex-col gap-4 lg:gap-5 min-h-0">
-
         <!-- ── Header ─────────────────────────────────────────── -->
         <div class="flex items-start sm:items-center justify-between gap-3 shrink-0">
             <div class="flex items-center gap-3">

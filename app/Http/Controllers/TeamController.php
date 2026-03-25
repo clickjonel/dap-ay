@@ -16,7 +16,8 @@ class TeamController extends Controller
         $userTeamIDs = $request->user()->teams->pluck('id')->toArray() ?? [];
 
         $teams = Team::query()
-            ->when($request->user()->accessLevels->access_level === 2 && !empty($userTeamIDs), function ($query) use ($userTeamIDs) {
+            ->with(['members','barangays'])
+            ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
                 $query->whereIn('id', $userTeamIDs);
             })
             // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {

@@ -17,9 +17,17 @@ class TeamMemberController extends Controller
     public function index(Team $team)
     {
         $userAuthenticated = Auth::user();
-        $users = User::whereHas('accessLevels', function ($query) use ($userAuthenticated) {
-            $query->where('pdoho_access_id', $userAuthenticated->accessLevels->pdoho_access_id);
-        })->get();
+        $users = User::query()
+            ->when($userAuthenticated->accessLevels->access_level === 2 | $userAuthenticated->accessLevels->access_level === 3, function($query) use ($userAuthenticated){
+                $query->whereHas('accessLevels', function ($query) use ($userAuthenticated) {
+                    $query->where('pdoho_access_id', $userAuthenticated->accessLevels->pdoho_access_id);
+                });
+            })
+            ->whereHas('accessLevels', function ($query) {
+                $query->where('access_level', '!=', 1)
+                    ->where('access_level', '!=', 3);
+            })
+            ->get();
 
         return Inertia::render('team/manageMembers', [
             'team'    => $team,

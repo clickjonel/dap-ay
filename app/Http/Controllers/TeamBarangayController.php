@@ -15,7 +15,12 @@ class TeamBarangayController extends Controller
      */
     public function index(Team $team)
     {
-        $barangays = Barangay::where('province_id', Auth::user()->accessLevels->pdoho_access_id)->get();
+        $user = Auth::user();
+        $barangays = Barangay::query()
+                        ->when($user->access_level === 2, function($query) use ($user) {
+                            $query->where('province_id', $user->accessLevels->pdoho_access_id);
+                        })
+                        ->get();
 
         return inertia('team/manageBarangays', [
             'team'      => $team->load('barangays.municipality'),
