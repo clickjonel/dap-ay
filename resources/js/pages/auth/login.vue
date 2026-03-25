@@ -9,6 +9,10 @@
     import Checkbox from 'primevue/checkbox';
     import Button from 'primevue/button';
     import Message from 'primevue/message';
+    import Toast from 'primevue/toast';
+    import { useToast } from 'primevue/usetoast';
+
+    const toast = useToast();
 
     const form = useForm({
         email: '',
@@ -17,7 +21,19 @@
     });
 
     const submit = () => {
-        form.post('/login');
+        form.post('/login', {
+            onSuccess: () => {
+                toast.add({ severity: 'success', summary: 'Welcome back!', detail: 'Logged in successfully.', life: 3000 })
+            },
+            onError: () => {
+                toast.add({
+                    severity: 'error',
+                    summary: 'Login Failed',
+                    detail: form.errors.email || form.errors.password || 'Invalid credentials. Please try again.',
+                    life: 4000,
+                })
+            },
+        })
     };
 
 </script>
@@ -25,6 +41,8 @@
 <template>
     <Head title="Login | PuroKalusugan" />
     
+    <Toast position="top-right" />
+
     <div class="min-h-screen flex items-center justify-center bg-slate-50 px-4 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-100/50 rounded-full blur-[120px] -mr-48 -mt-48"></div>
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-100/50 rounded-full blur-[120px] -ml-48 -mb-48"></div>
@@ -59,7 +77,6 @@
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center">
                             <label for="password" class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
-                            <!-- <a href="#" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">Forgot?</a> -->
                         </div>
                         <Password 
                             v-model="form.password" 
