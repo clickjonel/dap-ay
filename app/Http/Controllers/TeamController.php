@@ -15,9 +15,12 @@ class TeamController extends Controller
     {
         $user = $request->user();
         $userAccessLevel = $user->accessLevels?->access_level ?? 2;
+        $userTeamIDs = $user->teams->pluck('id')->toArray() ?? [];
 
         $teams = Team::query()
             ->with(['members','barangays'])
+
+            //pdoho access
             ->when($userAccessLevel === 3, function ($query) use ($user) {
                 $query->where(function ($query) use ($user) {
                     $query->whereHas('barangays', function ($query) use ($user) {
@@ -27,12 +30,17 @@ class TeamController extends Controller
                     ->orWhere('created_by', $user->id);
                 });
             })
-            // ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
-            //     $query->whereIn('id', $userTeamIDs);
-            // })
-            // ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($userTeamIDs) {
-            //     $query->whereIn('id', $userTeamIDs);
-            // })
+
+            //hrh access
+            ->when($userAccessLevel === 2, function ($query) use ($user) {
+                $query->where(function ($query) use ($user) {
+                    $query->whereHas('members', function ($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    ->orWhereDoesntHave('members');
+                });
+            })
+            
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
