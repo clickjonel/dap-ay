@@ -36,6 +36,7 @@
         'Parent Leader', 
         'Barangay Councilor',
         'Committee Chairperson on Health',
+        'Medical Officer',
     ]
 
     const search = ref('')
