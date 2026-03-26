@@ -25,6 +25,8 @@
         'DOH-deployed HRH', 
         'LGU Nurse', 
         'LGU Midwife',
+        'Nutritionist Dietician',
+        'Medical Technologist',
         'Barangay Health Worker (BHW)',
         'BLGU',
         'BNS',
