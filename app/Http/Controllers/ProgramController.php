@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Program;
 use App\Models\ProgramGroup;
-use Illuminate\Http\Request;
+use App\Http\Requests\Program\CreateProgramRequest;
 use Inertia\Inertia;
 
 class ProgramController extends Controller
@@ -34,15 +34,9 @@ class ProgramController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateProgramRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'parent_program_id' => 'required|exists:program_groups,id',
-            'is_active' => 'required|boolean',
-        ]);
-
-        Program::create($request->all());
+        Program::create($request->validated());
 
         return redirect()->route('program.index')->with('success', 'Program created successfully.');
     }
@@ -66,15 +60,9 @@ class ProgramController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Program $program)
+    public function update(CreateProgramRequest $request, Program $program)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'parent_program_id' => 'required|exists:program_groups,id',
-            'is_active' => 'required|boolean',
-        ]);
-
-        $program->update($request->all());
+        $program->update($request->validated());
 
         return redirect()->route('program.index')->with('success', 'Program updated successfully.');
     }
