@@ -10,7 +10,8 @@ class Team extends Model
         'name',
         'is_active',
         'pk_kit',
-        'eo_link'
+        'eo_link',
+        'created_by',
     ];
     public $timestamps = false;
     public $casts = [

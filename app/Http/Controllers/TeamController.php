@@ -13,10 +13,20 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
-        $userTeamIDs = $request->user()->teams->pluck('id')->toArray() ?? [];
+        $user = $request->user();
+        $userAccessLevel = $user->accessLevels?->access_level ?? 2;
 
         $teams = Team::query()
             ->with(['members','barangays'])
+            ->when($userAccessLevel === 3, function ($query) use ($user) {
+                $query->where(function ($query) use ($user) {
+                    $query->whereHas('barangays', function ($query) use ($user) {
+                        $query->where('province_id', $user->accessLevels->pdoho_access_id);
+                    })
+                    ->orWhereDoesntHave('barangays')
+                    ->orWhere('created_by', $user->id);
+                });
+            })
             // ->when($request->user()->accessLevels->access_level === 2, function ($query) use ($userTeamIDs) {
             //     $query->whereIn('id', $userTeamIDs);
             // })
@@ -59,7 +69,9 @@ class TeamController extends Controller
             'eo_link' => 'nullable',
         ]);
 
-        Team::create($validated);
+        Team::create(array_merge($validated, [
+            'created_by' => $request->user()->id,
+        ]));
 
         return back();
     }
