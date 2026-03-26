@@ -17,10 +17,15 @@ class TeamBarangayController extends Controller
     {
         $user = Auth::user();
         $barangays = Barangay::query()
+                        ->with(['municipality', 'province'])
                         ->when($user->access_level === 2, function($query) use ($user) {
                             $query->where('province_id', $user->accessLevels->pdoho_access_id);
                         })
-                        ->get();
+                        ->get()
+                        ->map(fn($b) => [
+                            'id'   => $b->id,
+                            'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
+                        ]);
 
         return inertia('team/manageBarangays', [
             'team'      => $team->load('barangays.municipality'),

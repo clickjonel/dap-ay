@@ -64,7 +64,7 @@ class ReportController extends Controller
                         ->map(fn($b) => [
                             'id'   => $b->id,
                             'name' => $b->name . ' - ' . ($b->municipality->name ?? '—'),
-                        ]);;
+                        ]);
         $users = User::query()
             ->when($user->accessLevels->access_level === 2, function ($query) use ($user) {
                 $query->whereHas('accessLevels', function ($q) use ($user) {
