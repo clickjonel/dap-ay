@@ -79,7 +79,7 @@ const submitStatus = (statusValue,reportID) => {
 
     <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- Pending Reports Section -->
+        <!-- Pending Reports Sections --> 
       <section class="lg:col-span-8 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 font-bold text-slate-800">Pending Reports</div>
         <table class="w-full text-left">

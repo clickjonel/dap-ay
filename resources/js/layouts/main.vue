@@ -483,6 +483,23 @@
                             </span>
                         </div>
                     </div>
+
+                    <!-- Barangay Profile deadline -->
+                    <div class="border border-slate-100 rounded-xl p-3 flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                            <Icon icon="hugeicons:user-group" class="text-indigo-600 text-base" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-700 text-xs font-semibold mb-1">Encoding of Barangay Profiles</p>
+                            <p class="text-slate-400 text-[11px] leading-relaxed mb-2">
+                                Please ensure that all barangay profile data is accurately encoded and finalized by the deadline to facilitate smooth report generation. Please encode upon available data of each of the brangay profiles to avoid delay in report generation.
+                            </p>
+                            <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-[11px] font-medium px-2.5 py-1 rounded-full">
+                                <Icon icon="hugeicons:calendar-03" class="text-[11px] flex-shrink-0" />
+                                Deadline: April 10, 2026
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Info note -->
