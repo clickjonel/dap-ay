@@ -214,7 +214,7 @@ function submitStatus(statusValue) {
                                     <button v-if="canEditReport(report.status)" @click="editReport(report.id)" class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
                                         <Icon icon="hugeicons:pencil-edit-02" class="text-sm" />
                                     </button>
-                                    <button v-if="!report.status && user.access_levels.access_level !== 2" @click="openStatusDialog(report)" class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
+                                    <button v-if="!report.status && user.access_levels.access_level === 4" @click="openStatusDialog(report)" class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
                                         <Icon icon="hugeicons:tick-01" class="text-sm" />
                                     </button>
                                 </div>

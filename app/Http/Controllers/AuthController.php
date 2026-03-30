@@ -36,6 +36,7 @@ class AuthController extends Controller
                 1 => redirect()->intended('/dashboard/access-level-one'), // admin
                 2 => redirect()->intended('/dashboard/access-level-two'), // user
                 3 => redirect()->intended('/dashboard/access-level-three'), // pdoho
+                4 => redirect()->intended('/dashboard/access-level-four'), // dmo
                 
                 default => abort(404, 'Access Level Not Recognized'),
             };

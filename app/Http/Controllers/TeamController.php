@@ -15,7 +15,6 @@ class TeamController extends Controller
     {
         $user = $request->user();
         $userAccessLevel = $user->accessLevels?->access_level ?? 2;
-        $userTeamIDs = $user->teams->pluck('id')->toArray() ?? [];
 
         $teams = Team::query()
             ->with(['members','barangays'])
@@ -44,9 +43,6 @@ class TeamController extends Controller
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
-            ->with([
-                
-            ])
             ->orderBy('id','desc')
             ->paginate(20)
             ->withQueryString();
