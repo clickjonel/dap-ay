@@ -185,7 +185,7 @@ const handleDelete = (priorityProgramID) => {
                                 v-model="addForm.target"
                                 :min="0"
                                 :use-grouping="false"
-                                placeholder="Target population or coverage"
+                                placeholder="Baseline Data based on Barangay FHSIS."
                                 class="w-full text-sm!"
                                 input-class="w-full"
                                 :invalid="!!addForm.errors.target"
