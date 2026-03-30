@@ -99,9 +99,9 @@
             label: 'PK Activities',
             icon: 'hugeicons:file-02',
             children: [
-                { label: 'PK Activities', href: '/pk-activities', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+                { label: 'PK Activities', href: '/pk-activities', icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
             ],
-            accessLevels: [1, 3]
+            accessLevels: [1, 2, 3]
         },
         {
             id: 'User',
