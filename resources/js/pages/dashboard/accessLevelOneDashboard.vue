@@ -1,5 +1,6 @@
 <script setup>
     import Main from '@/layouts/main.vue'
+import pkActivities from '@/routes/pk-activities'
     import { Icon } from '@iconify/vue'
     import { usePage } from '@inertiajs/vue3'
     import { ref } from 'vue'
@@ -9,6 +10,7 @@
         program: Object,
         team: Object,
         programIndicators: Array,
+        pkActivities: Object,
     })
 
     const page = usePage()
@@ -19,7 +21,7 @@
         { key: 'team',    label: 'Teams',    icon: 'hugeicons:user-group'   },
         { key: 'Programmatic Indicators',    label: 'Programmatic Indicators',    icon: 'hugeicons:chart-bar'   },
         // { key: 'Organizational Indicators',    label: 'Organizational Indicators',    icon: 'hugeicons:chart-pie'   },
-        // { key: 'PK Activities',    label: 'PK Activities',    icon: 'hugeicons:user-group'   },
+        { key: 'PK Activities',    label: 'PK Activities',    icon: 'hugeicons:user-group'   },
         // { key: 'Barangays',    label: 'Barangays',    icon: 'hugeicons:user-group'   },
     ]
 
@@ -296,6 +298,90 @@
                 </div>
             </div>
 
+        </div>
+
+        <div v-if="activeTab === 'PK Activities'" class="space-y-6 p-4">
+        
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+                <div class="bg-white rounded-xl border border-slate-200 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                            <Icon icon="hugeicons:user-group" class="text-indigo-600 text-base" />
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</span>
+                    </div>
+                    <p class="text-2xl font-bold text-slate-800">{{ props.pkActivities.total }}</p>
+                    <p class="text-xs text-slate-400 mt-1">Activities</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <Icon icon="hugeicons:checkmark-circle-01" class="text-emerald-600 text-base" />
+                        </div>
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Active</span>
+                    </div>
+                    <p class="text-2xl font-bold text-slate-800">{{ props.pkActivities.small }}</p>
+                    <p class="text-xs text-slate-400 mt-1">{{ props.pkActivities.total - props.pkActivities.small }} Small Scale</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                            <Icon icon="hugeicons:package-01" class="text-teal-600 text-base" />
+                        </div>
+                        <span class="px-2 py-0.5 bg-teal-50 text-teal-700 text-[10px] font-bold rounded-full border border-teal-100">
+                            {{ Math.round((props.pkActivities.large / props.pkActivities.total) * 100) }}%
+                        </span>
+                    </div>
+                    <p class="text-2xl font-bold text-slate-800">{{ props.pkActivities.large }}</p>
+                    <p class="text-xs text-slate-400 mt-1">Large Scale</p>
+                </div>
+
+            </div>
+
+            <!-- Stat cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <div
+                    v-for="activity in props.pkActivities.activities"
+                    :key="activity.province"
+                    class="bg-white rounded-xl border border-slate-200 overflow-hidden"
+                >
+                    <!-- Card header -->
+                    <div class="px-4 py-3.5 border-b border-slate-100 flex items-start justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                                <Icon icon="hugeicons:chart-bar-line" class="text-indigo-500 text-sm" />
+                            </div>
+                            <p class="text-xs font-semibold text-slate-700 leading-snug">{{ activity.province }}</p>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <p class="text-lg font-bold text-slate-800 leading-none">{{ activity.total }}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Total</p>
+                        </div>
+                    </div>
+
+                    <!-- Disaggregations -->
+                    <div class="px-4 py-3 grid grid-cols-1 gap-x-4 gap-y-2.5">
+                        <div  class="flex items-center justify-between gap-2 py-1.5 border-b border-slate-50 last:border-0">
+                            <p class="text-[11px] text-slate-500 truncate">Small Scale</p>
+                            <span class="text-[11px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                               {{ activity.small }}
+                            </span>
+                        </div>
+                        <div  class="flex items-center justify-between gap-2 py-1.5 border-b border-slate-50 last:border-0">
+                            <p class="text-[11px] text-slate-500 truncate">Large Scale</p>
+                            <span class="text-[11px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                               {{ activity.large }}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
         </div>
 
     </div>

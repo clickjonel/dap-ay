@@ -7,6 +7,7 @@ use App\Models\Municipality;
 use App\Models\Program;
 use App\Models\ProgramIndicator;
 use App\Models\Province;
+use App\Models\PurokalusuganActivity;
 use App\Models\Report;
 use App\Models\ReportValue;
 use App\Models\Team;
@@ -60,10 +61,32 @@ class DashboardController extends Controller
             ];
         });
 
+        $pkActivities = [
+            'total' => PurokalusuganActivity::count(),
+            'small' => PurokalusuganActivity::where('type', 'small')->count(),
+            'large' => PurokalusuganActivity::where('type', 'large')->count(),
+            
+            'activities' => Province::get()->map(function($province) {
+                // Query the activities for this specific province
+                $query = PurokalusuganActivity::whereHas('barangays', function($q) use ($province) {
+                    $q->where('province_id', $province->id);
+                });
+
+                // Clone the query to get specific type counts without re-running the heavy 'whereHas'
+                return [
+                    'province' => $province->name,
+                    'total'    => (clone $query)->count(),
+                    'small'    => (clone $query)->where('type', 'small')->count(),
+                    'large'    => (clone $query)->where('type', 'large')->count(),
+                ];
+            })
+        ];
+
         return inertia('dashboard/accessLevelOneDashboard', [
             'team' => $teamData,
             'program' => $programData,
-            'programIndicators' => $programIndicators
+            'programIndicators' => $programIndicators,
+            'pkActivities' => $pkActivities,
         ]);
     }
 
