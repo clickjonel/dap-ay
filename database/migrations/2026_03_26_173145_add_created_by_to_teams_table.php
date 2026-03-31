@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('teams', function (Blueprint $table) {
-            $table->foreignId('created_by')
-                ->constrained('users','id')
-                ->onDelete('restrict')
-                ->nullable();
-        });
+        // Schema::table('teams', function (Blueprint $table) {
+        //     $table->foreignId('created_by')
+        //         ->constrained('users','id')
+        //         ->onDelete('restrict')
+        //         ->nullable();
+        // });
     }
 
     /**
@@ -24,9 +24,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('teams', function (Blueprint $table) {
-            $table->dropForeign(['created_by']);
-            $table->dropColumn('created_by');
-        });
+        // Schema::table('teams', function (Blueprint $table) {
+        //     $table->dropForeign(['created_by']);
+        //     $table->dropColumn('created_by');
+        // });
     }
 };

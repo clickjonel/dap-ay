@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('teams', function (Blueprint $table) {
-            $table->foreignId('created_by')
-                ->nullable()
-                ->change();
-        });
+        // Schema::table('teams', function (Blueprint $table) {
+        //     $table->foreignId('created_by')
+        //         ->nullable()
+        //         ->change();
+        // });
     }
 
     /**
