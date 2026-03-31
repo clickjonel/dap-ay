@@ -14,7 +14,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $programs = Program::with(['group'])->get();
+        $programs = Program::with(['group','baseline'])->get();
         $groups = ProgramGroup::all();
 
         return Inertia::render('program/programs', [

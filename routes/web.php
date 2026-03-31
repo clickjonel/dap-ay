@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisaggregationController;
 use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\OrganizationalIndicatorController;
+use App\Http\Controllers\ProgramBaselineController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProgramIndicatorController;
 use App\Http\Controllers\ProgramIndicatorDisaggregationController;
@@ -43,6 +44,9 @@ Route::middleware('auth')->group(function () {
 
     //program routes
     Route::resource('program', ProgramController::class);
+
+    //program baseline routes
+    Route::resource('program-baseline', ProgramBaselineController::class);
 
     //barangay routes
     Route::resource('barangays', BarangayController::class);

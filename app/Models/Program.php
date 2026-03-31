@@ -15,4 +15,9 @@ class Program extends Model
     {
         return $this->belongsTo(ProgramGroup::class, 'parent_program_id');
     }
+
+    public function baseline()
+    {
+        return $this->hasOne(ProgramBaseline::class,'program_id', 'id');
+    }
 }
