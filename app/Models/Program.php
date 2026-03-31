@@ -20,4 +20,9 @@ class Program extends Model
     {
         return $this->hasOne(ProgramBaseline::class,'program_id', 'id');
     }
+
+    public function indicators()
+    {
+        return $this->hasMany(ProgramIndicator::class,'program_id', 'id');
+    }
 }

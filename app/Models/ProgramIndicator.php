@@ -22,5 +22,10 @@ class ProgramIndicator extends Model
     {
         return $this->belongsToMany(Disaggregation::class, 'program_indicator_disaggregations');
     }
+
+    public function reportValues()
+    {
+        return $this->hasMany(ReportValue::class,'indicator_id', 'id');
+    }
     
 }

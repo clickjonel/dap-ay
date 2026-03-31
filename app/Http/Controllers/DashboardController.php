@@ -4,15 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Models\Barangay;
 use App\Models\Municipality;
+use App\Models\Program;
+use App\Models\ProgramIndicator;
+use App\Models\Province;
 use App\Models\Report;
+use App\Models\ReportValue;
+use App\Models\Team;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function accessLevelOneDashboard()
+    public function accessLevelOneDashboard(Request $request)
     {
-        return inertia('dashboard/accessLevelOneDashboard');
+        $teamQuery = Team::query();
+        $teamData = [
+            'total'       => (clone $teamQuery)->count(),
+            'activeTeams' => (clone $teamQuery)->where('is_active', true)->count(),
+            'withKits'    => (clone $teamQuery)->where('pk_kit', true)->count(),
+            'withoutKits' => (clone $teamQuery)->where('pk_kit', false)->count(),
+            'withEO' => (clone $teamQuery)->where('eo_link', '!=', null)->count(),
+            'provinceBreakdown' => Province::get()->map(fn($province) => [
+                'province'   => $province->name,
+                'totalTeams' => Team::whereHas('barangays', fn($q) => $q->where('province_id', $province->id))->count(),
+            ]),
+        ];
+
+        $programs = Program::with(['baseline','indicators'])->get();
+        $programData = [
+            'total' => $programs->count(),
+            'active' => $programs->where('is_active', true)->count(),
+            'inactive' => $programs->where('is_active', false)->count(),
+            'withBaseline' => $programs->whereNotNull('baseline')->count(),
+            'programs' => $programs
+        ];
+
+        $programIndicators = ProgramIndicator::with(['reportValues.disaggregations.disaggregation'])->get()->map(function($indicator) {
+            // 1. Flatten all disaggregations from all report values into one list
+            $allDisaggs = $indicator->reportValues->flatMap->disaggregations;
+
+            // 2. Group by the ID and sum the values
+            $groupedDisaggs = $allDisaggs->groupBy('disaggregation_id')
+                ->map(function ($group) {
+                    return [
+                        'disaggregation_id' => $group->first()->disaggregation_id,
+                        'name' => $group->first()->disaggregation->disaggregation_name,
+                        'total_value' => $group->sum('value')
+                    ];
+                })->values();
+
+            return [
+                'indicator_name'  => $indicator->indicator_name,
+                'total'           => $indicator->reportValues->sum('total'),
+                'disaggregations' => $groupedDisaggs
+            ];
+        });
+
+        return inertia('dashboard/accessLevelOneDashboard', [
+            'team' => $teamData,
+            'program' => $programData,
+            'programIndicators' => $programIndicators
+        ]);
     }
 
     public function accessLevelTwoDashboard(Request $request)
