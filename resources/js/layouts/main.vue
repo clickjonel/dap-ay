@@ -109,8 +109,9 @@
             icon: 'hugeicons:file-02',
             children: [
                 { label: 'Users', href: '/users', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+                { label: 'Handled Municipalities', href: '/users/handled-municipalities', icon: 'hugeicons:note-done', accessLevels: [4] },
             ],
-            accessLevels: [1, 3]
+            accessLevels: [1, 3, 4]
         },
         {
             id: 'Generate',

@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Team::class, TeamMember::class, 'user_id', 'id', 'id', 'team_id');
     }
+
+    public function handledMunicipalities()
+    {
+        return $this->hasMany(UserHandledMunicipality::class, 'user_id', 'id');
+    }
 }

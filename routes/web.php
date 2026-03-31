@@ -21,6 +21,7 @@ use App\Http\Controllers\TeamBarangayController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserHandledMunicipalityController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -99,5 +100,9 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [UserController::class, 'getUsers']);
     Route::put('users/{user}', [UserController::class, 'resetPassword']);
     Route::post('users/create', [UserController::class, 'createUser']);
+
+    //dmo user routes
+    Route::get('users/handled-municipalities', [UserHandledMunicipalityController::class, 'create']);
+    Route::post('users/handled-municipalities', [UserHandledMunicipalityController::class, 'store']);
 
 });

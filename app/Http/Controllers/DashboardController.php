@@ -53,6 +53,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $userProvinceID = $user->accessLevels->pdoho_access_id;
+        $userHandledMunicipalities = $user->handledMunicipalities()->pluck('municipality_id')->toArray();
         $reports = Report::query()
                     ->with([
                         'users',
@@ -60,8 +61,8 @@ class DashboardController extends Controller
                         'values.disaggregations.disaggregation',
                         'values.indicator',
                     ])
-                    ->whereHas('barangay', function($query) use ($userProvinceID) {
-                        $query->where('province_id', $userProvinceID);
+                    ->whereHas('barangay', function($query) use ($userHandledMunicipalities) {
+                        $query->whereIn('municipality_id', $userHandledMunicipalities);
                     })
                     ->orderBy('date', 'asc')
                     ->get();
