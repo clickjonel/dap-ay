@@ -1,66 +1,66 @@
 <script setup>
-import Main from '@/layouts/main.vue'
-import { ref } from 'vue'
-import { useForm, router } from '@inertiajs/vue3'
-import { Icon } from '@iconify/vue'
-import { useToast } from 'primevue/usetoast'
-import InputText from 'primevue/inputtext'
-import Select from 'primevue/select'
-import DatePicker from 'primevue/datepicker'
+    import Main from '@/layouts/main.vue'
+    import { ref } from 'vue'
+    import { useForm, router } from '@inertiajs/vue3'
+    import { Icon } from '@iconify/vue'
+    import { useToast } from 'primevue/usetoast'
+    import InputText from 'primevue/inputtext'
+    import Select from 'primevue/select'
+    import DatePicker from 'primevue/datepicker'
 
-defineOptions({ layout: Main })
+    defineOptions({ layout: Main })
 
-const toast = useToast()
+    const toast = useToast()
 
-const props = defineProps({
-    programs: { type: Array, default: () => [] },
-})
+    const props = defineProps({
+        programs: { type: Array, default: () => [] },
+    })
 
-const activityTypes = [
-    { label: 'Small Scale Activity', value: 'small' },
-    { label: 'Large Scale Activity', value: 'large' },
-]
+    const activityTypes = [
+        { label: 'Small Scale Activity', value: 'small' },
+        { label: 'Large Scale Activity', value: 'large' },
+    ]
 
-const form = useForm({
-    activity_name: '',
-    type:          null,
-    date_start:    null,
-    date_end:      null,
-    total_clients: '',
-    program_ids:   [],
-    barangay_ids:  [],
-})
+    const form = useForm({
+        activity_name: '',
+        type:          null,
+        date_start:    null,
+        date_end:      null,
+        total_clients: '',
+        program_ids:   [],
+        barangay_ids:  [],
+    })
 
-// ── Barangay async search ──
-const barangaySearch    = ref('')
-const barangayResults   = ref([])
-const searching         = ref(false)
-const selectedBarangays = ref([])
+    // ── Barangay async search ──
+    const barangaySearch    = ref('')
+    const barangayResults   = ref([])
+    const searching         = ref(false)
+    const selectedBarangays = ref([])
 
-let debounceTimer
-const searchBarangays = () => {
-    clearTimeout(debounceTimer)
-    debounceTimer = setTimeout(async () => {
-        const q = barangaySearch.value.trim()
-        if (!q) return barangayResults.value = []
-        searching.value = true
-        const res = await fetch(`/barangays?search=${q}&only_search=true`)
-        barangayResults.value = await res.json()
-        searching.value = false
-    }, 300)
-}
-
-const toggleBarangay = (barangay) => {
-    const exists = selectedBarangays.value.find(b => b.id === barangay.id)
-    if (exists) {
-        selectedBarangays.value = selectedBarangays.value.filter(b => b.id !== barangay.id)
-    } else {
-        selectedBarangays.value.push({ id: barangay.id, name: barangay.name })
+    let debounceTimer
+    const searchBarangays = () => {
+        clearTimeout(debounceTimer)
+        debounceTimer = setTimeout(async () => {
+            const q = barangaySearch.value.trim()
+            if (!q) return barangayResults.value = []
+            searching.value = true
+            const res = await fetch(`/barangays?search=${q}&only_search=true`)
+            barangayResults.value = await res.json()
+            searching.value = false
+        }, 300)
     }
-    form.barangay_ids = selectedBarangays.value.map(b => b.id)
-}
 
-const isSelected = (id) => selectedBarangays.value.some(b => b.id === id)
+    const toggleBarangay = (barangay) => {
+        const exists = selectedBarangays.value.find(b => b.id === barangay.id)
+        if (exists) {
+            selectedBarangays.value = selectedBarangays.value.filter(b => b.id !== barangay.id)
+        } else {
+            selectedBarangays.value.push({ id: barangay.id, name: barangay.name })
+        }
+        form.barangay_ids = selectedBarangays.value.map(b => b.id)
+    }
+
+    const isSelected = (id) => selectedBarangays.value.some(b => b.id === id)
 
     // Add this helper above submit()
     const formatDate = (date) => {
