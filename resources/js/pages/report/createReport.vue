@@ -45,34 +45,42 @@
     const getDisaggregationValue = (indicatorId, disaggregationId) =>
         getIndicatorValue(indicatorId)?.disaggregations.find(d => d.disaggregation_id === disaggregationId)
 
-    const submit = () => {
-        const payload = {
-            ...form.data(),
-            date: form.date ? new Date(form.date).toISOString().split('T')[0] : null,
+        const formatDate = (date) => {
+            if (!date) return null
+            const d = new Date(date)
+            const year  = d.getFullYear()
+            const month = String(d.getMonth() + 1).padStart(2, '0')
+            const day   = String(d.getDate()).padStart(2, '0')
+            return `${year}-${month}-${day}`
         }
 
-        form.transform(() => payload).post('/reports', {
-            preserveScroll: true,
-            onSuccess: () => {
-                toast.add({
-                    severity: 'success',
-                    summary:  'Report Created',
-                    detail:   'Report has been created successfully.',
-                    life:     2000,
-                })
-                router.visit('/reports')
-            },
-            onError: () => {
-                toast.add({
-                    severity: 'error',
-                    summary:  'Error',
-                    detail:   'There was an error creating the report. Please check the form and try again. Required fields must be filled and values must be valid.',
-                    life:     3000,
-                })
-            },
-        })
+        const submit = () => {
+            const payload = {
+                ...form.data(),
+                date: formatDate(form.date),
+            }
 
-    }
+            form.transform(() => payload).post('/reports', {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.add({
+                        severity: 'success',
+                        summary:  'Report Created',
+                        detail:   'Report has been created successfully.',
+                        life:     2000,
+                    })
+                    router.visit('/reports')
+                },
+                onError: () => {
+                    toast.add({
+                        severity: 'error',
+                        summary:  'Error',
+                        detail:   'There was an error creating the report. Please check the form and try again. Required fields must be filled and values must be valid.',
+                        life:     3000,
+                    })
+                },
+            })
+        }
 </script>
 
 <template>

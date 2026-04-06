@@ -156,7 +156,7 @@
 
     // ── User menu ──────────────────────────────────────────
     const userMenuItems = [
-        { label: 'My Profile',       icon: 'hugeicons:user-circle',     href: '/profile',       badge: null },
+        { label: 'My Profile',       icon: 'hugeicons:user-circle',     href: '/user/profile',       badge: null },
         { label: 'Account Settings', icon: 'hugeicons:settings-01',     href: '/account-settings',      badge: null },
         { label: 'Notifications',    icon: 'hugeicons:notification-02', href: '/notifications', badge: 3    },
         { label: 'Help & Support',   icon: 'hugeicons:help-circle',     href: '/help',          badge: null },

@@ -105,7 +105,8 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [UserController::class, 'getUsers']);
     Route::put('users/{user}', [UserController::class, 'resetPassword']);
     Route::post('users/create', [UserController::class, 'createUser']);
-
+    Route::get('user/profile', [UserController::class, 'userProfile']);
+    Route::put('user/profile', [UserController::class, 'updateUserProfile']);
     //dmo user routes
     Route::get('users/handled-municipalities', [UserHandledMunicipalityController::class, 'create']);
     Route::post('users/handled-municipalities', [UserHandledMunicipalityController::class, 'store']);

@@ -62,25 +62,35 @@ const toggleBarangay = (barangay) => {
 
 const isSelected = (id) => selectedBarangays.value.some(b => b.id === id)
 
-// ── Submit ──
-const submit = () => {
-    form
-        .transform(data => ({
-            ...data,
-            date_start: data.date_start ? new Date(data.date_start).toISOString().split('T')[0] : null,
-            date_end:   data.date_end   ? new Date(data.date_end).toISOString().split('T')[0]   : null,
-        }))
-        .post('/pk-activities', {
-            preserveScroll: true,
-            onSuccess: () => {
-                toast.add({ severity: 'success', summary: 'Activity Created', detail: 'Activity has been created successfully.', life: 2000 })
-                router.visit('/pk-activities')
-            },
-            onError: () => {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Please check the form and try again.', life: 3000 })
-            },
-        })
-}
+    // Add this helper above submit()
+    const formatDate = (date) => {
+        if (!date) return null
+        const d = new Date(date)
+        const year  = d.getFullYear()
+        const month = String(d.getMonth() + 1).padStart(2, '0')
+        const day   = String(d.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+    }
+
+    // ── Submit ──
+    const submit = () => {
+        form
+            .transform(data => ({
+                ...data,
+                date_start: formatDate(data.date_start),  // ← fixed
+                date_end:   formatDate(data.date_end),    // ← fixed
+            }))
+            .post('/pk-activities', {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.add({ severity: 'success', summary: 'Activity Created', detail: 'Activity has been created successfully.', life: 2000 })
+                    router.visit('/pk-activities')
+                },
+                onError: () => {
+                    toast.add({ severity: 'error', summary: 'Error', detail: 'Please check the form and try again.', life: 3000 })
+                },
+            })
+    }
 </script>
 
 <template>
