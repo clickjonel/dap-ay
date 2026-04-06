@@ -53,7 +53,7 @@ class PurokalusuganActivityController extends Controller
             'activity_name' => 'required|string|max:255',
             'type'          => 'required|in:small,large',
             'date_start'    => 'required|date',
-            'date_end'      => 'required|date|after_or_equal:date_start',
+            'date_end'      => 'required|date',
             'total_clients' => 'required|integer|min:0',
             'program_ids'   => 'required|array|min:1',
             'program_ids.*' => 'exists:programs,id',

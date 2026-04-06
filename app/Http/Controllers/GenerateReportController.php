@@ -14,15 +14,14 @@ class GenerateReportController extends Controller
     public function generateQuarterlyLargeScaleReport()
     {
         $now          = now();
-        $quarterStart = $now->copy()->firstOfQuarter();
-        $quarterEnd   = $now->copy()->lastOfQuarter();
+        $monthStart = $now->copy()->firstOfQuarter();
+        $monthEnd   = $now->copy()->lastOfQuarter();
         $programs     = Program::get();
 
         $barangays = PurokalusuganActivityBarangay::query()
             ->with(['barangay.province','barangay.municipality', 'pkActivity.programs'])
-            ->whereHas('pkActivity', function ($query) use ($quarterStart, $quarterEnd) {
-                $query->whereBetween('date_start', [$quarterStart, $quarterEnd])
-                    ->where('type', 'large');
+            ->whereHas('pkActivity', function ($query) use ($monthStart, $monthEnd) {
+                $query->whereBetween('date_start', [$monthStart, $monthEnd]);
             })
             ->get()
             ->map(function ($barangay) use ($programs) {

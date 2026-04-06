@@ -118,7 +118,7 @@ const allPrograms = props.barangays.length
                             <tr
                                 v-for="(barangay, index) in props.barangays"
                                 :key="barangay.id"
-                                :class="index % 2 === 0 ? 'bg-white' : 'bg-slate-50'"
+                                :class="barangay.pk_activity?.type === 'large' ? 'bg-slate-100' : 'bg-emerald-100'"
                             >
                                 <td class="px-3 py-2.5 text-slate-400 border border-slate-200 text-center align-middle w-8">
                                     {{ index + 1 }}
