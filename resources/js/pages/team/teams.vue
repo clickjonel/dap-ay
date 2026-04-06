@@ -82,6 +82,25 @@
             })
         }
     }
+
+    // ── Delete ─────────────────────────────────────────────
+    const deleteModal = ref({ visible: false, team: null })
+
+    const openDeleteModal = (team) => {
+        deleteModal.value.team = team
+        deleteModal.value.visible = true
+    }
+
+    const confirmDelete = () => {
+        router.delete(`/team/${deleteModal.value.team.id}`, {
+            onSuccess: () => {
+                toast.add({ severity: 'success', summary: 'Team Deleted', detail: 'Team has been deleted successfully.', life: 2000 })
+                deleteModal.value.visible = false
+                deleteModal.value.team = null
+            },
+            onError: () => toast.add({ severity: 'error', summary: 'Failed to delete team', life: 2000 }),
+        })
+    }
 </script>
 
 <template>
@@ -198,8 +217,8 @@
 
                         <!-- EO Link -->
                         <td class="px-5 py-3.5">
-                            <a
-                                v-if="team.eo_link"
+                            
+                                <a v-if="team.eo_link"
                                 :href="team.eo_link"
                                 target="_blank"
                                 class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 hover:underline"
@@ -236,6 +255,14 @@
                                     title="Manage Barangays"
                                 >
                                     <Icon icon="hugeicons:map-pinpoint-01" class="text-sm" />
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="openDeleteModal(team)"
+                                    class="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                    title="Delete Team"
+                                >
+                                    <Icon icon="hugeicons:delete-02" class="text-sm" />
                                 </button>
                             </div>
                         </td>
@@ -327,8 +354,9 @@
                 </div>
                 <div class="flex flex-col items-center gap-0.5">
                     <span class="text-[10px] text-slate-400 font-medium">EO Link</span>
-                    <a
-                        v-if="team.eo_link"
+                    
+                        <a
+                            v-if="team.eo_link"
                         :href="team.eo_link"
                         target="_blank"
                         class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:underline font-semibold"
@@ -361,6 +389,13 @@
                     class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 transition-colors"
                 >
                     <Icon icon="hugeicons:map-pinpoint-01" class="text-xs" /> Barangays
+                </button>
+                <button
+                    type="button"
+                    @click="openDeleteModal(team)"
+                    class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                >
+                    <Icon icon="hugeicons:delete-02" class="text-xs" /> Delete
                 </button>
             </div>
         </div>
@@ -462,6 +497,54 @@
             </div>
 
         </form>
+    </Dialog>
+
+    <!-- ── Delete Confirmation Modal ─────────────────── -->
+    <Dialog
+        v-model:visible="deleteModal.visible"
+        header="Delete Team"
+        modal
+        :style="{ width: '95vw', maxWidth: '380px' }"
+        :pt="{
+            header:  { class: 'border-b border-slate-100 !py-4 !px-5' },
+            title:   { class: '!text-sm !font-bold !text-slate-800' },
+            content: { class: '!p-5' },
+        }"
+    >
+        <div class="flex flex-col gap-4">
+            <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                    <Icon icon="hugeicons:delete-02" class="text-base text-red-500" />
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-slate-700">
+                        Are you sure you want to delete
+                        <span class="text-red-600 uppercase">{{ deleteModal.team?.name }}</span>?
+                    </p>
+                    <p class="text-xs text-slate-400 mt-1">
+                        This will also remove all its members and barangay assignments. This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <button
+                    type="button"
+                    @click="deleteModal.visible = false"
+                    class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    @click="confirmDelete"
+                    class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                    <Icon icon="hugeicons:delete-02" class="text-sm" />
+                    Delete Team
+                </button>
+            </div>
+        </div>
     </Dialog>
 
 </div>

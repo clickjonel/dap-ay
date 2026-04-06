@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangayPKProfileController;
 use App\Http\Controllers\BarangayPopulationController;
 use App\Http\Controllers\BarangayPriorityProgramController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeleteController;
 use App\Http\Controllers\DisaggregationController;
 use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\OrganizationalIndicatorController;
@@ -108,5 +109,8 @@ Route::middleware('auth')->group(function () {
     //dmo user routes
     Route::get('users/handled-municipalities', [UserHandledMunicipalityController::class, 'create']);
     Route::post('users/handled-municipalities', [UserHandledMunicipalityController::class, 'store']);
+
+    //delete routes
+    Route::delete('team/{id}', [DeleteController::class, 'deleteTeam']);
 
 });
