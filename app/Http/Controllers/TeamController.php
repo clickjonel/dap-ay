@@ -25,7 +25,7 @@ class TeamController extends Controller
                     $query->whereHas('barangays', function ($query) use ($user) {
                         $query->where('province_id', $user->accessLevels->pdoho_access_id);
                     })
-                    ->orWhereDoesntHave('barangays')
+                    // ->orWhereDoesntHave('barangays')
                     ->orWhere('created_by', $user->id);
                 });
             })
