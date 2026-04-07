@@ -201,7 +201,7 @@ const today = new Date().toLocaleDateString('en-PH', { month: 'long', day: 'nume
                 </div>
 
                 <!-- Barangays -->
-                <div class="bg-white rounded-xl border border-slate-200 flex flex-col flex-1 min-h-0">
+                <div class="bg-white rounded-xl border border-slate-200 flex flex-col flex-1">
                     <div class="px-5 py-3.5 flex items-center gap-2 border-b border-slate-100 shrink-0">
                         <Icon icon="hugeicons:maps-location-02" class="text-sm text-slate-400" />
                         <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Barangays Handled</span>
@@ -209,12 +209,12 @@ const today = new Date().toLocaleDateString('en-PH', { month: 'long', day: 'nume
                     </div>
 
                     <!-- Empty state -->
-                    <div v-if="!props.barangays.length" class="flex-1 flex flex-col items-center justify-center gap-2 py-8 text-slate-400">
+                    <div v-if="props.barangays.length === 0" class="flex-1 flex flex-col items-center justify-center gap-2 py-8 text-slate-400">
                         <Icon icon="hugeicons:maps-location-02" class="text-2xl opacity-30" />
                         <p class="text-xs">No barangays assigned yet.</p>
                     </div>
 
-                    <div v-else class="flex-1 overflow-y-auto divide-y divide-slate-50">
+                    <div v-else class="flex-1 overflow-y-auto divide-y divide-slate-50 border h-[500px]">
                         <div
                             v-for="brgy in props.barangays"
                             :key="brgy.id"
