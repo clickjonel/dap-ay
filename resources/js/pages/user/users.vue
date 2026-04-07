@@ -86,6 +86,7 @@ const accessLevels = [
     { label: 'Admin',  value: 1 },
     { label: 'HRH',    value: 2 },
     { label: 'PDOHO',  value: 3 },
+    { label: 'DMO',  value: 4 },
 ]
 const accessLevelLabel = (level) => accessLevels.find(a => a.value === level)?.label ?? '—'
 const accessLevelColor = (level) => ({
