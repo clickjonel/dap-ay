@@ -37,7 +37,9 @@
         'Barangay Councilor',
         'Committee Chairperson on Health',
         'Medical Officer',
-        'Lupon'
+        'Lupon',
+        'CSO',
+        'NGO'
     ]
 
     const search = ref('')
