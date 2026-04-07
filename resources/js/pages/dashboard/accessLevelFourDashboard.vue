@@ -5,6 +5,8 @@ import { inject, ref, computed } from 'vue'
 import Dialog from 'primevue/dialog'
 import { router } from '@inertiajs/vue3'
 import { useToast } from 'primevue/usetoast'
+import Button from 'primevue/button'
+import Textarea from 'primevue/textarea'
 
 defineOptions({ layout: Main })
 const props = defineProps({
@@ -18,12 +20,18 @@ const viewReportDialog = ref({
     visible: false,
     report: null,
 })
+const confirmActionDialog = ref({
+    visible: false,
+    remarks: '',
+    action:'',
+    reportID:null
+})
 
 const stats = computed(() => ({
   total: props.reports.length,
   pending: props.reports.filter(r => r.status === null).length,
-  approved: props.reports.filter(r => r.status === 'approved').length,
-  rejected: props.reports.filter(r => r.status === 'rejected').length,
+  approved: props.reports.filter(r => r.status === 'Approved').length,
+  rejected: props.reports.filter(r => r.status === 'Rejected').length,
 }))
 
 const pendingReports = computed(() => props.reports.filter(r => r.status === null))
@@ -33,20 +41,56 @@ const openViewReportDialog = (report) => {
     viewReportDialog.value.visible = true
 }
 
-const submitStatus = (statusValue, reportID) => {
-    router.delete(`/reports/${reportID}`, {
-        data: { status: statusValue },
+const openConfirmActionDialog = (action, reportID) => {
+   confirmActionDialog.value.visible = true
+   confirmActionDialog.value.action = action
+   confirmActionDialog.value.reportID = reportID
+}
+
+
+const submitConfirm = () => {
+  if(confirmActionDialog.value.action === 'Approve'){
+    router.delete(`/reports/${confirmActionDialog.value.reportID}`, {
+        data: { 
+          status: 'Approved',
+          remarks: confirmActionDialog.value.remarks
+        },
         preserveScroll: true,
         onSuccess: () => {
             toast.add({ 
                 severity: 'success', 
                 summary: 'Report Updated', 
-                detail: `Status set to ${statusValue}`, 
+                detail: `Report Approved`, 
                 life: 3000 
             })
+            confirmActionDialog.value.visible = false
+            confirmActionDialog.value.remarks = ''
         },
     })
+  }
+  else{
+    router.delete(`/reports/${confirmActionDialog.value.reportID}`, {
+        data: { 
+          status: 'Reject',
+          remarks: confirmActionDialog.value.remarks
+        },
+        preserveScroll: true,
+        onSuccess: () => {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Report Updated', 
+                detail: `Report Rejected`, 
+                life: 3000 
+            })
+            confirmActionDialog.value.visible = false
+            confirmActionDialog.value.remarks = ''
+        },
+    })
+  }
+
 }
+
+
 </script>
 
 <template>
@@ -165,14 +209,14 @@ const submitStatus = (statusValue, reportID) => {
                     <Icon icon="hugeicons:file-view" class="text-base" />
                   </button>
                   <button
-                    @click="submitStatus('approved', report.id)"
+                    @click="openConfirmActionDialog('Approve',report.id)"
                     title="Approve"
                     class="p-2 rounded-lg text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all"
                   >
                     <Icon icon="hugeicons:checkmark-circle-02" class="text-base" />
                   </button>
                   <button
-                    @click="submitStatus('rejected', report.id)"
+                    @click="openConfirmActionDialog('Reject',report.id)"
                     title="Reject"
                     class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
                   >
@@ -301,6 +345,41 @@ const submitStatus = (statusValue, reportID) => {
         </div>
 
       </div>
+    </Dialog>
+
+    <!-- Confirm Action -->
+    <Dialog v-model:visible="confirmActionDialog.visible" header="Confirm Action" class="w-[95vw] lg:w-4/5 xl:w-3/4">
+      <div class="w-full flex flex-col justify-start items-start gap-4">
+          <span class="w-full text-center font-bold text-2xl">Are you sure to {{ confirmActionDialog.action }} this report? Please Indicate remarks if neccesary.</span>
+          <div class="w-full flex flex-col gap-2">
+            <Textarea
+              v-model="confirmActionDialog.remarks"
+              placeholder="Remarks"
+              rows="4"
+              class="w-full text-xs resize-none"
+            />
+          </div>
+      </div>
+
+      <template #footer>
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <Button
+            label="Cancel"
+            severity="secondary"
+            text
+            size="small"
+            @click="confirmActionDialog.visible = false"
+          />
+          <Button
+            :label="confirmActionDialog.action === 'Approve' ? 'Approve' : 'Rejected'"
+            :severity="confirmActionDialog.action === 'Approve' ? 'success' : 'danger'"
+            size="small"
+            :icon="confirmActionDialog.action === 'Approve' ? 'pi pi-check' : 'pi pi-times'"
+            @click="submitConfirm"
+          />
+        </div>
+      </template>
+
     </Dialog>
 
   </div>

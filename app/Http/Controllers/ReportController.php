@@ -278,6 +278,7 @@ class ReportController extends Controller
     {
         Report::findOrFail($id)->update([
             'status' => $request->status,
+            'remarks' => $request->remarks,
             'action_by' => $request->user()->id,
         ]);
 
