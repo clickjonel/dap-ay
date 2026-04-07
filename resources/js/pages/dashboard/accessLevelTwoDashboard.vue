@@ -152,7 +152,7 @@ const today = new Date().toLocaleDateString('en-PH', { month: 'long', day: 'nume
                             </div>
                         </div>
                         <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 bg-slate-100 text-slate-400 ring-1 ring-slate-200">
-                            No Status
+                            {{ report.status ?? 'No Status' }}
                         </span>
                     </div>
                 </div>
@@ -214,7 +214,7 @@ const today = new Date().toLocaleDateString('en-PH', { month: 'long', day: 'nume
                         <p class="text-xs">No barangays assigned yet.</p>
                     </div>
 
-                    <div v-else class="flex-1 overflow-y-auto divide-y divide-slate-50 border h-[500px]">
+                    <div v-else class="flex-1 overflow-y-auto divide-y divide-slate-50 h-[500px]">
                         <div
                             v-for="brgy in props.barangays"
                             :key="brgy.id"

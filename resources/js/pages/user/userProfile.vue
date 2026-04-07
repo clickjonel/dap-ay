@@ -24,7 +24,7 @@
     })
 
     const submitProfile = () => {
-        profileForm.put('/account-settings-update', {
+        profileForm.put('/user/profile', {
             onSuccess: () => toast.add({ severity: 'success', summary: 'Profile Updated', detail: 'Your name and email have been saved.', life: 3000 }),
             onError:   () => toast.add({ severity: 'error',   summary: 'Update Failed',   detail: 'Please check the fields and try again.', life: 3000 }),
         })

@@ -54,9 +54,8 @@
     <div class="flex flex-col gap-5 max-w-2xl">
 
         <!-- ── Profile section ──────────────────────── -->
-        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <!-- <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
 
-            <!-- Section header -->
             <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100">
                 <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
                     <Icon icon="hugeicons:user-circle" class="text-sm text-indigo-500" />
@@ -67,10 +66,8 @@
                 </div>
             </div>
 
-            <!-- Form -->
             <form @submit.prevent="submitProfile" class="px-6 py-5 flex flex-col gap-5">
 
-                <!-- Name -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-semibold text-slate-600">
                         Full Name <span class="text-red-400">*</span>
@@ -90,7 +87,6 @@
                     </p>
                 </div>
 
-                <!-- Email -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-semibold text-slate-600">
                         Email Address <span class="text-red-400">*</span>
@@ -111,7 +107,7 @@
                     </p>
                 </div>
 
-                <!-- Submit -->
+            
                 <div class="flex justify-end pt-1">
                     <button
                         type="submit"
@@ -125,7 +121,7 @@
                 </div>
 
             </form>
-        </div>
+        </div> -->
 
         <!-- ── Password section ──────────────────────── -->
         <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">

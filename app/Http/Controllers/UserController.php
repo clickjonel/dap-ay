@@ -106,11 +106,12 @@ class UserController extends Controller
 
     public function updateUserProfile(Request $request)
     {
-        $user = $request->user();
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $request->user()->id,
         ]);
+
+        $request->user()->update($validated);
 
         return back();
     }
