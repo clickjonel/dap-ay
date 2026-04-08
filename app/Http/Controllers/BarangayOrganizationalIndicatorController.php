@@ -40,9 +40,9 @@ class BarangayOrganizationalIndicatorController extends Controller
             'barangay_id'                                      => 'required|exists:barangays,id',
             'indicators'                                       => 'required|array',
             'indicators.*.organizational_indicator_id'         => 'required|exists:organizational_indicators,id',
-            'indicators.*.value'                               => 'nullable|string',
-            'indicators.*.facility_based'                      => 'nullable|integer',
-            'indicators.*.community_based'                     => 'nullable|integer',
+            'indicators.*.value'                               => 'nullable',
+            'indicators.*.facility_based'                      => 'nullable',
+            'indicators.*.community_based'                     => 'nullable',
         ]);
 
         foreach ($validated['indicators'] as $indicatorData) {
