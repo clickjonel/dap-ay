@@ -200,12 +200,19 @@ function submitStatus(statusValue) {
                                 {{ report.date ? new Date(report.date).toLocaleDateString() : '—' }}
                             </td>
 
-                            <td class="px-5 py-3.5">
+                            <td class="px-5 py-3.5 flex flex-col justify-center items-start gap-2">
                                 <span 
                                     class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
                                     :class="getStatusStyles(report.status)"
                                 >
                                     {{ report.status ?? 'Pending Approval' }}
+                                </span>
+                                <span 
+                                    v-if="report.actioned_by"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
+                                    :class="getStatusStyles(report.status)"
+                                >
+                                    {{ report.actioned_by?.name ?? '' }}
                                 </span>
                             </td>
 
