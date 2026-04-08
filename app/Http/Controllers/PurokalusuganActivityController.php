@@ -46,13 +46,29 @@ class PurokalusuganActivityController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $programs = Program::get();
-        $barangays = Barangay::get();
+        $user        = $request->user();
+        $accessLevel = $user->accessLevels;
+
+        $programs = Program::select('id', 'name')->orderBy('name')->get();
+
+        $barangays = Barangay::query()
+            ->select('id', 'name', 'municipality_id')
+            ->with(['municipality:id,name'])
+            ->when(
+                in_array($accessLevel->access_level, [2, 3]),
+                fn($q) => $q->where('province_id', $accessLevel->pdoho_access_id)
+            )
+            ->orderBy('name')
+            ->get()
+            ->map(fn($b) => [
+                'id'   => $b->id,
+                'name' => "{$b->name} — {$b->municipality->name}",
+            ]);
 
         return Inertia::render('activity/createPKActivity', [
-            'programs' => $programs,
+            'programs'  => $programs,
             'barangays' => $barangays,
         ]);
     }
