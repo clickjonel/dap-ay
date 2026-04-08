@@ -39,7 +39,8 @@
         'Medical Officer',
         'Lupon',
         'CSO',
-        'NGO'
+        'NGO',
+        'Government Agency'
     ]
 
     const search = ref('')
