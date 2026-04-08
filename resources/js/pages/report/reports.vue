@@ -22,9 +22,9 @@ const props = defineProps({
 // ── Status Styling Mapping ────────────────────────────
 const getStatusStyles = (status) => {
     const styles = {
-        approved: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-        rejected: 'bg-rose-50 text-rose-600 border-rose-100',
-        pending: 'bg-amber-50 text-amber-600 border-amber-100',
+        Approved: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+        Rejected: 'bg-rose-50 text-rose-600 border-rose-100',
+        Pending: 'bg-amber-50 text-amber-600 border-amber-100',
     }
     return styles[status?.toLowerCase()] || 'bg-slate-50 text-slate-500 border-slate-100'
 }
@@ -64,25 +64,6 @@ function openStatusDialog(report) {
     statusDialog.value = true
 }
 
-function submitStatus(statusValue) {
-    processingStatus.value = true
-    router.delete(`/reports/${selectedReport.value.id}`, {
-        data: { status: statusValue },
-        preserveScroll: true,
-        onSuccess: () => {
-            toast.add({ 
-                severity: 'success', 
-                summary: 'Report Updated', 
-                detail: `Status set to ${statusValue}`, 
-                life: 3000 
-            })
-            statusDialog.value = false
-        },
-        onFinish: () => {
-            processingStatus.value = false
-        }
-    })
-}
 </script>
 
 <template>
@@ -148,7 +129,6 @@ function submitStatus(statusValue) {
                             v-for="(report, index) in props.reports.data"
                             :key="report.id"
                             class="group hover:bg-slate-50/60 transition-colors cursor-pointer"
-                            @click="editReport(report.id)"
                         >
                             <td class="px-5 py-3.5 text-xs text-slate-300 font-mono">
                                 {{ props.reports.from + index }}
@@ -214,6 +194,15 @@ function submitStatus(statusValue) {
                                 >
                                     {{ report.actioned_by?.name ?? '' }}
                                 </span>
+
+                                <span 
+                                    v-if="report.status"
+                                    @click="openStatusDialog(report)"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border border-gray-200 text-sky-600"
+                                >
+                                    Remarks
+                                </span>
+
                             </td>
 
                             <td class="px-5 py-3.5 text-right" @click.stop>
@@ -252,46 +241,9 @@ function submitStatus(statusValue) {
         </div>
 
         <Dialog v-model:visible="statusDialog" modal :draggable="false" header="Update Report Status" class="w-full max-w-sm mx-4">
-            <div class="flex flex-col gap-5 py-2">
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
-                            <Icon icon="hugeicons:location-04" class="text-indigo-500 text-lg" />
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Selected Barangay</p>
-                            <p class="text-sm font-bold text-slate-800 truncate">{{ selectedReport?.barangay?.name }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-2.5">
-                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest ml-1">Choose Status</p>
-                    
-                    <button
-                        v-for="status in statusOptions"
-                        :key="status.value"
-                        @click="submitStatus(status.value)"
-                        :disabled="processingStatus"
-                        class="flex items-center justify-between px-4 py-3.5 rounded-xl border-2 transition-all active:scale-[0.98] group disabled:opacity-50"
-                        :class="status.color"
-                    >
-                        <div class="flex items-center gap-3">
-                            <Icon :icon="status.icon" class="text-xl" />
-                            <span class="text-xs font-bold uppercase tracking-wide">{{ status.label }}</span>
-                        </div>
-                        <Icon icon="hugeicons:arrow-right-01" class="text-sm opacity-30 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                    </button>
-                </div>
+            <div class="w-full flex flex-col gap-5 py-2 bg-gray-100 p-2 shadow-sm">
+                <p>{{ selectedReport.remarks }}</p>
             </div>
-
-            <template #footer>
-                <div class="flex justify-center w-full pt-2">
-                    <button @click="statusDialog = false" class="text-[10px] font-bold text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors">
-                        Cancel Action
-                    </button>
-                </div>
-            </template>
         </Dialog>
     </div>
 </template>

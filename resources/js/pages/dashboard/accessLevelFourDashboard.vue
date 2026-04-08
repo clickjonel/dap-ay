@@ -216,7 +216,7 @@ const submitConfirm = () => {
                     <Icon icon="hugeicons:checkmark-circle-02" class="text-base" />
                   </button>
                   <button
-                    @click="openConfirmActionDialog('Reject',report.id)"
+                    @click="openConfirmActionDialog('Rejected',report.id)"
                     title="Reject"
                     class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
                   >
