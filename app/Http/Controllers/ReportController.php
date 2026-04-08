@@ -24,7 +24,8 @@ class ReportController extends Controller
         $reports = Report::with([
             'barangay.municipality',
             'barangay.province',
-            'users'
+            'users',
+            'actionedBy'
         ])
         ->when($request->user()->accessLevels->access_level === 2, function ($query, $search) use ($request) {
             $query->whereHas('users', function ($q) use ($request) {

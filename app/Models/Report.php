@@ -30,4 +30,9 @@ class Report extends Model
     {
         return $this->hasMany(ReportValue::class);
     }
+
+    public function actionedBy()
+    {
+        return $this->belongsTo(User::class, 'action_by', 'id');
+    }
 }
