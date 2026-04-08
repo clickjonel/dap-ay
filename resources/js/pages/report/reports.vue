@@ -23,7 +23,9 @@ const props = defineProps({
 const getStatusStyles = (status) => {
     const styles = {
         Approved: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+        approved: 'bg-emerald-50 text-emerald-600 border-emerald-100',
         Rejected: 'bg-rose-50 text-rose-600 border-rose-100',
+        rejected: 'bg-rose-50 text-rose-600 border-rose-100',
         Pending: 'bg-amber-50 text-amber-600 border-amber-100',
     }
     return styles[status?.toLowerCase()] || 'bg-slate-50 text-slate-500 border-slate-100'
@@ -52,16 +54,21 @@ function editReport(id) {
 // ── Status Dialog Logic ────────────────────────────────
 const statusDialog = ref(false)
 const selectedReport = ref(null)
-const processingStatus = ref(false)
-
-const statusOptions = [
-    { label: 'Approved', value: 'approved', color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-emerald-100', icon: 'hugeicons:checkmark-circle-02' },
-    { label: 'Rejected', value: 'rejected', color: 'bg-rose-50 text-rose-600 hover:bg-rose-100 border-rose-100', icon: 'hugeicons:cancel-circle-02' },
-]
 
 function openStatusDialog(report) {
     selectedReport.value = report
     statusDialog.value = true
+}
+
+const deleteReport = (id) => {
+    router.delete(`/report/${id}`, {
+        onSuccess: () => {
+            toast.add({ severity: 'success', summary: 'Report Deleted', detail: 'Report has been deleted successfully.', life: 2000 })
+            // deleteModal.value.visible = false
+            // deleteModal.value.team = null
+        },
+        onError: () => toast.add({ severity: 'error', summary: 'Failed to delete team', life: 2000 }),
+    })
 }
 
 </script>
@@ -213,6 +220,12 @@ function openStatusDialog(report) {
                                     <button v-if="!report.status && user.access_levels.access_level === 4" @click="openStatusDialog(report)" class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
                                         <Icon icon="hugeicons:tick-01" class="text-sm" />
                                     </button>
+                                    <button @click="deleteReport(report.id)" class="p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-indigo-50 transition-colors">
+                                        <Icon icon="hugeicons:delete-02" class="text-sm" />
+                                    </button>
+                                    <!-- <button v-if="report.status === 'Approved'" class="p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-indigo-50 transition-colors">
+                                        <Icon icon="hugeicons:delete-02" class="text-sm" />
+                                    </button> -->
                                 </div>
                             </td>
                         </tr>

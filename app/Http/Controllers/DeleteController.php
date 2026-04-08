@@ -23,12 +23,20 @@ class DeleteController extends Controller
     public function deleteReport($id)
     {
         $report = Report::findOrFail($id);
-        $report->users()->detach(); 
 
-        $reportValues = $report->values;
+        // Delete disaggregations for each value first (child records)
+        foreach ($report->values as $value) {
+            $value->disaggregations()->delete();
+        }
 
-        $reportValues->disaggregations()->delete();
-        $reportValues->delete();
+        // Then delete the values
+        $report->values()->delete();
+
+        // Detach pivot records
+        $report->users()->detach();
+
+        // Finally delete the report
+        $report->delete();
     }
 
 
