@@ -17,13 +17,26 @@ class PurokalusuganActivityController extends Controller
      */
     public function index(Request $request)
     {
-        $activities = PurokalusuganActivity::with(['programs:id,name'])
+        $user = $request->user();
+        $accessLevel = $user->accessLevels;
+    
+        $activities = PurokalusuganActivity::query()
+            ->with(['programs:id,name'])
             ->withCount('barangays')
-            ->when($request->search, fn($q, $s) => $q->where('activity_name', 'like', "%{$s}%"))
+            ->when(
+                $accessLevel->access_level === 2,
+                fn($query) => $query->whereHas('barangays', fn($q) =>
+                    $q->where('province_id', $accessLevel->pdoho_access_id)
+                )
+            )
+            ->when(
+                $request->filled('search'),
+                fn($q) => $q->where('activity_name', 'like', "%{$request->search}%")
+            )
             ->orderBy('date_start', 'desc')
             ->paginate(10)
             ->withQueryString();
-
+    
         return Inertia::render('activity/purokalusuganActivities', [
             'activities' => $activities,
             'filters'    => $request->only('search'),
