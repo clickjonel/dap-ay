@@ -82,7 +82,7 @@ const submit = () => {
         <!-- ── Form ───────────────────────────────────────── -->
         <div class="flex-1 min-h-0 overflow-y-auto">
             <form @submit.prevent="submit">
-                <div class="grid grid-cols-3 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-5">
 
                     <!-- ── Col 1: Activity Details ── -->
                     <div class="bg-white rounded-xl border border-slate-200 p-5 flex flex-col gap-4">
