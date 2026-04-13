@@ -8,11 +8,13 @@ use App\Models\Program;
 use App\Models\ProgramIndicator;
 use App\Models\Province;
 use App\Models\PurokalusuganActivity;
+use App\Models\PurokalusuganActivityBarangay;
 use App\Models\Report;
 use App\Models\ReportValue;
 use App\Models\Team;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -156,4 +158,45 @@ class DashboardController extends Controller
             'geoCoverage' => $geoCoverage,
         ]);
     }
+
+    public function getDMOMunicipalityDashboard(Request $request)
+    {
+        $user = $request->user()->load([
+            'accessLevels',
+            'handledMunicipalities.municipality.barangays' => function ($query) {
+                $query->withCount([
+                    'reports',
+                    'pkActivities',
+                ]);
+            },
+            'handledMunicipalities.municipality.barangays.pkProfile',
+            'handledMunicipalities.municipality.barangays.priorityPrograms',
+            'handledMunicipalities.municipality.barangays.geography',
+        ]);
+
+        // $municipalities = $user->handledMunicipalities->map(function($userMunicipality){
+
+
+        //     return [
+        //         'name' => $userMunicipality->municipality->name,
+        //         'barangays' => $userMunicipality->municipality->barangays->map(function($barangay){
+        //             // $reportCount = Report::where('barangay_id',$barangay->id)->count();
+        //             // $pkActivityCount = PurokalusuganActivityBarangay::whereHas('barangays',function($query) use ($barangay){
+        //             //     $query->where('barangay_id',$barangay->id);
+        //             // })->count();
+        //             return [
+        //                 'name' => $barangay->name,
+        //                 // 'reports' => $reportCount,
+        //                 // 'pkActivityCount' => $pkActivityCount
+        //             ];
+        //         })
+        //     ];
+        // });
+
+        return Inertia::render('dashboard/dmoHandledMunicipalityDashboard',[
+            'municipalities' => $user->handledMunicipalities
+        ]);
+    }
+
+
 }

@@ -13,43 +13,49 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $user = $request->user()->load('accessLevels'); 
         $userAccessLevel = $user->accessLevels?->access_level ?? 2;
-
+    
         $teams = Team::query()
-            ->with(['members','barangays'])
-
-            //pdoho access
+            ->with([
+                'members:id,user_id,team_id,role',
+                'barangays:id,name,province_id',
+            ])
+    
             ->when($userAccessLevel === 3, function ($query) use ($user) {
-                $query->where(function ($query) use ($user) {
-                    $query->whereHas('barangays', function ($query) use ($user) {
-                        $query->where('province_id', $user->accessLevels->pdoho_access_id);
-                    })
-                    // ->orWhereDoesntHave('barangays')
+                $query->where(function ($q) use ($user) {
+                    $q->whereHas('barangays', fn($q) =>
+                        $q->where('province_id', $user->accessLevels->pdoho_access_id)
+                    )
                     ->orWhere('created_by', $user->id);
                 });
             })
-
-            //hrh access
+    
             ->when($userAccessLevel === 2, function ($query) use ($user) {
-                $query->where(function ($query) use ($user) {
-                    $query->whereHas('members', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    })
-                    ->orWhereDoesntHave('members');
+                $query->where(function ($q) use ($user) {
+                    $q->whereHas('members', fn($q) =>
+                        $q->where('user_id', $user->id)
+                    );
                 });
             })
-            
+    
             ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%")
+                        ->orWhereHas('members',function ($query) use ($search) {
+                            $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('barangays',function ($query) use ($search) {
+                            $query->where('name', 'like', "%{$search}%");
+                        });
             })
-            ->orderBy('id','desc')
+    
+            ->orderBy('id', 'desc')
             ->paginate(20)
             ->withQueryString();
-
+    
         return inertia('team/teams', [
-            'teams' => $teams,
-            'filters'   => $request->only('search'),
+            'teams'   => $teams,
+            'filters' => $request->only('search'),
         ]);
     }
 

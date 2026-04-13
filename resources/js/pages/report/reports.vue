@@ -114,6 +114,7 @@ const resubmitReport = () => {
                 <p class="text-xs text-slate-400 mt-1">Manage reports and their data.</p>
             </div>
             <button
+                v-if="user.access_levels.access_level == 2"
                 @click="router.visit('reports/create')"
                 class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200"
             >
@@ -150,7 +151,7 @@ const resubmitReport = () => {
                             <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Submitted By</th>
                             <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Date</th>
                             <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Status</th>
-                            <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
+                            <th v-if="user.access_levels.access_level !== 4" class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
@@ -243,8 +244,8 @@ const resubmitReport = () => {
 
                             </td>
 
-                            <td class="px-5 py-3.5 text-right" @click.stop>
-                                <div class="flex items-center justify-end gap-1">
+                            <td v-if="user.access_levels.access_level !== 4" class="px-5 py-3.5 text-right" @click.stop>
+                                <div v-if="user.access_levels.access_level !== 4" class="flex items-center justify-end gap-1">
                                     <button v-if="canEditReport(report.status)" @click="editReport(report.id)" class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
                                         <Icon icon="hugeicons:pencil-edit-02" class="text-sm" />
                                     </button>

@@ -21,25 +21,38 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
+        $user = $request->user()->load([
+            'accessLevels',
+            'handledMunicipalities'
+        ]);
+        $userHandledMunicipalities = $user->handledMunicipalities->pluck('municipality_id');
+
         $reports = Report::with([
             'barangay.municipality',
             'barangay.province',
             'users',
             'actionedBy'
         ])
-        ->when($request->user()->accessLevels->access_level === 2, function ($query, $search) use ($request) {
-            $query->whereHas('users', function ($q) use ($request) {
-                $q->where('user_id', $request->user()->id);
+        ->when($user->accessLevels->access_level === 2, function ($query) use ($user) {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
             });
         })
-        ->when($request->user()->accessLevels->access_level === 3, function ($query) use ($request) {
-            $query->whereHas('barangay', function ($q) use ($request) {
-                $q->where('province_id', $request->user()->accessLevels->pdoho_access_id);
+        ->when($user->accessLevels->access_level === 3, function ($query) use ($user) {
+            $query->whereHas('barangay', function ($q) use ($user) {
+                $q->where('province_id', $user->accessLevels->pdoho_access_id);
+            });
+        })
+        ->when($user->accessLevels->access_level === 4, function ($query) use ($userHandledMunicipalities) {
+            $query->whereHas('barangay', function ($q) use ($userHandledMunicipalities) {
+                $q->whereIn('municipality_id', $userHandledMunicipalities);
             });
         })
         ->when($request->search, function ($query, $search) {
-            $query->whereHas('barangay', fn($q) => $q->where('name', 'like', "%{$search}%"))
-                  ->orWhereHas('users', fn($q) => $q->where('name', 'like', "%{$search}%"));
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('barangay', fn($b) => $b->where('name', 'like', "%{$search}%"))
+                  ->orWhereHas('users',   fn($u) => $u->where('name', 'like', "%{$search}%"));
+            });
         })
         ->paginate(15)
         ->withQueryString(); // preserves ?search= in pagination links

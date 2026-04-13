@@ -50,5 +50,20 @@ class Barangay extends Model
         return $this->hasMany(BarangayPriorityProgram::class,'barangay_id')->with('program');
     }
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class,'barangay_id','id');
+    }
+
+    public function pkActivities()
+    {
+        return $this->belongsToMany(
+            PurokalusuganActivity::class,
+            'pk_activity_barangays',  // pivot table (matches $table in your model)
+            'barangay_id',            // FK for this model on pivot
+            'pk_activity_id'          // FK for related model on pivot
+        );
+    }
+
 
 }

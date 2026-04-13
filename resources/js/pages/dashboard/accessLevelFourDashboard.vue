@@ -130,7 +130,7 @@ const submitConfirm = () => {
       </div>
       <div class="bg-white rounded-xl border border-slate-200 p-4">
         <div class="flex items-center justify-between mb-3">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Revisions Needed</p>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rejected (Needed Revisions) </p>
           <span class="w-2 h-2 rounded-full bg-rose-400 shrink-0"></span>
         </div>
         <p class="text-3xl font-bold text-rose-500">{{ stats.rejected }}</p>

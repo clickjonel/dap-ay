@@ -36,6 +36,7 @@
                 { label: 'HRH Dashboard',    href: '/dashboard/access-level-two',   icon: 'hugeicons:building-03',   accessLevels: [2] },
                 { label: 'PDOHO Dashboard',  href: '/dashboard/access-level-three', icon: 'hugeicons:shield-user',   accessLevels: [3] },
                 { label: 'DMO Dashboard',  href: '/dashboard/access-level-four', icon: 'hugeicons:shield-user',   accessLevels: [4] },
+                { label: 'DMO Municipalities Dashboard',  href: '/dashboard/dmo/municipalities', icon: 'hugeicons:shield-user',   accessLevels: [4] },
             ],
             accessLevels: [1, 2, 3, 4]
         },
@@ -90,9 +91,9 @@
             label: 'Report',
             icon: 'hugeicons:file-02',
             children: [
-                { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
+                { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1, 2, 3, 4] },
             ],
-            accessLevels: [1, 2, 3]
+            accessLevels: [1, 2, 3, 4]
         },
         {
             id: 'Activities',
@@ -105,11 +106,11 @@
         },
         {
             id: 'User',
-            label: 'User Management',
+            label: 'Management',
             icon: 'hugeicons:file-02',
             children: [
                 { label: 'Users', href: '/users', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
-                { label: 'Handled Municipalities', href: '/users/handled-municipalities', icon: 'hugeicons:note-done', accessLevels: [4] },
+                { label: 'Set Handled Municipalities', href: '/users/handled-municipalities', icon: 'hugeicons:note-done', accessLevels: [4] },
             ],
             accessLevels: [1, 3, 4]
         },

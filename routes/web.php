@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
         Route::get('access-level-two', [DashboardController::class, 'accessLevelTwoDashboard']);
         Route::get('access-level-three', [DashboardController::class, 'accessLevelThreeDashboard']);
         Route::get('access-level-four', [DashboardController::class, 'accessLevelFourDashboard']);
+        Route::get('dmo/municipalities',[DashboardController::class,'getDMOMunicipalityDashboard']);
     });
 
     //program routes

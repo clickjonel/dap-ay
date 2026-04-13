@@ -12,6 +12,9 @@ class BarangayPKProfile extends Model
         'pk_site',
     ];
     protected $table = 'barangay_pk_profiles';
+    protected $casts = [
+        'pk_site' => 'boolean'
+    ];
 
     public function barangay()
     {

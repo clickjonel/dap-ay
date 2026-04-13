@@ -13,6 +13,10 @@ class BarangayGeography extends Model
         'is_gida',
     ];
 
+    protected $casts = [
+        'is_gida' => 'boolean'
+    ];
+
     public function barangay()
     {
         return $this->belongsTo(Barangay::class);
