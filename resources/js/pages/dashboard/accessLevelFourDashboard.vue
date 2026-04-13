@@ -71,7 +71,7 @@ const submitConfirm = () => {
   else{
     router.delete(`/reports/${confirmActionDialog.value.reportID}`, {
         data: { 
-          status: 'Reject',
+          status: 'Rejected',
           remarks: confirmActionDialog.value.remarks
         },
         preserveScroll: true,

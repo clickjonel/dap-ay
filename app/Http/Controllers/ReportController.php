@@ -53,12 +53,12 @@ class ReportController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $barangays = Barangay::query()
                         ->with(['municipality'])
-                         ->when($user->accessLevels->access_level === 2, function($query) use ($user) {
+                        ->when($user->accessLevels->access_level === 2, function($query) use ($user) {
                             $query->where('province_id', $user->accessLevels->pdoho_access_id);
                         })
                         ->get()

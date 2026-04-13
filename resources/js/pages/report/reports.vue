@@ -53,21 +53,52 @@ function editReport(id) {
 
 // ── Status Dialog Logic ────────────────────────────────
 const statusDialog = ref(false)
+const confirmResubmitDialog = ref(false)
+const confirmDeleteReportDialog = ref(false)
 const selectedReport = ref(null)
+
 
 function openStatusDialog(report) {
     selectedReport.value = report
     statusDialog.value = true
 }
 
-const deleteReport = (id) => {
-    router.delete(`/report/${id}`, {
+function openConfirmActionDialog(report) {
+    selectedReport.value = report
+    confirmResubmitDialog.value = true
+}
+
+function openConfirmDeleteReportDialog(report) {
+    selectedReport.value = report
+    confirmDeleteReportDialog.value = true
+}
+
+const deleteReport = () => {
+    router.delete(`/report/${selectedReport.value.id}`, {
         onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Report Deleted', detail: 'Report has been deleted successfully.', life: 2000 })
-            // deleteModal.value.visible = false
-            // deleteModal.value.team = null
+            confirmDeleteReportDialog.value = false
         },
-        onError: () => toast.add({ severity: 'error', summary: 'Failed to delete team', life: 2000 }),
+        onError: () => toast.add({ severity: 'error', summary: 'Failed to delete report', life: 2000 }),
+    })
+}
+
+const resubmitReport = () => {
+    router.delete(`/reports/${selectedReport.value.id}`, {
+        data: { 
+          status: null,
+          remarks: null
+        },
+        preserveScroll: true,
+        onSuccess: () => {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Report Submitted', 
+                detail: `Awaiting for DMO review of the report`, 
+                life: 3000 
+            })
+            confirmResubmitDialog.value = false
+        },
     })
 }
 
@@ -220,12 +251,12 @@ const deleteReport = (id) => {
                                     <button v-if="!report.status && user.access_levels.access_level === 4" @click="openStatusDialog(report)" class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
                                         <Icon icon="hugeicons:tick-01" class="text-sm" />
                                     </button>
-                                    <button @click="deleteReport(report.id)" class="p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-indigo-50 transition-colors">
+                                    <button @click="openConfirmDeleteReportDialog(report)" class="p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-indigo-50 transition-colors">
                                         <Icon icon="hugeicons:delete-02" class="text-sm" />
                                     </button>
-                                    <!-- <button v-if="report.status === 'Approved'" class="p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-indigo-50 transition-colors">
-                                        <Icon icon="hugeicons:delete-02" class="text-sm" />
-                                    </button> -->
+                                    <button @click="openConfirmActionDialog(report)" v-if="report.status === 'Rejected'" class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors" title="Resubmit Report">
+                                        <Icon icon="hugeicons:reset-password" class="text-sm" />
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -258,5 +289,79 @@ const deleteReport = (id) => {
                 <p>{{ selectedReport.remarks }}</p>
             </div>
         </Dialog>
+
+        <Dialog v-model:visible="confirmResubmitDialog" modal :draggable="false" header="Confirm Report Resubmission" class="w-full max-w-sm mx-4">
+            <div class="flex flex-col gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                        <Icon icon="hugeicons:delete-02" class="text-base text-red-500" />
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-700">
+                            Are you sure you want to resubmit this report?
+                        </p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            This will be sent to the DMO again for review. Please make sure to edit the report based on remarks of the DMO or needed updated from the report.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-1">
+                    <button
+                        type="button"
+                        @click="confirmResubmitDialog = false"
+                        class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        @click="resubmitReport"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
+                    >
+                        <Icon icon="hugeicons:reset-password" class="text-sm" />
+                        Resubmit
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+
+        <!-- confirm delete report -->
+        <Dialog v-model:visible="confirmDeleteReportDialog" modal :draggable="false" header="Confirm Report Resubmission" class="w-full max-w-sm mx-4">
+            <div class="flex flex-col gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                        <Icon icon="hugeicons:delete-02" class="text-base text-red-500" />
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-700">
+                            Are you sure you want to delete this report?
+                        </p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            This will delete all report related values, disaggregations, users and report record. Click Delete to delete record.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-1">
+                    <button
+                        type="button"
+                        @click="confirmResubmitDialog = false"
+                        class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        @click="deleteReport"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                    >
+                        <Icon icon="hugeicons:delete-03" class="text-sm" />
+                        Delete Report
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+
     </div>
 </template>
