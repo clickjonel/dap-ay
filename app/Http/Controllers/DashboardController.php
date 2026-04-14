@@ -20,75 +20,66 @@ class DashboardController extends Controller
 {
     public function accessLevelOneDashboard(Request $request)
     {
-        $teamQuery = Team::query();
-        $teamData = [
-            'total'       => (clone $teamQuery)->count(),
-            'activeTeams' => (clone $teamQuery)->where('is_active', true)->count(),
-            'withKits'    => (clone $teamQuery)->where('pk_kit', true)->count(),
-            'withoutKits' => (clone $teamQuery)->where('pk_kit', false)->count(),
-            'withEO' => (clone $teamQuery)->where('eo_link', '!=', null)->count(),
-            'provinceBreakdown' => Province::get()->map(fn($province) => [
-                'province'   => $province->name,
-                'totalTeams' => Team::whereHas('barangays', fn($q) => $q->where('province_id', $province->id))->count(),
-            ]),
-        ];
+        $provinces = Province::with([
+            'municipalities',
+            'barangays.pkProfile',
+            'barangays.geography',
+            'barangays.organizationalIndicators',
+        ])
+        ->withCount('municipalities')
+        ->withCount('barangays')
+        ->withCount([
+            'barangays as pk_sites_count' => fn($q) =>
+                $q->whereHas('pkProfile', fn($q) =>
+                    $q->where('pk_site', true)
+                ),
 
-        $programs = Program::with(['baseline','indicators'])->get();
-        $programData = [
-            'total' => $programs->count(),
-            'active' => $programs->where('is_active', true)->count(),
-            'inactive' => $programs->where('is_active', false)->count(),
-            'withBaseline' => $programs->whereNotNull('baseline')->count(),
-            'programs' => $programs
-        ];
+            // get barangays with or without barangay org indicators
+            'barangays as with_org_indicators' => fn($q) =>
+                $q->whereHas('organizationalIndicators'),
+            
+            'barangays as without_org_indicators' => fn($q) =>
+                $q->whereDoesntHave('organizationalIndicators'),
 
-        $programIndicators = ProgramIndicator::with(['reportValues.disaggregations.disaggregation'])->get()->map(function($indicator) {
-            // 1. Flatten all disaggregations from all report values into one list
-            $allDisaggs = $indicator->reportValues->flatMap->disaggregations;
+            //get barangays with or without barangay priority programs
+            'barangays as with_priority_programs' => fn($q) =>
+                $q->whereHas('priorityPrograms'),
+            
+            'barangays as without_priority_programs' => fn($q) =>
+                $q->whereDoesntHave('priorityPrograms'),
+        ])
 
-            // 2. Group by the ID and sum the values
-            $groupedDisaggs = $allDisaggs->groupBy('disaggregation_id')
-                ->map(function ($group) {
-                    return [
-                        'disaggregation_id' => $group->first()->disaggregation_id,
-                        'name' => $group->first()->disaggregation->disaggregation_name,
-                        'total_value' => $group->sum('value')
-                    ];
-                })->values();
+        ->get()
+        ->map(function($province){
+            $pk_coverage = [
+                'barangays' => $province->barangays,
+                'municipalities' => $province->municipalities,
+                'pk_sites_count' => $province->pk_sites_count,
+                'barangays_count' => $province->barangays_count,
+                'municipalities_count' => $province->municipalities_count
+            ];
+
+            $org_indicators_status = [
+                'with_org_indicators' => $province->with_org_indicators,
+                'without_org_indicators' => $province->without_org_indicators
+            ];
+
+            $priority_programs_status = [
+                'with_priority_programs' => $province->with_priority_programs,
+                'without_priority_programs' => $province->without_priority_programs
+            ];
 
             return [
-                'indicator_name'  => $indicator->indicator_name,
-                'total'           => $indicator->reportValues->sum('total'),
-                'disaggregations' => $groupedDisaggs
+                'name' => $province->name,
+                'pk_coverage' => $pk_coverage,
+                'org_indicator_status' => $org_indicators_status,
+                'priority_programs_status' => $priority_programs_status
             ];
         });
 
-        $pkActivities = [
-            'total' => PurokalusuganActivity::count(),
-            'small' => PurokalusuganActivity::where('type', 'small')->count(),
-            'large' => PurokalusuganActivity::where('type', 'large')->count(),
-            
-            'activities' => Province::get()->map(function($province) {
-                // Query the activities for this specific province
-                $query = PurokalusuganActivity::whereHas('barangays', function($q) use ($province) {
-                    $q->where('province_id', $province->id);
-                });
-
-                // Clone the query to get specific type counts without re-running the heavy 'whereHas'
-                return [
-                    'province' => $province->name,
-                    'total'    => (clone $query)->count(),
-                    'small'    => (clone $query)->where('type', 'small')->count(),
-                    'large'    => (clone $query)->where('type', 'large')->count(),
-                ];
-            })
-        ];
-
         return inertia('dashboard/accessLevelOneDashboard', [
-            'team' => $teamData,
-            'program' => $programData,
-            'programIndicators' => $programIndicators,
-            'pkActivities' => $pkActivities,
+          
+            'provinces' => $provinces,
         ]);
     }
 
@@ -173,25 +164,6 @@ class DashboardController extends Controller
             'handledMunicipalities.municipality.barangays.priorityPrograms',
             'handledMunicipalities.municipality.barangays.geography',
         ]);
-
-        // $municipalities = $user->handledMunicipalities->map(function($userMunicipality){
-
-
-        //     return [
-        //         'name' => $userMunicipality->municipality->name,
-        //         'barangays' => $userMunicipality->municipality->barangays->map(function($barangay){
-        //             // $reportCount = Report::where('barangay_id',$barangay->id)->count();
-        //             // $pkActivityCount = PurokalusuganActivityBarangay::whereHas('barangays',function($query) use ($barangay){
-        //             //     $query->where('barangay_id',$barangay->id);
-        //             // })->count();
-        //             return [
-        //                 'name' => $barangay->name,
-        //                 // 'reports' => $reportCount,
-        //                 // 'pkActivityCount' => $pkActivityCount
-        //             ];
-        //         })
-        //     ];
-        // });
 
         return Inertia::render('dashboard/dmoHandledMunicipalityDashboard',[
             'municipalities' => $user->handledMunicipalities

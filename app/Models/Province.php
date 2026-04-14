@@ -17,5 +17,10 @@ class Province extends Model
     {
         return $this->hasMany(Municipality::class);
     }
+
+    public function barangays(): HasMany
+    {
+        return $this->hasMany(Barangay::class,'province_id');
+    }
     
 }
