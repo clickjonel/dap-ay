@@ -32,7 +32,10 @@ class BarangayController extends Controller
             })
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('psgc_code', 'like', "%{$search}%");
+                    ->orWhere('psgc_code', 'like', "%{$search}%")
+                    ->orWhereHas('municipality', function($query) use ($search){
+                        $query->where('name', 'like', "%{$search}%");
+                    });
             });
 
         // ── JSON response for async search (activity form, etc.) ──
