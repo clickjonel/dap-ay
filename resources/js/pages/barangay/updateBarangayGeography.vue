@@ -41,6 +41,10 @@ const submit = () => {
         },
     })
 }
+
+const back = () => {
+    window.history.back()
+}
 </script>
 
 <template>
@@ -50,7 +54,7 @@ const submit = () => {
         <div class="flex items-center gap-4 shrink-0">
             <button
                 type="button"
-                @click="router.visit('/barangays')"
+                @click="back"
                 class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all shrink-0"
             >
                 <Icon icon="hugeicons:arrow-left-01" class="text-sm" />

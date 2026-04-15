@@ -79,4 +79,32 @@ class GenerateReportController extends Controller
         ]);
     }
 
+    
+    public function generateReport(Request $request)
+    {
+        $validated = $request->validate([
+            'start' => 'nullable|date',
+            'end' => 'nullable|date|after_or_equal:start',
+        ]);
+
+        $start = $validated['start'] ?? now()->startOfYear()->toDateString();
+        $end = $validated['end'] ?? now()->endOfYear()->toDateString();
+
+        $reports = Report::query()
+            ->where('status', 'Approved')
+            ->with([
+                'barangay.municipality',
+                'barangay.province',
+                'users',
+                'values.indicator.program',
+                'values.disaggregations.disaggregation'
+            ])
+            ->whereBetween('date', [$start, $end])
+            ->get();
+
+        return Inertia::render('generate/reportGenerator', [
+            'reports' => $reports,
+        ]);
+    }
+
 }
