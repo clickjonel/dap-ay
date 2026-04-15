@@ -119,11 +119,12 @@
             label: 'Generator',
             icon: 'hugeicons:file-02',
             children: [
-                { label: 'PK Activities', href: '/generate/quarterly-large-scale-report', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+                // { label: 'PK Activities', href: '/generate/quarterly-large-scale-report', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
                 //{ label: 'Report',   href: '/generate/approved-report-submissions',  icon: 'hugeicons:note-done', accessLevels: [1, 3] },
-                { label: 'Report Generate',   href: '/generate/report',  icon: 'hugeicons:note-done', accessLevels: [1, 3] },
+                { label: 'Report Generator',   href: '/generate/report',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
+                { label: 'PK Activities Generator',   href: '/generate/pk_activities',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
             ],
-            accessLevels: [1, 3]
+            accessLevels: [1, 2,  3]
         },
     ]
 

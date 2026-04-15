@@ -86,6 +86,9 @@ class GenerateReportController extends Controller
             'start' => 'nullable|date',
             'end' => 'nullable|date|after_or_equal:start',
         ]);
+        $user = $request->user()->load(['accessLevels']);
+        $provinceID = $user->accessLevels->pdoho_province_id;
+        $accessLevel = $user->accessLevels->access_level;
 
         $start = $validated['start'] ?? now()->startOfMonth()->toDateString();
         $end = $validated['end'] ?? now()->endOfMonth()->toDateString();
@@ -99,6 +102,16 @@ class GenerateReportController extends Controller
                 'values.indicator.program',
                 'values.disaggregations.disaggregation'
             ])
+            ->when($accessLevel === 2, function($query) use ($user){
+                $query->whereHas('users',function($query) use ($user){
+                    $query->where('user_id', $user->id);
+                });
+            })
+            ->when($accessLevel === 3, function($query) use ($provinceID){
+                $query->whereHas('barangay', function($query) use ($provinceID){
+                    $query->where('province_id', $provinceID);
+                });
+            })
             ->whereBetween('date', [$start, $end])
             ->get();
 
@@ -113,6 +126,44 @@ class GenerateReportController extends Controller
         return Inertia::render('generate/reportGenerator', [
             'reports' => $reports,
             'totals' => $totals
+        ]);
+    }
+
+    public function generatePKActivitiesReport(Request $request)
+    {
+        $validated = $request->validate([
+            'start' => 'nullable|date',
+            'end' => 'nullable|date|after_or_equal:start',
+        ]);
+        $user = $request->user()->load(['accessLevels']);
+        $provinceID = $user->accessLevels->pdoho_province_id;
+        $accessLevel = $user->accessLevels->access_level;
+
+        $start = $validated['start'] ?? now()->startOfMonth()->toDateString();
+        $end = $validated['end'] ?? now()->endOfMonth()->toDateString();
+
+        $activities = PurokalusuganActivity::query()
+                        ->with([
+                            'barangays.municipality',
+                            'barangays.province',
+                            'programs'
+                        ])
+                        ->when($accessLevel === 2, function($query) use ($provinceID){
+                            $query->whereHas('barangays',function($query) use ($provinceID){
+                                $query->where('province_id', $provinceID);
+                            });
+                        })
+                        ->when($accessLevel === 3, function($query) use ($provinceID){
+                            $query->whereHas('barangay', function($query) use ($provinceID){
+                                $query->where('province_id', $provinceID);
+                            });
+                        })
+                        ->whereBetween('date_start', [$start, $end])
+                        ->get();
+
+        return Inertia::render('generate/pkActivitiesGenerator', [
+            'activities' => $activities,
+            // 'totals' => $totals
         ]);
     }
 

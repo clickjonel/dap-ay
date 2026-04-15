@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::get('generate/quarterly-large-scale-report', [GenerateReportController::class, 'generateQuarterlyLargeScaleReport']);
     Route::get('generate/approved-report-submissions', [GenerateReportController::class, 'generateApprovedReportSubmissions']);
     Route::get('generate/report', [GenerateReportController::class, 'generateReport']);
+    Route::get('generate/pk_activities', [GenerateReportController::class, 'generatePKActivitiesReport']);
 
     //user routes
     Route::get('account-settings', [UserController::class, 'accountSettings']);

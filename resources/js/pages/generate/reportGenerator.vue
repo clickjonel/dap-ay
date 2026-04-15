@@ -106,11 +106,11 @@ const print = () => {
                 <p class="text-2xl font-black text-slate-800">{{ props.totals.total_submissions }}</p>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submissions</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Clients</p>
                 <p class="text-2xl font-black text-slate-800">{{ props.totals.total_clients }}</p>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submissions</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Returning Clients</p>
                 <p class="text-2xl font-black text-slate-800">{{ props.totals.total_returning_clients }}</p>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
