@@ -8,11 +8,12 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps({
     reports: { type: Array, default: () => [] },
+    totals: { type: Object, default: () => {} },
 })
-
+const now = new Date()
 const filters = ref({
-    start: null,
-    end: null
+    start: new Date(now.getFullYear(), now.getMonth(), 1),
+    end:   new Date(now.getFullYear(), now.getMonth() + 1, 0),
 })
 
 onMounted(()=>{
@@ -37,8 +38,8 @@ const applyFilter = () => {
 
 const clearFilters = () => {
     filters.value = {
-        start: null,
-        end: null
+        start: new Date(now.getFullYear(), now.getMonth(), 1),
+        end:   new Date(now.getFullYear(), now.getMonth() + 1, 0),
     }
     applyFilter()
 }
@@ -88,6 +89,38 @@ const print = () => {
                 <Button @click="clearFilters" label="Clear Filters" severity="info"/>
             </div>
             <Button @click="applyFilter" label="Get Reports"/>
+        </section>
+
+        <section class="w-full flex justify-center items-center">
+            <div class="w-full bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Reporting Period</p>
+                <p class="text-2xl font-black text-slate-800">
+                    {{ formatDate(filters.start) }} — {{ formatDate(filters.end) }}
+                </p>
+            </div>
+        </section>
+
+        <section class="w-full grid grid-cols-5 gap-2">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submissions</p>
+                <p class="text-2xl font-black text-slate-800">{{ props.totals.total_submissions }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submissions</p>
+                <p class="text-2xl font-black text-slate-800">{{ props.totals.total_clients }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submissions</p>
+                <p class="text-2xl font-black text-slate-800">{{ props.totals.total_returning_clients }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Barangays</p>
+                <p class="text-2xl font-black text-slate-800">{{ props.totals.total_barangays }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Submitters</p>
+                <p class="text-2xl font-black text-slate-800">{{ props.totals.total_users }}</p>
+            </div>
         </section>
 
         <section class="w-full flex flex-col justify-start items-start gap-4">

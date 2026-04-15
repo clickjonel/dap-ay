@@ -87,8 +87,8 @@ class GenerateReportController extends Controller
             'end' => 'nullable|date|after_or_equal:start',
         ]);
 
-        $start = $validated['start'] ?? now()->startOfYear()->toDateString();
-        $end = $validated['end'] ?? now()->endOfYear()->toDateString();
+        $start = $validated['start'] ?? now()->startOfMonth()->toDateString();
+        $end = $validated['end'] ?? now()->endOfMonth()->toDateString();
 
         $reports = Report::query()
             ->where('status', 'Approved')
@@ -102,8 +102,17 @@ class GenerateReportController extends Controller
             ->whereBetween('date', [$start, $end])
             ->get();
 
+        $totals = [
+            'total_submissions' => $reports->count(),
+            'total_clients' => $reports->sum('total_clients'),
+            'total_returning_clients' => $reports->sum('total_returning_clients'),
+            'total_barangays' => $reports->pluck('barangay_id')->unique()->count(),
+            'total_users' => $reports->pluck('users')->flatten()->pluck('id')->unique()->count(),
+        ];
+
         return Inertia::render('generate/reportGenerator', [
             'reports' => $reports,
+            'totals' => $totals
         ]);
     }
 
