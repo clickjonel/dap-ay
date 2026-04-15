@@ -35,7 +35,8 @@ class TeamController extends Controller
                 $query->where(function ($q) use ($user) {
                     $q->whereHas('members', fn($q) =>
                         $q->where('user_id', $user->id)
-                    );
+                    )
+                    ->orWhereDoesntHave('members');
                 });
             })
     
