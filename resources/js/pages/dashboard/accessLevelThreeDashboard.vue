@@ -62,7 +62,7 @@ const getStatusClass = (status) => status ? 'text-emerald-600' : 'text-slate-300
                                     <div class="font-bold text-slate-700">{{ brgy.name }}</div>
                                     <div class="text-xs text-slate-400">{{ brgy.municipality }}</div>
                                 </td>
-                                <td v-for="key in ['org_indicator', 'pk_profile', 'geography', 'population', 'priority']" 
+                                <td v-for="key in ['org_indicator', 'pk_profile', 'geography', 'population', 'priority_programs']" 
                                     :key="key" 
                                     class="px-4 py-4 text-center">
                                     <div class="flex justify-center">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\PurokalusuganActivity;
 use App\Models\Report;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -37,6 +38,15 @@ class DeleteController extends Controller
 
         // Finally delete the report
         $report->delete();
+    }
+
+    public function deletePurokalusuganActivity($id)
+    {
+        $activity = PurokalusuganActivity::findOrFail($id);
+        $activity->participants()->detach();
+        $activity->barangays()->detach();
+        $activity->programs()->detach();
+        $activity->delete();
     }
 
 
