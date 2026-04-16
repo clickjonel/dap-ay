@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PurokalusuganActivityRequests\StorePurokalusuganActivityRequest;
+use App\Http\Requests\PurokalusuganActivityRequests\UpdatePurokalusuganActivityRequest;
 use App\Models\Barangay;
 use App\Models\Program;
 use App\Models\PurokalusuganActivity;
 use App\Models\PurokalusuganActivityBarangay;
 use App\Models\PurokalusuganActivityProgram;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,8 +24,8 @@ class PurokalusuganActivityController extends Controller
         $accessLevel = $user->accessLevels;
     
         $activities = PurokalusuganActivity::query()
-            ->with(['programs:id,name'])
-            ->withCount('barangays')
+            // ->with(['programs:id,name'])
+            ->withCount(['barangays','participants','programs'])
             ->when(
                 $accessLevel->access_level === 2,
                 fn($query) => $query->whereHas('barangays', fn($q) =>
@@ -67,28 +70,29 @@ class PurokalusuganActivityController extends Controller
                 'name' => "{$b->name} — {$b->municipality->name}",
             ]);
 
+        $hrh = User::query()
+            ->select('id', 'name')
+            ->when(in_array($accessLevel->access_level, [2, 3]), function ($query) use ($accessLevel) {
+                $query->whereHas('accessLevels', function($query) use ($accessLevel) {
+                    $query->where('pdoho_access_id', $accessLevel->pdoho_access_id);
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
         return Inertia::render('activity/createPKActivity', [
             'programs'  => $programs,
             'barangays' => $barangays,
+            'hrh' => $hrh
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePurokalusuganActivityRequest $request)
     {
-         $validated = $request->validate([
-            'activity_name' => 'required|string|max:255',
-            'type'          => 'required|in:small,large',
-            'date_start'    => 'required|date',
-            'date_end'      => 'required|date',
-            'total_clients' => 'required|integer|min:0',
-            'program_ids'   => 'required|array|min:1',
-            'program_ids.*' => 'exists:programs,id',
-            'barangay_ids'  => 'required|array|min:1',
-            'barangay_ids.*'=> 'exists:barangays,id',
-        ]);
+        $validated = $request->validated();
 
         $activity = PurokalusuganActivity::create([
             'activity_name' => $validated['activity_name'],
@@ -98,19 +102,12 @@ class PurokalusuganActivityController extends Controller
             'total_clients' => $validated['total_clients'],
         ]);
 
-        foreach ($validated['program_ids'] as $programId) {
-            PurokalusuganActivityProgram::create([
-                'pk_activity_id' => $activity->id,
-                'program_id' => $programId,
-            ]);
-        }
+        $activity->programs()->attach($validated['programs']);
+        $activity->barangays()->attach($validated['barangays']);
+        $activity->participants()->attach($validated['hrh'] ?? []);
 
-        foreach ($validated['barangay_ids'] as $barangayId) {
-            PurokalusuganActivityBarangay::create([
-                'pk_activity_id' => $activity->id,
-                'barangay_id' => $barangayId,
-            ]);
-        }
+        redirect()->route('pk-activities.index');
+
     }
 
     /**
@@ -124,30 +121,54 @@ class PurokalusuganActivityController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PurokalusuganActivity $pkActivity)
+    public function edit(Request $request, int $id)
     {
-         return Inertia::render('activity/editPKActivity', [
-            'activity' => $pkActivity->load(['programs:id,name', 'barangays:id,name']),
-            'programs' => Program::select('id', 'name')->get(),
+        $user = $request->user();
+        $accessLevel = $user->accessLevels;
+
+        $activity = PurokalusuganActivity::with(['participants','barangays','programs'])->find($id);
+
+        $programs = Program::select('id', 'name')->orderBy('name')->get();
+
+        $barangays = Barangay::query()
+            ->select('id', 'name', 'municipality_id')
+            ->with(['municipality:id,name'])
+            ->when(
+                in_array($accessLevel->access_level, [2, 3]),
+                fn($q) => $q->where('province_id', $accessLevel->pdoho_access_id)
+            )
+            ->orderBy('name')
+            ->get()
+            ->map(fn($b) => [
+                'id'   => $b->id,
+                'name' => "{$b->name} — {$b->municipality->name}",
+            ]);
+
+        $hrh = User::query()
+            ->select('id', 'name')
+            ->when(in_array($accessLevel->access_level, [2, 3]), function ($query) use ($accessLevel) {
+                $query->whereHas('accessLevels', function($query) use ($accessLevel) {
+                    $query->where('pdoho_access_id', $accessLevel->pdoho_access_id);
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('activity/editPKActivity', [
+            'programs'  => $programs,
+            'barangays' => $barangays,
+            'hrh' => $hrh,
+            'activity' => $activity
         ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PurokalusuganActivity $pkActivity)
+    public function update(UpdatePurokalusuganActivityRequest $request, PurokalusuganActivity $pkActivity)
     {
-        $validated = $request->validate([
-            'activity_name' => 'required|string|max:255',
-            'type'          => 'required|in:small,large',
-            'date_start'    => 'required|date',
-            'date_end'      => 'required|date|after_or_equal:date_start',
-            'total_clients' => 'required|integer|min:0',
-            'program_ids'   => 'required|array|min:1',
-            'program_ids.*' => 'exists:programs,id',
-            'barangay_ids'  => 'required|array|min:1',
-            'barangay_ids.*'=> 'exists:barangays,id',
-        ]);
+        $validated = $request->validated();
 
         $pkActivity->update([
             'activity_name' => $validated['activity_name'],
@@ -157,8 +178,9 @@ class PurokalusuganActivityController extends Controller
             'total_clients' => $validated['total_clients'],
         ]);
 
-        $pkActivity->programs()->sync($validated['program_ids']);
-        $pkActivity->barangays()->sync($validated['barangay_ids']);
+        $pkActivity->programs()->sync($validated['programs']);
+        $pkActivity->barangays()->sync($validated['barangays']);
+        $pkActivity->participants()->sync($validated['hrh']);
 
         return redirect('/pk-activities');
     }

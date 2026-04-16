@@ -24,5 +24,10 @@ class PurokalusuganActivity extends Model
         return $this->belongsToMany(Program::class, 'pk_activity_programs', 'pk_activity_id', 'program_id');
     }
 
+    public function participants()
+    {
+        return $this->belongsToMany(User::class, 'purokalusugan_activity_hrh_participants', 'pk_activity_id', 'user_id');
+    }
+
 
 }
