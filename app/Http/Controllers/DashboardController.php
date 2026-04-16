@@ -13,6 +13,7 @@ use App\Models\Report;
 use App\Models\ReportValue;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -112,9 +113,94 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function accessLevelThreeDashboard()
+    public function accessLevelThreeDashboard(Request $request)
     {
-        return inertia('dashboard/accessLevelThreeDashboard');
+        $user = $request->user()->load(['accessLevels']);
+
+        $province = Province::with([
+            'barangays.pkProfile',
+            'barangays.organizationalIndicators',
+            'barangays.geography',
+            'barangays.population',
+            'barangays.priorityPrograms',
+            'barangays.municipality'
+        ])
+        ->withCount([
+            'barangays',
+            'municipalities'
+        ])
+        ->find($user->accessLevels->pdoho_access_id);
+
+        $teams = Team::with([
+                        'barangays',
+                        'members'
+                    ])
+                    ->whereHas('barangays',function($query) use ($province) {
+                        $query->where('province_id',$province->id);
+                    })
+                    ->withCount([
+                        'barangays',
+                        'members',
+                        'members as doh_deployed' => function($query){
+                            $query->whereNotNull('user_id');
+                        },
+                    ])
+                    ->distinct()
+                    ->get()
+                    ->map(function($team){
+                        $teamData = [
+                            'name' => $team->name,
+                            'barangay_count' => $team->barangays_count,
+                            'member_count' => $team->members_count,
+                            'doh_deployed' => $team->doh_deployed,
+                            'pk_kit' => $team->pk_kit ? 'Given' : 'For Issuance',
+                            'eo_link' => $team->eo_link,
+                            'active' => $team->is_active
+                        ];
+
+                        return $teamData;
+                    });
+
+        $provinceDashboardData = [
+            'name' => $province->name,
+
+            'barangays' => $province->barangays->map(function($brgy){
+                $brgyData = [
+                    'name' => $brgy->name,
+                    'org_indicator' => $brgy->organizationalIndicators->isNotEmpty(),
+                    'pk_profile' => $brgy->pkProfile !== null,
+                    'geography' => $brgy->geography !== null,
+                    'population' => $brgy->population !== null,
+                    'priority_programs' => $brgy->priorityPrograms->isNotEmpty(),
+                    'municipality' => $brgy->municipality->name
+                ];
+
+                return $brgyData;
+            })
+                
+        ];
+
+
+        $totals = [
+            'municipalities' => $province->municipalities_count,
+            'barangays' => $province->barangays_count,
+            'hrh' => User::whereHas('accessLevels', function($query) use ($province){
+                                $query->where('pdoho_access_id',$province->id);
+                            })
+                            ->distinct()
+                            ->count(),
+            'teams' => Team::whereHas('barangays', function($query) use ($province){
+                                $query->where('province_id',$province->id);
+                            })
+                            ->distinct()
+                            ->count(),
+        ];
+
+        return inertia('dashboard/accessLevelThreeDashboard', [
+            'province' => $provinceDashboardData,
+            'totals' => $totals,
+            'teams' => $teams
+        ]);
     }
 
     public function accessLevelFourDashboard(Request $request)

@@ -4,6 +4,11 @@ import { Icon } from '@iconify/vue'
 import { usePage } from '@inertiajs/vue3'
 
 defineOptions({ layout: Main })
+const props = defineProps({
+    province: Object,
+    teams: Array,
+    totals: Object
+})
 
 const user = {
     name: 'Maria Santos',
@@ -11,83 +16,111 @@ const user = {
 }
 const page = usePage()
 
-const stats = {
-    total:      148,
-    this_month: 23,
-    pending:    5,
-    approved:   18,
-}
-
-const teams = [
-    { id: 1, name: 'Baguio Health Team',     members: 8,  role: 'Member', color: 'indigo'  },
-    { id: 2, name: 'Mountain Province Unit', members: 5,  role: 'Lead',   color: 'emerald' },
-    { id: 3, name: 'CAR Monitoring Group',   members: 12, role: 'Member', color: 'amber'   },
-]
-
-const recentReports = [
-    { id: 1, title: 'Q2 Health Coverage Report',  barangay: 'Brgy. Lualhati',    date: 'Jul 10, 2025', status: 'approved' },
-    { id: 2, title: 'Nutrition Program Update',    barangay: 'Brgy. Kagitingan',  date: 'Jul 8, 2025',  status: 'pending'  },
-    { id: 3, title: 'Monthly Field Assessment',    barangay: 'Brgy. Trancoville', date: 'Jul 5, 2025',  status: 'approved' },
-    { id: 4, title: 'Immunization Drive Summary',  barangay: 'Brgy. Lualhati',    date: 'Jul 1, 2025',  status: 'draft'    },
-    { id: 5, title: 'Water Sanitation Monitoring', barangay: 'Brgy. Burnham',     date: 'Jun 28, 2025', status: 'approved' },
-]
-
-const barangays = [
-    { id: 1, name: 'Brgy. Lualhati',    municipality: 'Baguio City', reports: 42, active: true  },
-    { id: 2, name: 'Brgy. Kagitingan',  municipality: 'Baguio City', reports: 31, active: true  },
-    { id: 3, name: 'Brgy. Trancoville', municipality: 'Baguio City', reports: 28, active: true  },
-    { id: 4, name: 'Brgy. Burnham',     municipality: 'Baguio City', reports: 19, active: false },
-]
-
-const statusConfig = {
-    approved: { label: 'Approved', class: 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200' },
-    pending:  { label: 'Pending',  class: 'bg-amber-50  text-amber-600  ring-1 ring-amber-200'  },
-    draft:    { label: 'Draft',    class: 'bg-slate-100 text-slate-500  ring-1 ring-slate-200'  },
-}
-
-const teamColors = {
-    indigo:  { bg: 'bg-indigo-100',  text: 'text-indigo-600',  dot: 'bg-indigo-500'  },
-    emerald: { bg: 'bg-emerald-100', text: 'text-emerald-600', dot: 'bg-emerald-500' },
-    amber:   { bg: 'bg-amber-100',   text: 'text-amber-600',   dot: 'bg-amber-500'   },
-}
-
-const initials = (name) => name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-
-const greeting = () => {
-    const h = new Date().getHours()
-    if (h < 12) return 'Good morning'
-    if (h < 18) return 'Good afternoon'
-    return 'Good evening'
-}
-
-const today = new Date().toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' })
+// Helper to handle status styles consistently
+const getStatusClass = (status) => status ? 'text-emerald-600' : 'text-slate-300'
 </script>
 
 <template>
-    <div class="h-full flex flex-col gap-6 min-h-0 overflow-y-auto">
+    <div class="h-full flex flex-col gap-8 p-6 bg-slate-50 min-h-0 overflow-y-auto">
 
-        <!-- ── Welcome banner ─────────────────────────────── -->
-        <div class="shrink-0 relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-900 px-6 py-5">
-            <div class="absolute inset-0 opacity-10"
-                style="background-image: linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px); background-size: 24px 24px;">
-            </div>
-            <div class="relative flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-white/20 ring-2 ring-white/30 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                    {{ initials(page.props.auth.user.name) }}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-indigo-200 text-xs font-medium">{{ greeting() }},</p>
-                    <h1 class="text-white text-lg font-bold leading-tight truncate">{{ page.props.auth.user.name }}</h1>
-                    <p class="text-indigo-300 text-[11px] mt-0.5">PDOHO Purokalusugan Dashboard</p>
-                </div>
-                <div class="hidden sm:flex items-center gap-1.5 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5">
-                    <Icon icon="hugeicons:calendar-03" class="text-indigo-200 text-sm" />
-                    <span class="text-white text-xs font-medium">{{ today }}</span>
-                </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div v-for="(val, label) in { Municipalities: 'municipalities', Barangays: 'barangays', HRH: 'hrh', Teams: 'teams' }" 
+                 :key="label" 
+                 class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 transition-transform hover:scale-[1.02]">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{{ label }}</p>
+                <p class="text-4xl font-black text-slate-900">{{ props.totals[val] }}</p>
             </div>
         </div>
 
+        <section class="flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                        <Icon icon="lucide:map-pin" class="w-5 h-5" />
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800">Barangays Status Tracker</h2>
+                </div>
+                <span class="text-xs text-slate-400 font-medium">Showing {{ props.province.barangays.length }} locations</span>
+            </div>
 
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold border-b border-slate-200">
+                                <th class="px-6 py-4">Barangay Details</th>
+                                <th class="px-4 py-4 text-center">Org Indicators</th>
+                                <th class="px-4 py-4 text-center">Pk Profile</th>
+                                <th class="px-4 py-4 text-center">Geography</th>
+                                <th class="px-4 py-4 text-center">Population</th>
+                                <th class="px-4 py-4 text-center">Programs</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr v-for="brgy in props.province.barangays" :key="brgy.id" class="hover:bg-blue-50/30 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-700">{{ brgy.name }}</div>
+                                    <div class="text-xs text-slate-400">{{ brgy.municipality }}</div>
+                                </td>
+                                <td v-for="key in ['org_indicator', 'pk_profile', 'geography', 'population', 'priority']" 
+                                    :key="key" 
+                                    class="px-4 py-4 text-center">
+                                    <div class="flex justify-center">
+                                        <Icon 
+                                            :icon="brgy[key] ? 'lucide:check-circle-2' : 'lucide:clock-3'" 
+                                            :class="['w-5 h-5', brgy[key] ? 'text-emerald-500' : 'text-slate-200 group-hover:text-amber-400']" 
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="flex flex-col gap-4 pb-10">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-rose-100 rounded-lg text-rose-600">
+                    <Icon icon="lucide:users" class="w-5 h-5" />
+                </div>
+                <h2 class="text-lg font-bold text-slate-800">Teams Status Tracker</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold border-b border-slate-200">
+                            <th class="px-6 py-4">Team Name</th>
+                            <th class="px-4 py-4 text-center">Brgy</th>
+                            <th class="px-4 py-4 text-center">Members</th>
+                            <th class="px-4 py-4 text-center">DOH Deployed</th>
+                            <th class="px-4 py-4 text-center">PK Kit</th>
+                            <th class="px-4 py-4 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr v-for="team in props.teams" :key="team.name" class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-slate-700">{{ team.name }}</td>
+                            <td class="px-4 py-4 text-center font-medium">{{ team.barangay_count }}</td>
+                            <td class="px-4 py-4 text-center font-medium">{{ team.member_count }}</td>
+                            <td class="px-4 py-4 text-center text-slate-500">{{ team.doh_deployed }}</td>
+                            <td class="px-4 py-4 text-center">
+                                <span class="px-2 py-1 rounded bg-slate-100 text-[10px] font-bold uppercase">{{ team.pk_kit }}</span>
+                            </td>
+                            <td class="px-4 py-4 text-center">
+                                <span :class="[
+                                    'px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter',
+                                    team.active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                                ]">
+                                    {{ team.active ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
     </div>
 </template>
