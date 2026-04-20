@@ -136,7 +136,7 @@ class GenerateReportController extends Controller
             'end' => 'nullable|date|after_or_equal:start',
         ]);
         $user = $request->user()->load(['accessLevels']);
-        $provinceID = $user->accessLevels->pdoho_province_id;
+        $provinceID = $user->accessLevels->pdoho_access_id;
         $accessLevel = $user->accessLevels->access_level;
 
         $start = $validated['start'] ?? now()->startOfMonth()->toDateString();
@@ -148,16 +148,11 @@ class GenerateReportController extends Controller
                             'barangays.province',
                             'programs'
                         ])
-                        ->when($accessLevel === 2 || $accessLevel === 3, function($query) use ($provinceID){
-                            $query->whereHas('barangays',function($query) use ($provinceID){
+                        ->when(in_array($accessLevel, [2, 3]), function ($query) use ($provinceID) {
+                            $query->whereHas('barangays', function ($query) use ($provinceID) {
                                 $query->where('province_id', $provinceID);
                             });
                         })
-                        // ->when($accessLevel === 3, function($query) use ($provinceID){
-                        //     $query->whereHas('barangays', function($query) use ($provinceID){
-                        //         $query->where('province_id', $provinceID);
-                        //     });
-                        // })
                         ->whereBetween('date_start', [$start, $end])
                         ->get();
 
