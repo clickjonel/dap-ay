@@ -120,7 +120,7 @@ class BarangayController extends Controller
     public function update(Request $request, Barangay $barangay)
     {
         $request->validate([
-            'psgc_code'       => 'nullable|string|unique:barangays,psgc_code,' . $barangay->id,
+            'psgc_code'       => 'nullable|string',
             'name'            => 'required|string|max:255',
             'province_id'     => 'required|exists:provinces,id',
             'municipality_id' => 'required|exists:municipalities,id',

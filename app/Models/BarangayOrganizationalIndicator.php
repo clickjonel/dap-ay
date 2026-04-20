@@ -20,8 +20,8 @@ class BarangayOrganizationalIndicator extends Model
     //     return $this->belongsTo(Barangay::class);
     // }
 
-    // public function organizationalIndicator()
-    // {
-    //     return $this->belongsTo(OrganizationalIndicator::class);
-    // }
+    public function organizationalIndicator()
+    {
+        return $this->belongsTo(OrganizationalIndicator::class,'org_indicator_id','id');
+    }
 }
