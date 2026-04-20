@@ -2,11 +2,9 @@
     import { computed, ref, onMounted } from 'vue'
     import { Icon } from '@iconify/vue'
     import { usePage, router, Link } from '@inertiajs/vue3'
-    import Popover from 'primevue/popover'
-    import Divider from 'primevue/divider'
-    import Toast from 'primevue/toast'
-    import Dialog from 'primevue/dialog'
+    import { Popover, Divider, Toast, Dialog } from 'primevue'
     import { provide } from 'vue'
+    import { filterNavLinks } from '@/utils/navigationLinks'
 
     // ── Inertia page props ─────────────────────────────────
     const page = usePage()
@@ -26,132 +24,25 @@
     const closeSidebar  = () => sidebarOpen.value = false
 
     // ── Navigation ─────────────────────────────────────────
-    const navItems = [
-        {
-            id: 'dashboard',
-            label: 'Dashboard',
-            icon: 'hugeicons:dashboard-square-02',
-            children: [
-                { label: 'Admin Dashboard',  href: '/dashboard/access-level-one',   icon: 'hugeicons:user-square',   accessLevels: [1] },
-                { label: 'HRH Dashboard',    href: '/dashboard/access-level-two',   icon: 'hugeicons:building-03',   accessLevels: [2] },
-                { label: 'PDOHO Dashboard',  href: '/dashboard/access-level-three', icon: 'hugeicons:shield-user',   accessLevels: [3] },
-                { label: 'DMO Dashboard',  href: '/dashboard/access-level-four', icon: 'hugeicons:shield-user',   accessLevels: [4] },
-                { label: 'DMO Municipalities Dashboard',  href: '/dashboard/dmo/municipalities', icon: 'hugeicons:shield-user',   accessLevels: [4] },
-            ],
-            accessLevels: [1, 2, 3, 4]
-        },
-        {
-            id: 'program',
-            label: 'Program',
-            icon: 'hugeicons:folder-library',
-            children: [
-                { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01', accessLevels: [1, 3] },
-            ],
-            accessLevels: [1, 3]
-        },
-        {
-            id: 'indicator',
-            label: 'Indicator',
-            icon: 'hugeicons:chart-increase',
-            children: [
-                { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1, 3] },
-                { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1, 3] },
-            ],
-            accessLevels: [1, 3]
-        },
-        {
-            id: 'disaggregation',
-            label: 'Disaggregation',
-            icon: 'hugeicons:chart-increase',
-            children: [
-                { label: 'Disaggregations', href: '/disaggregations', icon: 'hugeicons:analytics-up', accessLevels: [1, 3] },
-            ],
-            accessLevels: [1, 3]
-        },
-        {
-            id: 'barangay',
-            label: 'Barangay',
-            icon: 'hugeicons:maps-location-01',
-            children: [
-                { label: 'Barangays', href: '/barangays', icon: 'hugeicons:home-07', accessLevels: [1, 2, 3] },
-            ],
-            accessLevels: [1, 2, 3]
-        },
-        {
-            id: 'team',
-            label: 'Team',
-            icon: 'hugeicons:user-multiple-02',
-            children: [
-                { label: 'Teams', href: '/teams', icon: 'hugeicons:user-group', accessLevels: [1, 2, 3] },
-            ],
-            accessLevels: [1, 2, 3]
-        },
-        {
-            id: 'report',
-            label: 'Report',
-            icon: 'hugeicons:file-02',
-            children: [
-                { label: 'Reports', href: '/reports', icon: 'hugeicons:note-done', accessLevels: [1, 2, 3, 4] },
-            ],
-            accessLevels: [1, 2, 3, 4]
-        },
-        {
-            id: 'Activities',
-            label: 'PK Activities',
-            icon: 'hugeicons:file-02',
-            children: [
-                { label: 'PK Activities', href: '/pk-activities', icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
-            ],
-            accessLevels: [1, 2, 3]
-        },
-        {
-            id: 'User',
-            label: 'Management',
-            icon: 'hugeicons:file-02',
-            children: [
-                { label: 'Users', href: '/users', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
-                { label: 'Set Handled Municipalities', href: '/users/handled-municipalities', icon: 'hugeicons:note-done', accessLevels: [4] },
-            ],
-            accessLevels: [1, 3, 4]
-        },
-        {
-            id: 'Generate',
-            label: 'Generator',
-            icon: 'hugeicons:file-02',
-            children: [
-                // { label: 'PK Activities', href: '/generate/quarterly-large-scale-report', icon: 'hugeicons:note-done', accessLevels: [1, 3] },
-                //{ label: 'Report',   href: '/generate/approved-report-submissions',  icon: 'hugeicons:note-done', accessLevels: [1, 3] },
-                { label: 'Report Generator',   href: '/generate/report',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
-                { label: 'PK Activities Generator',   href: '/generate/pk_activities',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
-            ],
-            accessLevels: [1, 2,  3]
-        },
-    ]
+    // const navItems = navLinks
 
     // ── Access level ───────────────────────────────────────
     const userLevel = computed(() => user.value?.access_levels?.access_level)
 
     provide('user', user)
 
-    const visibleNavItems = computed(() =>
-        navItems
-            .filter(item => item.accessLevels.includes(userLevel.value))
-            .map(item => ({
-                ...item,
-                children: item.children.filter(child => child.accessLevels.includes(userLevel.value))
-            }))
-    )
+    const visibleNavItems = computed(() => filterNavLinks(userLevel.value))
 
     // ── Active state ───────────────────────────────────────
     const isActive = (href) => href !== '#' && page.url.startsWith(href)
 
-    const activeLabel = computed(() => {
-        for (const item of visibleNavItems.value) {
-            const match = item.children.find(c => isActive(c.href))
-            if (match) return match.label
-        }
-        return ''
-    })
+    // const activeLabel = computed(() => {
+    //     for (const item of visibleNavItems) {
+    //         const match = item.children.find(c => isActive(c.href))
+    //         if (match) return match.label
+    //     }
+    //     return ''
+    // })
 
     // ── Popover ────────────────────────────────────────────
     const popoverRef = ref(null)
@@ -211,10 +102,7 @@
 
         <!-- ── Sidebar ───────────────────────────────────── -->
         <Transition name="slide">
-            <aside
-                v-show="sidebarOpen"
-                class="fixed inset-y-0 left-0 z-30 w-64 flex flex-col h-full bg-white border-r border-slate-200 lg:hidden"
-            >
+            <aside v-show="sidebarOpen" class="fixed inset-y-0 left-0 z-30 w-64 flex flex-col h-full bg-white border-r border-slate-200 lg:hidden">
                 <!-- Brand -->
                 <div class="flex items-center justify-between gap-3 px-5 h-16 border-b border-slate-100 flex-shrink-0">
                     <div class="flex items-center gap-3 min-w-0">
@@ -397,8 +285,6 @@
                         <span class="text-xs text-slate-400 font-medium whitespace-nowrap hidden sm:inline">DAPAY</span>
                         <Icon icon="hugeicons:arrow-right-01" class="text-slate-300 text-xs flex-shrink-0 hidden sm:inline" />
                         <span class="text-xs text-slate-500 font-medium whitespace-nowrap hidden sm:inline">Navigation</span>
-                        <Icon icon="hugeicons:arrow-right-01" class="text-slate-300 text-xs flex-shrink-0 hidden sm:inline" />
-                        <span class="text-xs text-slate-700 font-semibold truncate">{{ activeLabel }}</span>
                     </div>
                 </div>
 

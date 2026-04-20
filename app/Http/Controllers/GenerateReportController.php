@@ -148,16 +148,16 @@ class GenerateReportController extends Controller
                             'barangays.province',
                             'programs'
                         ])
-                        ->when($accessLevel === 2, function($query) use ($provinceID){
+                        ->when($accessLevel === 2 || $accessLevel === 3, function($query) use ($provinceID){
                             $query->whereHas('barangays',function($query) use ($provinceID){
                                 $query->where('province_id', $provinceID);
                             });
                         })
-                        ->when($accessLevel === 3, function($query) use ($provinceID){
-                            $query->whereHas('barangay', function($query) use ($provinceID){
-                                $query->where('province_id', $provinceID);
-                            });
-                        })
+                        // ->when($accessLevel === 3, function($query) use ($provinceID){
+                        //     $query->whereHas('barangays', function($query) use ($provinceID){
+                        //         $query->where('province_id', $provinceID);
+                        //     });
+                        // })
                         ->whereBetween('date_start', [$start, $end])
                         ->get();
 
