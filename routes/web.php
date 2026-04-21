@@ -118,6 +118,7 @@ Route::middleware('auth')->group(function () {
     //delete routes
     Route::delete('team/{id}', [DeleteController::class, 'deleteTeam']);
     Route::delete('report/{id}', [DeleteController::class, 'deleteReport']);
+    Route::delete('barangay/{id}', [DeleteController::class, 'deleteBarangay']);
 
     //Province Routes
     Route::get('province/dashboard/{id}',[ProvinceController::class,'renderProvinceDashboardData']);

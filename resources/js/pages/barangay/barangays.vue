@@ -3,9 +3,12 @@
     import { ref, inject } from 'vue'
     import { router } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
+    import { Dialog } from 'primevue'
+    import { useToast } from 'primevue/usetoast'
 
     defineOptions({ layout: Main })
     const user = inject('user')
+    const toast = useToast()
 
     const props = defineProps({
         barangays: { type: Object, default: () => ({}) },
@@ -15,6 +18,13 @@
 
     // ── Search ─────────────────────────────────────────────
     const search = ref(props.filters.search ?? '')
+    const confirmDeleteBarangayDialog = ref(false)
+    const selectedBarangay = ref(null)
+
+    function openConfirmDeleteReportDialog(barangay) {
+        selectedBarangay.value = barangay
+        confirmDeleteBarangayDialog.value = true
+    }
 
     let searchTimeout = null
     const onSearch = (e) => {
@@ -35,6 +45,16 @@
         router.get(url, { search: search.value }, {
             preserveState:  true,
             preserveScroll: true,
+        })
+    }
+
+    const deletebarangay = () => {
+        router.delete(`/barangay/${selectedBarangay.value.id}`, {
+            onSuccess: () => {
+                toast.add({ severity: 'success', summary: 'Barangay Deleted', detail: 'Barangay has been deleted successfully.', life: 2000 })
+                confirmDeleteBarangayDialog.value = false
+            },
+            onError: () => toast.add({ severity: 'error', summary: 'Failed to delete barangay', life: 2000 }),
         })
     }
 
@@ -234,6 +254,16 @@
                                     <Icon icon="carbon:top-programs" class="text-sm" />
                                 </button>
 
+
+                                <!-- delete -->
+                                <button
+                                    @click="openConfirmDeleteReportDialog(barangay)"
+                                    type="button"
+                                    class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                    title="Priority Programs"
+                                >
+                                    <Icon icon="hugeicons:delete-02" class="text-sm" />
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -266,6 +296,43 @@
 
         </div>
 
+
+        <!-- confirm delete barangay -->
+        <Dialog v-model:visible="confirmDeleteBarangayDialog" modal :draggable="false" header="Confirm" class="w-full max-w-sm mx-4">
+            <div class="flex flex-col gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                        <Icon icon="hugeicons:delete-02" class="text-base text-red-500" />
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-700">
+                            Are you sure you want to delete this barangay?
+                        </p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            This will delete all report related data including indicators, activities and others. Click Delete to delete record.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-1">
+                    <button
+                        type="button"
+                        @click="confirmDeleteBarangayDialog = false"
+                        class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        @click="deletebarangay"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                    >
+                        <Icon icon="hugeicons:delete-03" class="text-sm" />
+                        Delete Barangay
+                    </button>
+                </div>
+            </div>
+        </Dialog>
 
     </div>
 </template>

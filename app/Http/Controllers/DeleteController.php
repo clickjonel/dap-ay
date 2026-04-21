@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Barangay;
 use App\Models\PurokalusuganActivity;
 use App\Models\Report;
 use App\Models\Team;
@@ -47,6 +48,21 @@ class DeleteController extends Controller
         $activity->barangays()->detach();
         $activity->programs()->detach();
         $activity->delete();
+    }
+
+    public function deleteBarangay($id)
+    {
+        $barangay = Barangay::findOrFail($id);
+
+        // delete all related records first
+        $barangay->pkProfile()->delete();
+        $barangay->organizationalIndicators()->delete();
+        $barangay->geography()->delete();
+        $barangay->population()->delete();
+        $barangay->priorityPrograms()->delete();
+        $barangay->reports()->delete();
+    
+        $barangay->delete();
     }
 
 
