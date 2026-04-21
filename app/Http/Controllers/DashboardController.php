@@ -256,5 +256,20 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function adminBarangayMonitoringDashboard()
+    {
+        $provinces = Province::with([
+            'municipalities.barangays.priorityPrograms',
+        ])->get();
+        
+        $programs = Program::get();
+        
+
+        return Inertia::render('dashboard/barangayDashboard',[
+            'provinces' => $provinces,
+            'programs' => $programs
+        ]);
+    }
+
 
 }
