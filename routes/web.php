@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('access-level-four', [DashboardController::class, 'accessLevelFourDashboard']);
         Route::get('dmo/municipalities',[DashboardController::class,'getDMOMunicipalityDashboard']);
         Route::get('admin/barangay-monitoring',[DashboardController::class,'adminBarangayMonitoringDashboard']);
+        Route::get('barangay-monitoring/organizational-indicators',[DashboardController::class,'barangayOrganizationalIndicatorsMonitoring']);
     });
 
     //program routes

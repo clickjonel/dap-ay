@@ -323,6 +323,7 @@
                         Cancel
                     </button>
                     <button
+                        v-if="user.access_levels.access_level.in([1,3])"
                         type="button"
                         @click="deletebarangay"
                         class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"

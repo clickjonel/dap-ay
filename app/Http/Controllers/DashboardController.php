@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barangay;
 use App\Models\Municipality;
+use App\Models\OrganizationalIndicator;
 use App\Models\Program;
 use App\Models\ProgramIndicator;
 use App\Models\Province;
@@ -268,6 +269,21 @@ class DashboardController extends Controller
         return Inertia::render('dashboard/barangayDashboard',[
             'provinces' => $provinces,
             'programs' => $programs
+        ]);
+    }
+
+    public function barangayOrganizationalIndicatorsMonitoring()
+    {
+        $provinces = Province::with([
+            'municipalities.barangays.organizationalIndicators',
+        ])->get();
+        
+        $indicators = OrganizationalIndicator::get();
+        
+
+        return Inertia::render('dashboard/barangayOrganizationalIndicatorsMonitoring',[
+            'provinces' => $provinces,
+            'indicators' => $indicators
         ]);
     }
 

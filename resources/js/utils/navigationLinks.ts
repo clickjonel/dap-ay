@@ -11,6 +11,7 @@ const navLinks = [
             { label: 'DMO Dashboard',  href: '/dashboard/access-level-four', icon: 'hugeicons:shield-user',   accessLevels: [4] },
             { label: 'DMO Municipalities Dashboard',  href: '/dashboard/dmo/municipalities', icon: 'hugeicons:shield-user',   accessLevels: [4] },
             { label: 'Barangay Monitoring Dashboard',  href: '/dashboard/admin/barangay-monitoring', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Barangay Organizational Indicators Dashboard',  href: '/dashboard/barangay-monitoring/organizational-indicators', icon: 'hugeicons:shield-user',   accessLevels: [1] },
         ],
         accessLevels: [1, 2, 3, 4]
     },
