@@ -257,7 +257,7 @@
 
                                 <!-- delete -->
                                 <button
-                                    v-if="user.access_levels.access_level.in[1,3]"
+                                    v-if="user.access_levels.access_level === 1 | user.access_levels.access_level === 3"
                                     @click="openConfirmDeleteReportDialog(barangay)"
                                     type="button"
                                     class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
