@@ -9,7 +9,8 @@ class ProgramIndicator extends Model
     protected $fillable = [
         'indicator_name',
         'is_active',
-        'program_id'
+        'program_id',
+        'scope'
     ];
     public $timestamps = false;
 

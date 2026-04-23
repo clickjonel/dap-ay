@@ -18,6 +18,11 @@ const props = defineProps({
     programs:  { type: Array,   default: () => [] },
 })
 
+const scopeOptions = [
+    { label: 'Region',  value: 'Region'  },
+    { label: 'Central', value: 'Central' },
+]
+
 // ── Mode ───────────────────────────────────────────────
 const isEdit = computed(() => props.indicator !== null)
 
@@ -25,6 +30,7 @@ const isEdit = computed(() => props.indicator !== null)
 const form = useForm({
     indicator_name: '',
     program_id:     null,
+    scope:          null,
     is_active:      true,
 })
 
@@ -33,6 +39,7 @@ const onShow = () => {
     if (isEdit.value) {
         form.indicator_name = props.indicator.indicator_name ?? ''
         form.program_id     = props.indicator.program_id     ?? null
+        form.scope          = props.indicator.scope          ?? null
         form.is_active      = !!props.indicator.is_active
     } else {
         form.reset()
@@ -119,6 +126,25 @@ const submit = () => {
             />
             <p v-if="form.errors.program_id" class="text-[11px] text-red-500">
                 {{ form.errors.program_id }}
+            </p>
+        </div>
+
+        <!-- Scope -->
+        <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-semibold text-slate-600">
+                Scope <span class="text-red-400">*</span>
+            </label>
+            <Select
+                v-model="form.scope"
+                :options="scopeOptions"
+                option-label="label"
+                option-value="value"
+                placeholder="Select a scope..."
+                class="w-full text-sm!"
+                :class="form.errors.scope ? 'border-red-400!' : ''"
+            />
+            <p v-if="form.errors.scope" class="text-[11px] text-red-500">
+                {{ form.errors.scope }}
             </p>
         </div>
 

@@ -41,6 +41,7 @@ class ProgramIndicatorController extends Controller
             'indicator_name' => 'required|string|max:255',
             'program_id' => 'required|exists:programs,id',
             'is_active' => 'nullable|boolean',
+            'scope' => 'required|string',
         ]);
 
         ProgramIndicator::create($request->all());
@@ -72,6 +73,7 @@ class ProgramIndicatorController extends Controller
             'indicator_name' => 'required|string|max:255',
             'program_id' => 'required|exists:programs,id',
             'is_active' => 'nullable|boolean',
+            'scope' => 'required|string',
         ]);
 
         $indicator = ProgramIndicator::findOrFail($id);

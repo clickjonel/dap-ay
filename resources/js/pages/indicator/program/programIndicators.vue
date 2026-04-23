@@ -178,6 +178,7 @@
                         <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">#</th>
                         <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Indicator Name</th>
                         <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Program</th>
+                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Scope</th>
                         <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Status</th>
                         <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
                     </tr>
@@ -220,6 +221,13 @@
                         <td class="px-5 py-3.5">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 rounded-full text-[11px] font-medium text-indigo-600">
                                 {{ indicator.program?.name ?? '—' }}
+                            </span>
+                        </td>
+
+                        <!-- Scope -->
+                        <td class="px-5 py-3.5">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 rounded-full text-[11px] font-medium text-indigo-600">
+                                {{ indicator.scope }}
                             </span>
                         </td>
 
