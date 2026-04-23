@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserHandledMunicipality::class, 'user_id', 'id');
     }
+
+    public function actionedReports()
+    {
+        return $this->hasMany(Report::class,'action_by','id');
+    }
 }

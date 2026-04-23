@@ -320,5 +320,28 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function dmoReportApprovalsMonitoring()
+    {
+        $users = User::query()
+            // ->with(['actionedReports'])
+            ->whereHas('accessLevels', function ($query) {
+                $query->where('access_level', 4);
+            })
+            ->withCount([
+                'actionedReports as rejected' => function ($query) {
+                    $query->where('status', 'Rejected'); // was a comma here
+                },
+                'actionedReports as approved' => function ($query) {
+                    $query->where('status', 'Approved');
+                },
+            ])
+            ->get();
+
+        return Inertia::render('dashboard/dmoReportsApprovalMonitoring', [
+            'users' => $users,
+        ]);
+    }
+
+
 
 }

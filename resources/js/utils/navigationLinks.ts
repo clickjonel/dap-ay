@@ -15,6 +15,7 @@ const navLinks = [
             { label: 'Barangay PK Profile Dashboard',  href: '/dashboard/barangay-monitoring/pk-profile', icon: 'hugeicons:shield-user',   accessLevels: [1] },
             { label: 'Barangay Geography Dashboard',  href: '/dashboard/barangay-monitoring/geography', icon: 'hugeicons:shield-user',   accessLevels: [1] },
             { label: 'Barangay Population Dashboard',  href: '/dashboard/barangay-monitoring/population', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Report Approval Monitoring',  href: '/dashboard/report-monitoring/dmo-approvals', icon: 'hugeicons:shield-user',   accessLevels: [1] },
         ],
         accessLevels: [1, 2, 3, 4]
     },
