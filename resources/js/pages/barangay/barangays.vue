@@ -257,10 +257,11 @@
 
                                 <!-- delete -->
                                 <button
+                                    v-if="user.access_levels.access_level.in[1,3]"
                                     @click="openConfirmDeleteReportDialog(barangay)"
                                     type="button"
                                     class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                    title="Priority Programs"
+                                    title="Delete Barangay"
                                 >
                                     <Icon icon="hugeicons:delete-02" class="text-sm" />
                                 </button>
