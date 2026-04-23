@@ -25,17 +25,17 @@ const navLinks = [
         children: [
             { label: 'Programs', href: '/program', icon: 'hugeicons:book-open-01', accessLevels: [1, 3] },
         ],
-        accessLevels: [1, 3]
+        accessLevels: [1]
     },
     {
         id: 'indicator',
         label: 'Indicator',
         icon: 'hugeicons:chart-increase',
         children: [
-            { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1, 3] },
-            { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1, 3] },
+            { label: 'Organizational Indicators', href: '/indicator/organizational', icon: 'hugeicons:analytics-up', accessLevels: [1] },
+            { label: 'Program Indicators',        href: '/indicator/program',        icon: 'hugeicons:analytics-up', accessLevels: [1] },
         ],
-        accessLevels: [1, 3]
+        accessLevels: [1]
     },
     {
         id: 'disaggregation',
