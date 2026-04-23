@@ -10,8 +10,11 @@ const navLinks = [
             { label: 'PDOHO Dashboard',  href: '/dashboard/access-level-three', icon: 'hugeicons:shield-user',   accessLevels: [3] },
             { label: 'DMO Dashboard',  href: '/dashboard/access-level-four', icon: 'hugeicons:shield-user',   accessLevels: [4] },
             { label: 'DMO Municipalities Dashboard',  href: '/dashboard/dmo/municipalities', icon: 'hugeicons:shield-user',   accessLevels: [4] },
-            { label: 'Barangay Monitoring Dashboard',  href: '/dashboard/admin/barangay-monitoring', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Barangay Priority Programs Dashboard',  href: '/dashboard/barangay-monitoring/priority-programs', icon: 'hugeicons:shield-user',   accessLevels: [1] },
             { label: 'Barangay Organizational Indicators Dashboard',  href: '/dashboard/barangay-monitoring/organizational-indicators', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Barangay PK Profile Dashboard',  href: '/dashboard/barangay-monitoring/pk-profile', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Barangay Geography Dashboard',  href: '/dashboard/barangay-monitoring/geography', icon: 'hugeicons:shield-user',   accessLevels: [1] },
+            { label: 'Barangay Population Dashboard',  href: '/dashboard/barangay-monitoring/population', icon: 'hugeicons:shield-user',   accessLevels: [1] },
         ],
         accessLevels: [1, 2, 3, 4]
     },

@@ -42,8 +42,11 @@ Route::middleware('auth')->group(function () {
         Route::get('access-level-three', [DashboardController::class, 'accessLevelThreeDashboard']);
         Route::get('access-level-four', [DashboardController::class, 'accessLevelFourDashboard']);
         Route::get('dmo/municipalities',[DashboardController::class,'getDMOMunicipalityDashboard']);
-        Route::get('admin/barangay-monitoring',[DashboardController::class,'adminBarangayMonitoringDashboard']);
+        Route::get('barangay-monitoring/priority-programs',[DashboardController::class,'barangayPriorityProgramsMonitoring']);
         Route::get('barangay-monitoring/organizational-indicators',[DashboardController::class,'barangayOrganizationalIndicatorsMonitoring']);
+        Route::get('barangay-monitoring/pk-profile',[DashboardController::class,'barangayPKProfileMonitoring']);
+        Route::get('barangay-monitoring/geography',[DashboardController::class,'barangayGeographyMonitoring']);
+        Route::get('barangay-monitoring/population',[DashboardController::class,'barangayPopulationMonitoring']);
     });
 
     //program routes

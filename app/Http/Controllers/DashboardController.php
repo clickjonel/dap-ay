@@ -257,7 +257,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function adminBarangayMonitoringDashboard()
+    public function barangayPriorityProgramsMonitoring()
     {
         $provinces = Province::with([
             'municipalities.barangays.priorityPrograms',
@@ -266,7 +266,7 @@ class DashboardController extends Controller
         $programs = Program::get();
         
 
-        return Inertia::render('dashboard/barangayDashboard',[
+        return Inertia::render('dashboard/barangayPriorityProgramsMonitoring',[
             'provinces' => $provinces,
             'programs' => $programs
         ]);
@@ -284,6 +284,39 @@ class DashboardController extends Controller
         return Inertia::render('dashboard/barangayOrganizationalIndicatorsMonitoring',[
             'provinces' => $provinces,
             'indicators' => $indicators
+        ]);
+    }
+
+    public function barangayPKProfileMonitoring()
+    {
+        $provinces = Province::with([
+            'municipalities.barangays.pkProfile',
+        ])->get();
+
+        return Inertia::render('dashboard/barangayPKProfileMonitoring',[
+            'provinces' => $provinces,
+        ]);
+    }
+
+    public function barangayGeographyMonitoring()
+    {
+        $provinces = Province::with([
+            'municipalities.barangays.geography',
+        ])->get();
+
+        return Inertia::render('dashboard/barangayGeographyMonitoring',[
+            'provinces' => $provinces,
+        ]);
+    }
+
+    public function barangayPopulationMonitoring()
+    {
+        $provinces = Province::with([
+            'municipalities.barangays.population',
+        ])->get();
+
+        return Inertia::render('dashboard/barangayPopulationMonitoring',[
+            'provinces' => $provinces,
         ]);
     }
 
