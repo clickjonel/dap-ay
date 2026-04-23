@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Program;
+use App\Models\ProgramIndicator;
 use App\Models\PurokalusuganActivity;
 use App\Models\PurokalusuganActivityBarangay;
 use App\Models\Report;
@@ -159,6 +160,13 @@ class GenerateReportController extends Controller
         return Inertia::render('generate/pkActivitiesGenerator', [
             'activities' => $activities,
             // 'totals' => $totals
+        ]);
+    }
+
+    public function generateReportForm()
+    {
+        return Inertia::render('generate/generateReportForm',[
+            'indicators' => ProgramIndicator::with(['disaggregations'])->where('is_active',1)->get()
         ]);
     }
 

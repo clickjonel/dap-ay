@@ -103,6 +103,7 @@ const navLinks = [
             //{ label: 'Report',   href: '/generate/approved-report-submissions',  icon: 'hugeicons:note-done', accessLevels: [1, 3] },
             { label: 'Report Generator',   href: '/generate/report',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
             { label: 'PK Activities Generator',   href: '/generate/pk_activities',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
+            { label: 'Report Form',   href: '/generate/report-form',  icon: 'hugeicons:note-done', accessLevels: [1, 2, 3] },
         ],
         accessLevels: [1, 2,  3]
     },

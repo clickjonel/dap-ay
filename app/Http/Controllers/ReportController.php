@@ -182,7 +182,7 @@ class ReportController extends Controller
      */
     public function show(string $id)
     {
-        //
+      
     }
 
     /**
