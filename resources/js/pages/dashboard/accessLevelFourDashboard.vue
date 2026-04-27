@@ -10,7 +10,7 @@ import Textarea from 'primevue/textarea'
 
 defineOptions({ layout: Main })
 const props = defineProps({
-  reports: Array,
+  reports: Object,
   geoCoverage: Object
 })
 
@@ -29,12 +29,12 @@ const confirmActionDialog = ref({
 
 const stats = computed(() => ({
   total: props.reports.length,
-  pending: props.reports.filter(r => r.status === null).length,
-  approved: props.reports.filter(r => r.status === 'Approved').length,
-  rejected: props.reports.filter(r => r.status === 'Rejected').length,
+  pending: props.reports.data.filter(r => r.status === null).length,
+  approved: props.reports.data.filter(r => r.status === 'Approved').length,
+  rejected: props.reports.data.filter(r => r.status === 'Rejected').length,
 }))
 
-const pendingReports = computed(() => props.reports.filter(r => r.status === null))
+const pendingReports = computed(() => props.reports.data.filter(r => r.status === null))
 
 const openViewReportDialog = (report) => {
     viewReportDialog.value.report = report
