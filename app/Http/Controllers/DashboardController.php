@@ -219,7 +219,6 @@ class DashboardController extends Controller
                     ->whereHas('barangay', function($query) use ($userHandledMunicipalities) {
                         $query->whereIn('municipality_id', $userHandledMunicipalities);
                     })
-                    ->orderBy('date', 'asc')
                     ->limit(5)
                     ->get();
             
