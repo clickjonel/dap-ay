@@ -56,6 +56,7 @@ const submitConfirm = () => {
           remarks: confirmActionDialog.value.remarks
         },
         preserveScroll: true,
+        only: ['reports', 'geoCoverage'],
         onSuccess: () => {
             toast.add({
                 severity: 'success',
