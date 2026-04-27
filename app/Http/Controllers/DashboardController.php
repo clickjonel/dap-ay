@@ -219,9 +219,7 @@ class DashboardController extends Controller
                     ->whereHas('barangay', function($query) use ($userHandledMunicipalities) {
                         $query->whereIn('municipality_id', $userHandledMunicipalities);
                     })
-                    // ->latest('date')
-                    // ->limit(10)
-                    ->paginate();
+                    ->get();
 
         $geoCoverage = [
             'municipalities' => Municipality::where('province_id',$userProvinceID)->count(),
