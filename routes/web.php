@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
 
     //report routes
     Route::resource('reports', ReportController::class);
+    Route::post('/reports/bulk-action', [ReportController::class, 'bulkAction']);
 
     //purokalusugan activity routes
     Route::resource('pk-activities', PurokalusuganActivityController::class);

@@ -298,4 +298,15 @@ class ReportController extends Controller
 
         return back();
     }
+
+    public function bulkAction(Request $request)
+    {
+        Report::whereIn('id', $request->report_ids)->update([
+            'status'    => $request->status,
+            'remarks'   => $request->remarks,
+            'action_by' => $request->user()->id,
+        ]);
+
+        return back();
+    }
 }

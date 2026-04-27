@@ -209,29 +209,40 @@ class DashboardController extends Controller
         $user = $request->user();
         $userProvinceID = $user->accessLevels->pdoho_access_id;
         $userHandledMunicipalities = $user->handledMunicipalities()->pluck('municipality_id')->toArray();
-        $reports = Report::query()
-                    ->with([
-                        'users',
-                        'barangay.municipality',
-                        'values.disaggregations.disaggregation',
-                        'values.indicator',
-                    ])
-                    ->whereHas('barangay', function($query) use ($userHandledMunicipalities) {
-                        $query->whereIn('municipality_id', $userHandledMunicipalities);
-                    })
-                    ->paginate();
-
-        $geoCoverage = [
-            'municipalities' => Municipality::where('province_id',$userProvinceID)->count(),
-            'barangays' => Barangay::where('province_id',$userProvinceID)->count(),
-            'gida' => Barangay::where('province_id',$userProvinceID)
-                        ->whereHas('geography',function($query) {
-                            $query->where('is_gida', true);
-                        })->count(),
+    
+        $baseQuery = Report::whereHas('barangay', function($query) use ($userHandledMunicipalities) {
+            $query->whereIn('municipality_id', $userHandledMunicipalities);
+        });
+    
+        $stats = [
+            'total'    => (clone $baseQuery)->count(),
+            'pending'  => (clone $baseQuery)->whereNull('status')->count(),
+            'approved' => (clone $baseQuery)->where('status', 'Approved')->count(),
+            'rejected' => (clone $baseQuery)->where('status', 'Rejected')->count(),
         ];
-
+    
+        $reports = (clone $baseQuery)
+            ->with([
+                'users',
+                'barangay.municipality',
+                'values.disaggregations.disaggregation',
+                'values.indicator',
+            ])
+            ->whereNull('status')
+            ->latest('date')
+            ->paginate();
+    
+        $geoCoverage = [
+            'municipalities' => Municipality::where('province_id', $userProvinceID)->count(),
+            'barangays'      => Barangay::where('province_id', $userProvinceID)->count(),
+            'gida'           => Barangay::where('province_id', $userProvinceID)
+                                    ->whereHas('geography', fn($q) => $q->where('is_gida', true))
+                                    ->count(),
+        ];
+    
         return inertia('dashboard/accessLevelFourDashboard', [
-            'reports' => $reports,
+            'reports'     => $reports,
+            'stats'       => $stats,
             'geoCoverage' => $geoCoverage,
         ]);
     }
