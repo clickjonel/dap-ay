@@ -39,14 +39,14 @@ class DashboardController extends Controller
             // get barangays with or without barangay org indicators
             'barangays as with_org_indicators' => fn($q) =>
                 $q->whereHas('organizationalIndicators'),
-            
+
             'barangays as without_org_indicators' => fn($q) =>
                 $q->whereDoesntHave('organizationalIndicators'),
 
             //get barangays with or without barangay priority programs
             'barangays as with_priority_programs' => fn($q) =>
                 $q->whereHas('priorityPrograms'),
-            
+
             'barangays as without_priority_programs' => fn($q) =>
                 $q->whereDoesntHave('priorityPrograms'),
         ])
@@ -80,7 +80,7 @@ class DashboardController extends Controller
         });
 
         return inertia('dashboard/accessLevelOneDashboard', [
-          
+
             'provinces' => $provinces,
         ]);
     }
@@ -178,7 +178,7 @@ class DashboardController extends Controller
 
                 return $brgyData;
             })
-                
+
         ];
 
 
@@ -219,10 +219,10 @@ class DashboardController extends Controller
                     ->whereHas('barangay', function($query) use ($userHandledMunicipalities) {
                         $query->whereIn('municipality_id', $userHandledMunicipalities);
                     })
-                    ->latest('date')
-                    ->limit(10)
-                    ->get();
-            
+                    // ->latest('date')
+                    // ->limit(10)
+                    ->paginate();
+
         $geoCoverage = [
             'municipalities' => Municipality::where('province_id',$userProvinceID)->count(),
             'barangays' => Barangay::where('province_id',$userProvinceID)->count(),
@@ -263,9 +263,9 @@ class DashboardController extends Controller
         $provinces = Province::with([
             'municipalities.barangays.priorityPrograms',
         ])->get();
-        
+
         $programs = Program::get();
-        
+
 
         return Inertia::render('dashboard/barangayPriorityProgramsMonitoring',[
             'provinces' => $provinces,
@@ -278,9 +278,9 @@ class DashboardController extends Controller
         $provinces = Province::with([
             'municipalities.barangays.organizationalIndicators',
         ])->get();
-        
+
         $indicators = OrganizationalIndicator::get();
-        
+
 
         return Inertia::render('dashboard/barangayOrganizationalIndicatorsMonitoring',[
             'provinces' => $provinces,
@@ -358,7 +358,7 @@ class DashboardController extends Controller
                 ]);
             },
         ])->get();
-    
+
         return Inertia::render('dashboard/barangayPKActivitiesMonitoring', [
             'provinces' => $provinces,
         ]);

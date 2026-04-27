@@ -51,17 +51,17 @@ const openConfirmActionDialog = (action, reportID) => {
 const submitConfirm = () => {
   if(confirmActionDialog.value.action === 'Approve'){
     router.delete(`/reports/${confirmActionDialog.value.reportID}`, {
-        data: { 
+        data: {
           status: 'Approved',
           remarks: confirmActionDialog.value.remarks
         },
         preserveScroll: true,
         onSuccess: () => {
-            toast.add({ 
-                severity: 'success', 
-                summary: 'Report Updated', 
-                detail: `Report Approved`, 
-                life: 3000 
+            toast.add({
+                severity: 'success',
+                summary: 'Report Updated',
+                detail: `Report Approved`,
+                life: 3000
             })
             confirmActionDialog.value.visible = false
             confirmActionDialog.value.remarks = ''
@@ -70,17 +70,17 @@ const submitConfirm = () => {
   }
   else{
     router.delete(`/reports/${confirmActionDialog.value.reportID}`, {
-        data: { 
+        data: {
           status: 'Rejected',
           remarks: confirmActionDialog.value.remarks
         },
         preserveScroll: true,
         onSuccess: () => {
-            toast.add({ 
-                severity: 'success', 
-                summary: 'Report Updated', 
-                detail: `Report Rejected`, 
-                life: 3000 
+            toast.add({
+                severity: 'success',
+                summary: 'Report Updated',
+                detail: `Report Rejected`,
+                life: 3000
             })
             confirmActionDialog.value.visible = false
             confirmActionDialog.value.remarks = ''
