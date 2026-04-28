@@ -1,20 +1,36 @@
 <script setup>
 import Main from '@/layouts/main.vue'
 import { Icon } from '@iconify/vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 defineOptions({ layout: Main })
 
 const props = defineProps({
     provinces: Array,
+    programs:  Array
 })
 
 const selectedProvince = ref(props.provinces?.[0] ?? null)
 const search           = ref('')
 
+// onMounted(()=>{
+//     console.log(props.provinces)
+// })
+
 const selectProvince = (province) => {
     selectedProvince.value = province
     search.value           = ''
+}
+
+const getProgramCount = (barangay, programId) => {
+    if (!barangay.pk_activities?.length) return 0
+
+    return barangay.pk_activities
+        .filter(activity => activity.type === 'large')
+        .reduce((count, activity) => {
+            const hasProgram = activity.programs?.some(p => p.id === programId)
+            return hasProgram ? count + 1 : count
+        }, 0)
 }
 
 const filteredMunicipalities = computed(() => {
@@ -91,14 +107,12 @@ const filteredMunicipalities = computed(() => {
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
                                 Barangay
                             </th>
-                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Activities
-                            </th>
-                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Small Scale
-                            </th>
-                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Large Scale
+                            <th
+                                v-for="program in props.programs"
+                                :key="program.id"
+                                class="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-20 break-words leading-tight"
+                            >
+                                {{ program.name }}
                             </th>
                         </tr>
                     </thead>
@@ -108,7 +122,10 @@ const filteredMunicipalities = computed(() => {
 
                             <!-- Municipality Header Row -->
                             <tr>
-                                <td colspan="4" class="px-4 py-2 bg-slate-50 border-y border-slate-100">
+                                <td
+                                    :colspan="props.programs.length + 1"
+                                    class="px-4 py-2 bg-slate-50 border-y border-slate-100"
+                                >
                                     <div class="flex items-center gap-2">
                                         <div class="w-5 h-5 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
                                             <Icon icon="lucide:building-2" class="text-indigo-400 text-[10px]"/>
@@ -135,41 +152,32 @@ const filteredMunicipalities = computed(() => {
                                     </div>
                                 </td>
 
-                                <!-- Total Activities -->
-                                <td class="px-4 py-2.5 pl-8">
-                                    <span class="text-slate-600 text-[11px]">
-                                        {{ (barangay.small ?? 0) + (barangay.large ?? 0) }}
-                                    </span>
+                                <!-- Program Cells -->
+                                <td v-for="program in props.programs" :key="program.id" class="px-2 py-2.5 text-center">
+                                    <template v-if="getProgramCount(barangay, program.id) > 0">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold text-[11px]">
+                                            {{ getProgramCount(barangay, program.id) }}
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span class="text-slate-200 text-[11px]">—</span>
+                                    </template>
                                 </td>
-
-                                <!-- Small Scale -->
-                                <td class="px-4 py-2.5 pl-8">
-                                    <span
-                                        v-if="barangay.small"
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-sky-50 text-sky-600 rounded-full text-[11px] font-medium"
-                                    >
-                                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />
-                                        {{ barangay.small }}
-                                    </span>
-                                    <span v-else class="text-slate-300 text-[11px]">—</span>
-                                </td>
-
-                                <!-- Large Scale -->
-                                <td class="px-4 py-2.5 pl-8">
-                                    <span
-                                        v-if="barangay.large"
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-medium"
-                                    >
-                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
-                                        {{ barangay.large }}
-                                    </span>
-                                    <span v-else class="text-slate-300 text-[11px]">—</span>
-                                </td>
-
                             </tr>
 
                         </template>
 
+                        <!-- Empty -->
+                        <tr v-if="filteredMunicipalities?.length === 0">
+                            <td :colspan="props.programs.length + 1" class="py-20 text-center">
+                                <div class="flex flex-col items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                                        <Icon icon="lucide:search-x" class="text-slate-400"/>
+                                    </div>
+                                    <p class="text-sm text-slate-400">No results for "{{ search }}"</p>
+                                </div>
+                            </td>
+                        </tr>
 
                     </tbody>
                 </table>

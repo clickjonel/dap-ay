@@ -356,20 +356,15 @@ class DashboardController extends Controller
     public function barangayPKActivitiesMonitoring()
     {
         $provinces = Province::with([
-            'municipalities.barangays' => function ($query) {
-                $query->withCount([
-                    'pkActivities as small' => function ($query) {
-                        $query->where('type', 'small');
-                    },
-                    'pkActivities as large' => function ($query) {
-                        $query->where('type', 'large');
-                    },
-                ]);
-            },
-        ])->get();
+                        'municipalities.barangays.pkActivities.programs'
+                    ])
+                    ->get();
+
+        $programs = Program::get();
 
         return Inertia::render('dashboard/barangayPKActivitiesMonitoring', [
             'provinces' => $provinces,
+            'programs' => $programs
         ]);
     }
 
