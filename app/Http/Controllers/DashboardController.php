@@ -303,18 +303,34 @@ class DashboardController extends Controller
         //return response()->json($provinces);
     }
 
-    public function barangayOrganizationalIndicatorsMonitoring()
+    public function barangayOrganizationalIndicatorsMonitoring(Request $request)
     {
-        $provinces = Province::with([
-            'municipalities.barangays.organizationalIndicators',
-        ])->get();
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+        $municipality_ids = $request->user()->handledMunicipalities->pluck('municipality_id')->toArray();
 
-        $indicators = OrganizationalIndicator::get();
+        $provinces = Province::query()
+                        ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->with([
+                            'municipalities' => fn($q) => $q->when(
+                                $access_level === 4,
+                                fn($q) => $q->whereIn('id', $municipality_ids)
+                            ),
+                            'municipalities.barangays.organizationalIndicators',
+                            'municipalities.barangays.population',
+                            'municipalities.barangays.team.members'
+                        ])
+                        ->get();
+
+        
+
+        // $indicators = OrganizationalIndicator::get();
 
 
         return Inertia::render('dashboard/barangayOrganizationalIndicatorsMonitoring',[
             'provinces' => $provinces,
-            'indicators' => $indicators
+            // 'indicators' => $indicators
         ]);
     }
 

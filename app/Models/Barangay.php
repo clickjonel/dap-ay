@@ -25,6 +25,11 @@ class Barangay extends Model
         return $this->belongsTo(Municipality::class);
     }
 
+    public function team()
+    {
+        return $this->belongsToMany(Team::class, 'team_barangays', 'barangay_id', 'team_id');
+    }
+
     public function pkProfile()
     {
         return $this->hasOne(BarangayPKProfile::class,'barangay_id');
