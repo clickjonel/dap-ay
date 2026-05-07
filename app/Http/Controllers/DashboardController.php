@@ -279,13 +279,12 @@ class DashboardController extends Controller
             ->toArray();
 
             $provinces = Province::query()
-                ->when($access_level === 4, function ($query) use ($province_id) {
-                    $query->where('id', $province_id);
-                })
+                ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
                 ->with([
-                    'municipalities' => function ($query) use ($municipality_ids) {
-                        $query->whereIn('id', $municipality_ids);
-                    },
+                    'municipalities' => fn($q) => $q->when(
+                        $access_level === 4,
+                        fn($q) => $q->whereIn('id', $municipality_ids)
+                    ),
                     'municipalities.barangays.priorityPrograms',
                 ])
                 ->get();
