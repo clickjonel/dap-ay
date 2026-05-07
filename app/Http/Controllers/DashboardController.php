@@ -273,8 +273,11 @@ class DashboardController extends Controller
             'municipalities.barangays.priorityPrograms',
         ])->get();
 
-        $programs = Program::get();
+        $program_arrangement = [1,3,4,13,6,5,7,9,8,11,10,12];
 
+        $programs = Program::whereIn('id', $program_arrangement)
+            ->orderByRaw('FIELD(id,'.implode(',', $program_arrangement).')')
+            ->get();
 
         return Inertia::render('dashboard/barangayPriorityProgramsMonitoring',[
             'provinces' => $provinces,
