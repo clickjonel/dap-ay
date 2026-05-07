@@ -92,13 +92,22 @@ const filteredMunicipalities = computed(() => {
                                 Barangay
                             </th>
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Population
+                                Total Population
                             </th>
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Purok
+                                Target Population
                             </th>
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
-                                Household
+                                Total Purok
+                            </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Target Purok
+                            </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Total Household
+                            </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Target Household
                             </th>
                         </tr>
                     </thead>
@@ -138,24 +147,39 @@ const filteredMunicipalities = computed(() => {
                                 <!-- Barangay Population -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex flex-col items-center gap-1.5">
-                                        <span v-if="barangay.population?.total_population" class="text-slate-600 text-[11px]">Total: {{ barangay.population.total_population }}</span>
-                                        <span v-if="barangay.population?.target_population" class="text-slate-600 text-[11px]">Target: {{ barangay.population.target_population }}</span>
+                                        <span v-if="barangay.population?.total_population" class="text-slate-600 text-[11px]"> {{ barangay.population.total_population }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-2.5 pl-8">
+                                    <div class="flex flex-col items-center gap-1.5">
+                                        <span v-if="barangay.population?.target_population" class="text-slate-600 text-[11px]"> {{ barangay.population.target_population }}</span>
                                     </div>
                                 </td>
 
                                 <!-- Barangay Purok -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex flex-col items-center gap-1.5">
-                                        <span v-if="barangay.population?.total_puroks" class="text-slate-600 text-[11px]">Total: {{ barangay.population.total_puroks }}</span>
-                                        <span v-if="barangay.population?.target_puroks" class="text-slate-600 text-[11px]">Target: {{ barangay.population.target_puroks }}</span>
+                                        <span v-if="barangay.population?.total_puroks" class="text-slate-600 text-[11px]"> {{ barangay.population.total_puroks }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-2.5 pl-8">
+                                    <div class="flex flex-col items-center gap-1.5">
+                                        <span v-if="barangay.population?.target_puroks" class="text-slate-600 text-[11px]"> {{ barangay.population.target_puroks }}</span>
                                     </div>
                                 </td>
 
                                 <!-- Barangay Household -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex flex-col items-center gap-1.5">
-                                        <span v-if="barangay.population?.total_households" class="text-slate-600 text-[11px]">Total: {{ barangay.population.total_households }}</span>
-                                        <span v-if="barangay.population?.target_households" class="text-slate-600 text-[11px]">Target: {{ barangay.population.target_households }}</span>
+                                        <span v-if="barangay.population?.total_households" class="text-slate-600 text-[11px]"> {{ barangay.population.total_households }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-2.5 pl-8">
+                                    <div class="flex flex-col items-center gap-1.5">
+                                        <span v-if="barangay.population?.target_households" class="text-slate-600 text-[11px]"> {{ barangay.population.target_households }}</span>
                                     </div>
                                 </td>
 

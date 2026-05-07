@@ -356,11 +356,23 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function barangayPopulationMonitoring()
+    public function barangayPopulationMonitoring(Request $request)
     {
-        $provinces = Province::with([
-            'municipalities.barangays.population',
-        ])->get();
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+        $municipality_ids = $request->user()->handledMunicipalities->pluck('municipality_id')->toArray();
+
+        $provinces = Province::query()
+                        ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->with([
+                            'municipalities' => fn($q) => $q->when(
+                                $access_level === 4,
+                                fn($q) => $q->whereIn('id', $municipality_ids)
+                            ),
+                            'municipalities.barangays.population',
+                        ])
+                        ->get();
 
         return Inertia::render('dashboard/barangayPopulationMonitoring',[
             'provinces' => $provinces,
