@@ -267,9 +267,17 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function barangayPriorityProgramsMonitoring()
+    public function barangayPriorityProgramsMonitoring(Request $request)
     {
-        $provinces = Province::with([
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+
+        $provinces = Province::query()
+        ->when($access_level === 4, function($query) use($province_id){
+            $query->where('id', $province_id);
+        })
+        ->with([
             'municipalities.barangays.priorityPrograms',
         ])->get();
 
