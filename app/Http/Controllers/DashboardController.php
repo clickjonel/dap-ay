@@ -273,13 +273,22 @@ class DashboardController extends Controller
         $province_id = $accessLevels->pdoho_access_id;
         $access_level = $accessLevels->access_level;
 
-        $provinces = Province::query()
-        ->when($access_level === 4, function($query) use($province_id){
-            $query->where('id', $province_id);
-        })
-        ->with([
-            'municipalities.barangays.priorityPrograms',
-        ])->get();
+        $municipality_ids = $request->user()
+            ->handledMunicipalities
+            ->pluck('municipality_id')
+            ->toArray();
+
+            $provinces = Province::query()
+                ->when($access_level === 4, function ($query) use ($province_id) {
+                    $query->where('id', $province_id);
+                })
+                ->with([
+                    'municipalities' => function ($query) use ($municipality_ids) {
+                        $query->whereIn('id', $municipality_ids);
+                    },
+                    'municipalities.barangays.priorityPrograms',
+                ])
+                ->get();
 
         $program_arrangement = [1,3,4,13,6,5,7,9,8,11,10,12];
 
@@ -291,6 +300,8 @@ class DashboardController extends Controller
             'provinces' => $provinces,
             'programs' => $programs
         ]);
+
+        //return response()->json($provinces);
     }
 
     public function barangayOrganizationalIndicatorsMonitoring()

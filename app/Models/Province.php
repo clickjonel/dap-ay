@@ -15,12 +15,12 @@ class Province extends Model
 
     public function municipalities(): HasMany
     {
-        return $this->hasMany(Municipality::class);
+        return $this->hasMany(Municipality::class, 'province_id', 'id');
     }
 
     public function barangays(): HasMany
     {
-        return $this->hasMany(Barangay::class,'province_id');
+        return $this->hasMany(Barangay::class,'province_id','id');
     }
     
 }
