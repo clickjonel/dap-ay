@@ -117,7 +117,7 @@ const filteredMunicipalities = computed(() => {
 
                             <!-- Municipality Header Row -->
                             <tr>
-                                <td colspan="4" class="px-4 py-2 bg-slate-50 border-y border-slate-100">
+                                <td colspan="7" class="px-4 py-2 bg-slate-50 border-y border-slate-100">
                                     <div class="flex items-center gap-2">
                                         <div class="w-5 h-5 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
                                             <Icon icon="lucide:building-2" class="text-indigo-400 text-[10px]"/>

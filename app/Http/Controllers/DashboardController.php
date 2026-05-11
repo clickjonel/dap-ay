@@ -402,14 +402,33 @@ class DashboardController extends Controller
     }
 
 
-    public function barangayPKActivitiesMonitoring()
+    public function barangayPKActivitiesMonitoring(Request $request)
     {
-        $provinces = Province::with([
-                        'municipalities.barangays.pkActivities.programs'
-                    ])
-                    ->get();
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+        $municipality_ids = $request->user()->handledMunicipalities->pluck('municipality_id')->toArray();
 
-        $programs = Program::get();
+        $provinces = Province::query()
+                            ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                            ->with([
+                                'municipalities' => fn($q) => $q->when(
+                                    $access_level === 4,
+                                    fn($q) => $q->whereIn('id', $municipality_ids)
+                                ),
+                                'municipalities.barangays.pkActivities.programs',
+                                'municipalities.barangays' => fn($q) => $q->withCount([
+                                    'pkActivities',
+                                    'pkActivities as large_pk_count' => fn($q) => $q->where('type', 'large')
+                            ])
+                        ])
+                        ->get();
+
+        $program_arrangement = [1,3,4,13,6,5,7,9,8,11,10,12];
+
+        $programs = Program::whereIn('id', $program_arrangement)
+            ->orderByRaw('FIELD(id,'.implode(',', $program_arrangement).')')
+            ->get();
 
         return Inertia::render('dashboard/barangayPKActivitiesMonitoring', [
             'provinces' => $provinces,

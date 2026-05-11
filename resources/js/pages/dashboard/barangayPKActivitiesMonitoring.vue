@@ -107,6 +107,12 @@ const filteredMunicipalities = computed(() => {
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
                                 Barangay
                             </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Total PK Activities
+                            </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Total Large PK Activities
+                            </th>
                             <th
                                 v-for="program in props.programs"
                                 :key="program.id"
@@ -149,6 +155,17 @@ const filteredMunicipalities = computed(() => {
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-1 h-1 rounded-full bg-slate-300 shrink-0"/>
                                         <span class="text-slate-600 text-[11px]">{{ barangay.name }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-2.5 pl-8">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-slate-600 text-[11px]">{{ barangay.pk_activities_count }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-2.5 pl-8">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-slate-600 text-[11px]">{{ barangay.large_pk_count }}</span>
                                     </div>
                                 </td>
 
