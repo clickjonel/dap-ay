@@ -129,6 +129,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('team/{id}', [DeleteController::class, 'deleteTeam']);
     Route::delete('report/{id}', [DeleteController::class, 'deleteReport']);
     Route::delete('barangay/{id}', [DeleteController::class, 'deleteBarangay']);
+    Route::delete('activity/{id}', [DeleteController::class, 'deletePurokalusuganActivity']);
 
     //Province Routes
     Route::get('province/dashboard/{id}',[ProvinceController::class,'renderProvinceDashboardData']);

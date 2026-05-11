@@ -4,6 +4,8 @@
     import { useForm, router } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
     import { useToast } from 'primevue/usetoast'
+    import { Dialog } from 'primevue'
+
 
     defineOptions({ layout: Main })
 
@@ -12,6 +14,11 @@
     const props = defineProps({
         activities: { type: Object, default: () => ({}) },
         filters:    { type: Object, default: () => ({}) },
+    })
+
+    const deleteActivityModal = ref({
+        visible: false,
+        activity_id: null
     })
 
     const search = ref(props.filters.search ?? '')
@@ -23,6 +30,24 @@
             router.get('/pk-activities', { search: search.value }, { preserveState: true, replace: true })
         }, 300)
     }
+
+    const confirmDeleteActivity = (activityID) => {
+        deleteActivityModal.value.visible = true
+        deleteActivityModal.value.activity_id = activityID
+    }
+
+    
+    const confirmDelete = () => {
+        router.delete(`/activity/${deleteActivityModal.value.activity_id}`, {
+            onSuccess: () => {
+                toast.add({ severity: 'success', summary: 'Activity Deleted', detail: 'Activity has been deleted successfully.', life: 2000 })
+                deleteActivityModal.value.visible = false
+                deleteActivityModal.value.activity_id = null
+            },
+            onError: () => toast.add({ severity: 'error', summary: 'Failed to delete activity', life: 2000 }),
+        })
+    }
+
 
 </script>
 
@@ -128,13 +153,21 @@
                             </td>
     
                             <td class="px-4 md:px-5 py-3.5">
-                                <div class="flex items-center justify-end">
+                                <div class="flex items-center justify-end gap-2">
                                     <button
                                         type="button"
                                         @click="router.visit(`/pk-activities/${activity.id}/edit`)"
                                         class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full sm:rounded-lg sm:border sm:border-slate-200 sm:px-2.5 sm:py-1.5 sm:text-[11px] transition-all"
                                     >
                                         <Icon icon="hugeicons:pencil-edit-01" class="text-sm" />
+                                        <!-- <span class="hidden sm:inline ml-1.5">Edit</span> -->
+                                    </button>
+                                    <button
+                                        @click="confirmDeleteActivity(activity.id)"
+                                        type="button"
+                                        class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full sm:rounded-lg sm:border sm:border-slate-200 sm:px-2.5 sm:py-1.5 sm:text-[11px] transition-all"
+                                    >
+                                        <Icon icon="hugeicons:delete-03" class="text-sm" />
                                         <!-- <span class="hidden sm:inline ml-1.5">Edit</span> -->
                                     </button>
                                 </div>
@@ -165,4 +198,51 @@
         </div>
     
     </div>
+
+    <Dialog
+        v-model:visible="deleteActivityModal.visible"
+        header="Delete Team"
+        modal
+        :style="{ width: '95vw', maxWidth: '380px' }"
+        :pt="{
+            header:  { class: 'border-b border-slate-100 !py-4 !px-5' },
+            title:   { class: '!text-sm !font-bold !text-slate-800' },
+            content: { class: '!p-5' },
+        }"
+    >
+        <div class="flex flex-col gap-4">
+            <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                    <Icon icon="hugeicons:delete-02" class="text-base text-red-500" />
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-slate-700">
+                        Are you sure you want to delete this activity?
+                        <!-- <span class="text-red-600 uppercase">{{ deleteModal.team?.name }}</span>? -->
+                    </p>
+                    <p class="text-xs text-slate-400 mt-1">
+                        This will also remove all its related records. This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <button
+                    type="button"
+                    @click="deleteActivityModal.visible = false"
+                    class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    @click="confirmDelete"
+                    class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                    <Icon icon="hugeicons:delete-02" class="text-sm" />
+                    Delete Activity
+                </button>
+            </div>
+        </div>
+    </Dialog>
     </template>
