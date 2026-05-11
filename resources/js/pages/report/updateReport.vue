@@ -6,6 +6,7 @@ import Select from 'primevue/select'
 import MultiSelect from 'primevue/multiselect'
 import { useToast } from 'primevue/usetoast'
 import DatePicker from 'primevue/datepicker'
+import { formatDate } from '@/utils/dateHelper'
 
 defineOptions({ layout: Main })
 
@@ -37,7 +38,7 @@ const getDisaggregationValue = (indicatorId, disaggregationId) =>
 const submit = () => {
     const payload = {
         ...form.data(),
-        date: form.date ? new Date(form.date).toISOString().split('T')[0] : null,
+        date: formatDate(form.date),
     }
 
     form.transform(() => payload).put(`/reports/${props.report.id}`, {

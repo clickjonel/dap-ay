@@ -37,6 +37,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
+        "dayjs": "^1.11.20",
         "laravel-vite-plugin": "^2.0.0",
         "primevue": "^4.5.4",
         "tailwind-merge": "^3.2.0",

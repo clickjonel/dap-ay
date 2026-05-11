@@ -6,6 +6,7 @@
     import MultiSelect from 'primevue/multiselect'
     import { useToast } from 'primevue/usetoast'
     import DatePicker from 'primevue/datepicker'
+    import { formatDate } from '@/utils/dateHelper'
 
     defineOptions({ 
         layout: Main 
@@ -44,15 +45,6 @@
 
     const getDisaggregationValue = (indicatorId, disaggregationId) =>
         getIndicatorValue(indicatorId)?.disaggregations.find(d => d.disaggregation_id === disaggregationId)
-
-        const formatDate = (date) => {
-            if (!date) return null
-            const d = new Date(date)
-            const year  = d.getFullYear()
-            const month = String(d.getMonth() + 1).padStart(2, '0')
-            const day   = String(d.getDate()).padStart(2, '0')
-            return `${year}-${month}-${day}`
-        }
 
         const submit = () => {
             const payload = {

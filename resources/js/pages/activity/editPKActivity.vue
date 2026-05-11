@@ -11,6 +11,7 @@
     import Button from 'primevue/button'
     import FloatLabel from 'primevue/floatlabel'
     import InputNumber from 'primevue/inputnumber'
+    import { formatDate } from '@/utils/dateHelper'
 
     defineOptions({ layout: Main })
 
@@ -45,16 +46,6 @@
         chipItem:       { class: 'max-w-[150px] sm:max-w-full min-w-0' },
         chip:           { class: 'max-w-full truncate' },
         overlay:        { class: 'w-full max-w-[calc(100vw-2rem)] sm:max-w-full' },
-    }
-
-    const formatDate = (date) => {
-        if (!date) return null
-
-        const year  = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day   = String(date.getDate()).padStart(2, '0')
-
-        return `${year}-${month}-${day}`
     }
 
     const submitActivity = () => {
