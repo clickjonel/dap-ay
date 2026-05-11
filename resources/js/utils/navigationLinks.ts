@@ -12,6 +12,7 @@ const navLinks = [
             { label: 'DMO Municipalities Dashboard',  href: '/dashboard/dmo/municipalities', icon: 'hugeicons:shield-user',   accessLevels: [4] },
             { label: 'Barangay Priority Programs Dashboard',  href: '/dashboard/barangay-monitoring/priority-programs', icon: 'hugeicons:shield-user',   accessLevels: [1,4] },
             { label: 'Barangay PK Profile Dashboard',  href: '/dashboard/barangay-monitoring/organizational-indicators', icon: 'hugeicons:shield-user',   accessLevels: [1,4] },
+            { label: 'Primary Health Care Indicators',  href: '/dashboard/barangay-monitoring/primary-health-care', icon: 'hugeicons:shield-user',   accessLevels: [1,4] },
             // { label: 'Barangay PK Profile Dashboard',  href: '/dashboard/barangay-monitoring/pk-profile', icon: 'hugeicons:shield-user',   accessLevels: [1] },
             { label: 'Barangay Geography Dashboard',  href: '/dashboard/barangay-monitoring/geography', icon: 'hugeicons:shield-user',   accessLevels: [1] },
             { label: 'Barangay Population Dashboard',  href: '/dashboard/barangay-monitoring/population', icon: 'hugeicons:shield-user',   accessLevels: [1,4] },

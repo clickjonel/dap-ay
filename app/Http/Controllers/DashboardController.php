@@ -334,6 +334,39 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function barangayPrimaryHealthCareIndicators(Request $request)
+    {
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+        $municipality_ids = $request->user()->handledMunicipalities->pluck('municipality_id')->toArray();
+
+        $provinces = Province::query()
+                        ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->with([
+                            'municipalities' => fn($q) => $q->when(
+                                $access_level === 4,
+                                fn($q) => $q->whereIn('id', $municipality_ids)
+                            ),
+                            'municipalities.barangays.organizationalIndicators',
+                            'municipalities.barangays.population',
+                            'municipalities.barangays.team.members'
+                        ])
+                        ->get();
+
+        
+        $indicator_arrangement = [8,5,6,7,9];
+        $indicators = OrganizationalIndicator::whereIn('id', $indicator_arrangement)
+        ->orderByRaw('FIELD(id,'.implode(',', $indicator_arrangement).')')
+        ->get();
+
+
+        return Inertia::render('dashboard/barangayPrimaryHealthCareIndicators',[
+            'provinces' => $provinces,
+            'indicators' => $indicators
+        ]);
+    }
+
     public function barangayPKProfileMonitoring()
     {
         $provinces = Province::with([

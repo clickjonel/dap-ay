@@ -48,7 +48,9 @@ Route::middleware('auth')->group(function () {
         Route::get('barangay-monitoring/geography',[DashboardController::class,'barangayGeographyMonitoring']);
         Route::get('barangay-monitoring/population',[DashboardController::class,'barangayPopulationMonitoring']);
         Route::get('barangay-monitoring/pk-activities',[DashboardController::class,'barangayPKActivitiesMonitoring']);
+        Route::get('barangay-monitoring/primary-health-care',[DashboardController::class,'barangayPrimaryHealthCareIndicators']);
         Route::get('report-monitoring/dmo-approvals',[DashboardController::class,'dmoReportApprovalsMonitoring']);
+        
     });
 
     //program routes
