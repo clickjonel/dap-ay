@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeleteController;
 use App\Http\Controllers\DisaggregationController;
 use App\Http\Controllers\GenerateReportController;
+use App\Http\Controllers\GlossaryController;
 use App\Http\Controllers\OrganizationalIndicatorController;
 use App\Http\Controllers\ProgramBaselineController;
 use App\Http\Controllers\ProgramController;
@@ -133,5 +134,11 @@ Route::middleware('auth')->group(function () {
 
     //Province Routes
     Route::get('province/dashboard/{id}',[ProvinceController::class,'renderProvinceDashboardData']);
+
+    // Glossary Routes
+    Route::get('/glossaries',[GlossaryController::class,'getGlossary']);
+    Route::post('/glossaries',[GlossaryController::class,'create']);
+    Route::patch('/glossaries/{id}',[GlossaryController::class,'update']);
+    Route::delete('/glossaries/{id}',[GlossaryController::class,'delete']);
 
 });

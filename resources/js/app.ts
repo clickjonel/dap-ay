@@ -6,6 +6,7 @@ import '../css/app.css';
 import PrimeVue from 'primevue/config';
 import Material from '@primeuix/themes/material';
 import ToastService from 'primevue/toastservice';
+import 'quill/dist/quill.snow.css'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

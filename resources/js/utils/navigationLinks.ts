@@ -108,6 +108,15 @@ const navLinks = [
         ],
         accessLevels: [1, 2,  3]
     },
+    {
+        id: 'Glossary',
+        label: 'Glossary',
+        icon: 'hugeicons:file-search',
+        children: [
+            { label: 'Definition of Terms',   href: '/glossaries',  icon: 'hugeicons:note-done', accessLevels: [1] },
+        ],
+        accessLevels: [1]
+    },
 ]
 
 export const filterNavLinks = (accessLevel:number) => {
