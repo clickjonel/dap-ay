@@ -144,7 +144,7 @@
                                 {{ term.term }}
                             </td>
                             <td class="px-4 py-3 text-slate-500 align-top">
-                                <div class="ql-content break-words" v-html="term.description" />
+                                <div class="ql-content break-all" v-html="term.description" />
                             </td>
                             <td class="px-4 py-3 align-top">
                                 <div class="flex items-center justify-center gap-1">

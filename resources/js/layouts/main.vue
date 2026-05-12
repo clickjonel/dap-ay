@@ -401,7 +401,7 @@ function openGlossaryModal() {
                             />
                         </div>
                         <div v-if="selectedTerm?.id === term.id" class="mt-3 ml-10">
-                            <div class="ql-snow ql-editor text-xs leading-relaxed text-slate-500 !p-0" v-html="term.description" />
+                            <div class="ql-content text-xs leading-relaxed text-slate-500 break-all" v-html="term.description" />
                         </div>
                     </div>
                 </div>
