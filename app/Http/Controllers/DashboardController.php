@@ -255,15 +255,26 @@ class DashboardController extends Controller
                 $query->withCount([
                     'reports',
                     'pkActivities',
-                ]);
+                ])
+                ->withSum('reports', 'total_clients')
+                ->withSum('reports', 'total_returning_clients');
             },
             'handledMunicipalities.municipality.barangays.pkProfile',
             'handledMunicipalities.municipality.barangays.priorityPrograms',
             'handledMunicipalities.municipality.barangays.geography',
         ]);
-
-        return Inertia::render('dashboard/dmoHandledMunicipalityDashboard',[
-            'municipalities' => $user->handledMunicipalities
+        
+        $municipalities = $user->handledMunicipalities->map(function ($hm) {
+            $barangays = $hm->municipality->barangays;
+        
+            $hm->municipality->total_clients           = $barangays->sum('reports_sum_total_clients');
+            $hm->municipality->total_returning_clients = $barangays->sum('reports_sum_total_returning_clients');
+        
+            return $hm;
+        });
+        
+        return Inertia::render('dashboard/dmoHandledMunicipalityDashboard', [
+            'municipalities' => $municipalities,
         ]);
     }
 

@@ -1,11 +1,15 @@
 <script setup>
   import Main from '@/layouts/main.vue'
-  import { reactive } from 'vue'
+  import { onMounted, reactive } from 'vue'
 
   defineOptions({ layout: Main })
 
   const props = defineProps({
     municipalities: Array,
+  })
+
+  onMounted(()=>{
+    console.log(props.municipalities)
   })
 
   const openPanels = reactive(new Set([0]))
@@ -56,6 +60,12 @@
 
         <!-- Pills -->
         <div class="flex items-center gap-2 shrink-0">
+          <span class="text-xs font-medium px-3 py-1 rounded-full bg-purple-50 text-purple-700">
+            {{ mun.municipality.total_clients }} Total Clients
+          </span>
+          <span class="text-xs font-medium px-3 py-1 rounded-full bg-purple-50 text-purple-700">
+            {{ mun.municipality.total_returning_clients }} Total Returning Clients
+          </span>
           <span class="text-xs font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-700">
             {{ mun.municipality.barangays.length }} barangays
           </span>
