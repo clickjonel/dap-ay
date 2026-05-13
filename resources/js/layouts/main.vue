@@ -38,23 +38,7 @@ const userMenuItems = [
 const logout = () => router.post('/logout');
 
 // ── Announcement ───────────────────────────────────────
-const ANNOUNCEMENT_KEY = 'dapay_announcement_april10_2026';
 const showAnnouncement = ref(false);
-
-onMounted(() => {
-    const dismissed = localStorage.getItem(ANNOUNCEMENT_KEY);
-    if (!dismissed) showAnnouncement.value = true;
-});
-
-const dismissAnnouncement = () => {
-    localStorage.setItem(ANNOUNCEMENT_KEY, 'dismissed');
-    showAnnouncement.value = false;
-};
-const remindLater = () => { showAnnouncement.value = false; };
-
-const announcementDate = new Date().toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric',
-});
 
 // ── Glossary Modal ─────────────────────────────────────
 const glossaryModalVisible = ref(false);
@@ -62,6 +46,7 @@ const glossarySearch = ref('');
 const selectedTerm = ref(null);
 
 const terms = computed(() => page.props?.glossaries ?? []);
+const announcements = computed(() => page.props?.announcements ?? []);
 
 const filteredGlossary = computed(() =>
     terms.value.filter(t =>
@@ -243,7 +228,7 @@ function openGlossaryModal() {
                     >
                         <Icon icon="hugeicons:help-circle" class="text-base" />
                     </button>
-                    <button type="button" class="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50">
+                    <button  @click="showAnnouncement = true" type="button" class="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50">
                         <Icon icon="hugeicons:hotel-bell" class="text-base" />
                         <span class="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-red-500" />
                     </button>
@@ -259,7 +244,12 @@ function openGlossaryModal() {
             v-model:visible="showAnnouncement"
             modal
             :closable="false"
-            :style="{ width: '440px', padding: '0', borderRadius: '16px', overflow: 'hidden' }"
+            :style="{ width: '1000px', padding: '0', borderRadius: '16px', overflow: 'hidden' }"
+            :breakpoints="{
+                '1024px': '90vw',
+                '768px': '95vw',
+                '640px': '100vw',
+            }"
             :pt="{
                 root: { style: 'border-radius: 16px; overflow: hidden; padding: 0;' },
                 header: { style: 'display: none;' },
@@ -272,64 +262,32 @@ function openGlossaryModal() {
                         <Icon icon="hugeicons:notification-02" class="text-base text-white" />
                     </div>
                     <div>
-                        <p class="text-sm leading-none font-semibold text-white">System Announcement</p>
-                        <p class="mt-1 text-[10px] text-indigo-200">{{ announcementDate }}</p>
+                        <p class="text-sm leading-none font-semibold text-white uppercase">Announcements and Reminders</p>
                     </div>
                 </div>
             </div>
             <div class="px-6 pt-5 pb-0">
                 <p class="mb-4 text-xs leading-relaxed text-slate-500">
-                    Please be reminded of the following upcoming deadlines. Ensure all submissions are completed on time to avoid any delays in report processing.
+                    Please be reminded of the following announcements/reminders.
                 </p>
                 <div class="mb-4 space-y-3">
-                    <div class="flex items-start gap-3 rounded-xl border border-slate-100 p-3">
+                    <div v-for="announcement in announcements" class="flex items-start gap-3 rounded-xl border border-slate-100 p-3">
                         <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                            <Icon icon="hugeicons:note-done" class="text-base text-indigo-600" />
+                            <Icon icon="hugeicons:notification-02" class="text-base text-indigo-600" />
                         </div>
                         <div class="min-w-0 flex-1">
-                            <p class="mb-1 text-xs font-semibold text-slate-700">Encoding of Reports</p>
-                            <p class="mb-2 text-[11px] leading-relaxed text-slate-400">Report submissions must be encoded and finalized by the specified deadline to ensure inclusion in the quarterly report.</p>
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-medium text-amber-800">
+                            <p class="mb-1 text-xs font-semibold text-slate-700">{{ announcement.title }}</p>
+                            <div class="ql-content break-all text-xs" v-html="announcement.announcement" />
+                            <!-- <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-medium text-amber-800">
                                 <Icon icon="hugeicons:calendar-03" class="flex-shrink-0 text-[11px]" />
                                 Deadline: April 10, 2026
-                            </span>
+                            </span> -->
                         </div>
                     </div>
-                    <div class="flex items-start gap-3 rounded-xl border border-slate-100 p-3">
-                        <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                            <Icon icon="hugeicons:user-group" class="text-base text-indigo-600" />
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <p class="mb-1 text-xs font-semibold text-slate-700">Encoding of Teams</p>
-                            <p class="mb-2 text-[11px] leading-relaxed text-slate-400">Please ensure that all team-related data is accurately encoded and finalized by the deadline to facilitate smooth report generation.</p>
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-medium text-amber-800">
-                                <Icon icon="hugeicons:calendar-03" class="flex-shrink-0 text-[11px]" />
-                                Deadline: April 10, 2026
-                            </span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 rounded-xl border border-slate-100 p-3">
-                        <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                            <Icon icon="hugeicons:user-group" class="text-base text-indigo-600" />
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <p class="mb-1 text-xs font-semibold text-slate-700">Encoding of Barangay Profiles</p>
-                            <p class="mb-2 text-[11px] leading-relaxed text-slate-400">Please ensure that all barangay profile data is accurately encoded and finalized by the deadline to facilitate smooth report generation.</p>
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-medium text-amber-800">
-                                <Icon icon="hugeicons:calendar-03" class="flex-shrink-0 text-[11px]" />
-                                Deadline: April 10, 2026
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-5 flex gap-2 rounded-lg bg-slate-50 p-3">
-                    <Icon icon="hugeicons:information-circle" class="mt-0.5 flex-shrink-0 text-sm text-indigo-400" />
-                    <p class="text-[11px] leading-relaxed text-slate-400">Please make sure to review all the information and complete the necessary details to ensure a smooth transition and report generation.</p>
                 </div>
             </div>
             <div class="flex gap-2 px-6 pb-5">
-                <button type="button" @click="remindLater" class="flex-1 rounded-lg border border-slate-200 py-2.5 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50">Close</button>
-                <button type="button" @click="dismissAnnouncement" class="flex-1 rounded-lg bg-indigo-600 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700">Got it</button>
+                <button type="button" @click="showAnnouncement = false" class="flex-1 rounded-lg bg-indigo-600 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700">Got it</button>
             </div>
         </Dialog>
 

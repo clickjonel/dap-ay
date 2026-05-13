@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Announcement;
 use App\Models\Glossary;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -43,6 +44,16 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user()?->load(['accessLevels']),
             ],
             'glossaries' => Glossary::orderBy('term')->get(),
+            'announcements' => function () use ($request) {
+                $user = $request->user()?->load(['accessLevels']);
+                $query = Announcement::orderBy('created_at');
+
+                if ($user?->accessLevels?->access_level !== 1) {
+                    $query->where('target_access_level', $user?->accessLevels?->access_level);
+                }
+
+                return $query->get();
+            },
         ];
     }
 }
