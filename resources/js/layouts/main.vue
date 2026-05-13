@@ -428,12 +428,12 @@ function openGlossaryModal() {
 </template>
 
 <style scoped>
-.scrollbar-none::-webkit-scrollbar { display: none; }
-.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+    .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
+    .fade-enter-from, .fade-leave-to { opacity: 0; }
 
-.slide-enter-active, .slide-leave-active { transition: transform 0.25s ease; }
-.slide-enter-from, .slide-leave-to { transform: translateX(-100%); }
+    .slide-enter-active, .slide-leave-active { transition: transform 0.25s ease; }
+    .slide-enter-from, .slide-leave-to { transform: translateX(-100%); }
 </style>

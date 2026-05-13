@@ -117,6 +117,15 @@ const navLinks = [
         ],
         accessLevels: [1]
     },
+    {
+        id: 'Announcements',
+        label: 'Announcements',
+        icon: 'hugeicons:bell',
+        children: [
+            { label: 'Announcements',   href: '/announcements',  icon: 'hugeicons:bell', accessLevels: [1] },
+        ],
+        accessLevels: [1]
+    },
 ]
 
 export const filterNavLinks = (accessLevel:number) => {

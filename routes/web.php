@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayGeographyController;
@@ -140,5 +141,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/glossaries',[GlossaryController::class,'create']);
     Route::patch('/glossaries/{id}',[GlossaryController::class,'update']);
     Route::delete('/glossaries/{id}',[GlossaryController::class,'delete']);
+
+    //announcement routes
+    Route::resource('/announcements',AnnouncementController::class);
 
 });
