@@ -251,13 +251,13 @@ class DashboardController extends Controller
     {
         $user = $request->user()->load([
             'accessLevels',
-            'handledMunicipalities.municipality.barangays' => function ($query) {
+           'handledMunicipalities.municipality.barangays' => function ($query) {
                 $query->withCount([
                     'reports',
                     'pkActivities',
                 ])
-                ->withSum('reports', 'total_clients')
-                ->withSum('reports', 'total_returning_clients');
+                ->withSum(['reports' => fn($q) => $q->where('status', 'Approved')], 'total_clients')
+                ->withSum(['reports' => fn($q) => $q->where('status', 'Approved')], 'total_returning_clients');
             },
             'handledMunicipalities.municipality.barangays.pkProfile',
             'handledMunicipalities.municipality.barangays.priorityPrograms',
@@ -267,7 +267,7 @@ class DashboardController extends Controller
         $municipalities = $user->handledMunicipalities->map(function ($hm) {
             $barangays = $hm->municipality->barangays;
         
-            $hm->municipality->total_clients           = $barangays->sum('reports_sum_total_clients');
+            $hm->municipality->total_clients = $barangays->sum('reports_sum_total_clients');
             $hm->municipality->total_returning_clients = $barangays->sum('reports_sum_total_returning_clients');
         
             return $hm;
