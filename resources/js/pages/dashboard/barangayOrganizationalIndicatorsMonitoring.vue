@@ -178,7 +178,7 @@ const filteredMunicipalities = computed(() => {
                                     <template v-if="barangay.organizational_indicators">
                                         <div class="flex flex-col items-center leading-tight">
                                             <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.organizational_indicators[0]?.value ?? '-' }}
+                                                {{ barangay.team.length ?? '-' }}
                                             </span>
                                         </div>
                                     </template>
