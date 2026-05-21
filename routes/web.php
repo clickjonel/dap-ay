@@ -28,6 +28,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHandledMunicipalityController;
 use Illuminate\Support\Facades\Route;
 
+
+//test
+Route::get('/playground',[DashboardController::class,'playground']);
+
 Route::middleware('guest')->group(function () {
     Route::inertia('/', 'Welcome')->name('home');
     Route::get('login', [AuthController::class, 'showLoginPage'])->name('login');
@@ -144,5 +148,7 @@ Route::middleware('auth')->group(function () {
 
     //announcement routes
     Route::resource('/announcements',AnnouncementController::class);
+
+
 
 });

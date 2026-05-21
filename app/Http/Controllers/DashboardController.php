@@ -291,6 +291,9 @@ class DashboardController extends Controller
 
             $provinces = Province::query()
                 ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                ->when($access_level === 2, fn($q) =>
+                    $q->where('id', $accessLevels->pdoho_access_id)
+                )
                 ->with([
                     'municipalities' => fn($q) => $q->when(
                         $access_level === 4,
@@ -323,6 +326,9 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
                         ->with([
                             'municipalities' => fn($q) => $q->when(
                                 $access_level === 4,
@@ -354,6 +360,9 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
                         ->with([
                             'municipalities' => fn($q) => $q->when(
                                 $access_level === 4,
@@ -378,22 +387,40 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function barangayPKProfileMonitoring()
+    public function barangayPKProfileMonitoring(Request $request)
     {
-        $provinces = Province::with([
-            'municipalities.barangays.pkProfile',
-        ])->get();
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+
+        $provinces = Province::query()
+                        ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
+                        ->with([
+                            'municipalities.barangays.pkProfile',
+                        ])->get();
 
         return Inertia::render('dashboard/barangayPKProfileMonitoring',[
             'provinces' => $provinces,
         ]);
     }
 
-    public function barangayGeographyMonitoring()
+    public function barangayGeographyMonitoring(Request $request)
     {
-        $provinces = Province::with([
-            'municipalities.barangays.geography',
-        ])->get();
+        $accessLevels = $request->user()->accessLevels;
+        $province_id = $accessLevels->pdoho_access_id;
+        $access_level = $accessLevels->access_level;
+
+        $provinces = Province::query()
+                        ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
+                        ->with([
+                            'municipalities.barangays.geography',
+                        ])->get();
 
         return Inertia::render('dashboard/barangayGeographyMonitoring',[
             'provinces' => $provinces,
@@ -409,6 +436,9 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
                         ->with([
                             'municipalities' => fn($q) => $q->when(
                                 $access_level === 4,
@@ -454,17 +484,28 @@ class DashboardController extends Controller
         $municipality_ids = $request->user()->handledMunicipalities->pluck('municipality_id')->toArray();
 
         $provinces = Province::query()
-                            ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                            ->with([
-                                'municipalities' => fn($q) => $q->when(
+                        ->when($access_level === 4, fn($q) =>
+                            $q->where('id', $province_id)
+                        )
+                        ->when($access_level === 2, fn($q) =>
+                            $q->where('id', $accessLevels->pdoho_access_id)
+                        )
+                        ->with([
+                            'municipalities' => fn($q) =>
+                                $q->when(
                                     $access_level === 4,
                                     fn($q) => $q->whereIn('id', $municipality_ids)
                                 ),
-                                'municipalities.barangays.pkActivities.programs',
-                                'municipalities.barangays' => fn($q) => $q->withCount([
+                    
+                            'municipalities.barangays.pkActivities.programs',
+                    
+                            'municipalities.barangays' => fn($q) =>
+                                $q->withCount([
                                     'pkActivities',
-                                    'pkActivities as large_pk_count' => fn($q) => $q->where('type', 'large')
-                            ])
+                    
+                                    'pkActivities as large_pk_count' => fn($q) =>
+                                        $q->where('type', 'large')
+                                ])
                         ])
                         ->get();
 
@@ -478,9 +519,15 @@ class DashboardController extends Controller
             'provinces' => $provinces,
             'programs' => $programs
         ]);
+
     }
 
+    public function playground()
+    {
+        return inertia('playground',[
 
+        ]);
+    }
 
 
 }
