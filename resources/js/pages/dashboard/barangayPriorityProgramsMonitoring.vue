@@ -22,6 +22,19 @@ const getProgramData = (barangay, programId) => {
     return barangay.priority_programs?.find(pp => pp.program_id === programId) ?? null
 }
 
+// ✅ Sum a program's target across all barangays in a municipality
+const getMunicipalityProgramTotal = (municipality, programId) => {
+    return municipality.barangays?.reduce((sum, barangay) => {
+        const programData = getProgramData(barangay, programId)
+        return sum + (programData?.target ?? 0)
+    }, 0) ?? 0
+}
+
+// ✅ Check if a municipality has ANY data for a program (to avoid showing 0 for missing programs)
+const municipalityHasProgramData = (municipality, programId) => {
+    return municipality.barangays?.some(b => getProgramData(b, programId) !== null)
+}
+
 const filteredMunicipalities = computed(() => {
     if (!selectedProvince.value) return []
     if (!search.value) return selectedProvince.value.municipalities
@@ -133,7 +146,6 @@ const filteredMunicipalities = computed(() => {
                                 :key="barangay.id"
                                 :class="['border-b border-slate-50 hover:bg-sky-50/20 transition-colors', index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30']"
                             >
-                                <!-- Barangay Name -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-1 h-1 rounded-full bg-slate-300 shrink-0"/>
@@ -141,7 +153,6 @@ const filteredMunicipalities = computed(() => {
                                     </div>
                                 </td>
 
-                                <!-- Program Cells -->
                                 <td
                                     v-for="program in props.programs"
                                     :key="program.id"
@@ -160,6 +171,29 @@ const filteredMunicipalities = computed(() => {
                                     <template v-else>
                                         <span class="text-slate-200 text-[11px]">—</span>
                                     </template>
+                                </td>
+                            </tr>
+
+                            <!-- ✅ Municipality Totals Row -->
+                            <tr class="border-b-2 border-slate-200 bg-indigo-50/40">
+                                <td class="px-4 py-2 pl-8">
+                                    <div class="flex items-center gap-1.5">
+                                        <Icon icon="lucide:sigma" class="text-indigo-400 text-[10px] shrink-0"/>
+                                        <span class="text-[11px] font-semibold text-indigo-600">Total</span>
+                                    </div>
+                                </td>
+                                <td
+                                    v-for="program in props.programs"
+                                    :key="program.id"
+                                    class="px-2 py-2 text-center"
+                                >
+                                    <span
+                                        v-if="municipalityHasProgramData(municipality, program.id)"
+                                        class="text-[11px] font-bold text-indigo-600"
+                                    >
+                                        {{ getMunicipalityProgramTotal(municipality, program.id) }}
+                                    </span>
+                                    <span v-else class="text-slate-200 text-[11px]">—</span>
                                 </td>
                             </tr>
 

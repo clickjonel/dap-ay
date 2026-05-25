@@ -1,13 +1,13 @@
 <script setup>
 import Main from '@/layouts/main.vue'
 import { Icon } from '@iconify/vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 
 defineOptions({ layout: Main })
 
 const props = defineProps({
     provinces: Array,
-    indicators:  Array
+    indicators: Array
 })
 
 const selectedProvince = ref(props.provinces?.[0] ?? null)
@@ -20,6 +20,18 @@ const selectProvince = (province) => {
 
 const getBarangay = (barangay, indicatorID) => {
     return barangay.organizational_indicators?.find(pp => pp.org_indicator_id === indicatorID) ?? null
+}
+
+// ✅ Sum a given indicator across all barangays in a municipality
+const getMunicipalityIndicatorTotal = (municipality, indicatorId) => {
+    return municipality.barangays?.reduce((sum, barangay) => {
+        return sum + (Number(getBarangay(barangay, indicatorId)?.value) || 0)
+    }, 0) ?? 0
+}
+
+// ✅ Check if any barangay has data for this indicator (avoids showing 0 for truly empty columns)
+const municipalityHasIndicatorData = (municipality, indicatorId) => {
+    return municipality.barangays?.some(b => getBarangay(b, indicatorId) !== null)
 }
 
 const filteredMunicipalities = computed(() => {
@@ -96,7 +108,11 @@ const filteredMunicipalities = computed(() => {
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
                                 Barangay
                             </th>
-                            <th v-for="indicator in props.indicators" class="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 break-words leading-tight">
+                            <th
+                                v-for="indicator in props.indicators"
+                                :key="indicator.id"
+                                class="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 break-words leading-tight"
+                            >
                                 {{ indicator.indicator_name }}
                             </th>
                         </tr>
@@ -108,7 +124,8 @@ const filteredMunicipalities = computed(() => {
                             <!-- Municipality Header Row -->
                             <tr>
                                 <td
-                                    class="px-4 py-2 bg-slate-50 border-y border-slate-100" colspan="6"
+                                    :colspan="(props.indicators?.length ?? 0) + 1"
+                                    class="px-4 py-2 bg-slate-50 border-y border-slate-100"
                                 >
                                     <div class="flex items-center gap-2">
                                         <div class="w-5 h-5 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
@@ -128,7 +145,6 @@ const filteredMunicipalities = computed(() => {
                                 :key="barangay.id"
                                 :class="['border-b border-slate-50 hover:bg-sky-50/20 transition-colors', index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30']"
                             >
-                                <!-- Barangay Name -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-1 h-1 rounded-full bg-slate-300 shrink-0"/>
@@ -136,24 +152,49 @@ const filteredMunicipalities = computed(() => {
                                     </div>
                                 </td>
 
-                                <td v-for="indicator in props.indicators" class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.organizational_indicators">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ getBarangay(barangay, indicator.id)?.value }}
-                                               
-                                            </span>
-                                        </div>
-                                    </template>
+                                <td
+                                    v-for="indicator in props.indicators"
+                                    :key="indicator.id"
+                                    class="px-2 py-2.5 text-center"
+                                >
+                                    <span
+                                        v-if="getBarangay(barangay, indicator.id)"
+                                        class="text-sky-700 font-semibold text-[11px]"
+                                    >
+                                        {{ getBarangay(barangay, indicator.id)?.value }}
+                                    </span>
+                                    <span v-else class="text-slate-200 text-[11px]">—</span>
                                 </td>
+                            </tr>
 
+                            <!-- ✅ Municipality Totals Row -->
+                            <tr class="border-b-2 border-slate-200 bg-indigo-50/40">
+                                <td class="px-4 py-2 pl-8">
+                                    <div class="flex items-center gap-1.5">
+                                        <Icon icon="lucide:sigma" class="text-indigo-400 text-[10px] shrink-0"/>
+                                        <span class="text-[11px] font-semibold text-indigo-600">Total</span>
+                                    </div>
+                                </td>
+                                <td
+                                    v-for="indicator in props.indicators"
+                                    :key="indicator.id"
+                                    class="px-2 py-2 text-center"
+                                >
+                                    <span
+                                        v-if="municipalityHasIndicatorData(municipality, indicator.id)"
+                                        class="text-[11px] font-bold text-indigo-600"
+                                    >
+                                        {{ getMunicipalityIndicatorTotal(municipality, indicator.id) }}
+                                    </span>
+                                    <span v-else class="text-slate-200 text-[11px]">—</span>
+                                </td>
                             </tr>
 
                         </template>
 
                         <!-- Empty -->
                         <tr v-if="filteredMunicipalities?.length === 0">
-                            <td :colspan="props.ind.length + 1" class="py-20 text-center">
+                            <td :colspan="(props.indicators?.length ?? 0) + 1" class="py-20 text-center">
                                 <div class="flex flex-col items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                                         <Icon icon="lucide:search-x" class="text-slate-400"/>

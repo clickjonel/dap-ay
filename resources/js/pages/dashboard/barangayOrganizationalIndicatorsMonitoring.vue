@@ -1,13 +1,13 @@
 <script setup>
 import Main from '@/layouts/main.vue'
 import { Icon } from '@iconify/vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 
 defineOptions({ layout: Main })
 
 const props = defineProps({
     provinces: Array,
-    indicators:  Array
+    indicators: Array
 })
 
 const selectedProvince = ref(props.provinces?.[0] ?? null)
@@ -21,6 +21,40 @@ const selectProvince = (province) => {
 const getBarangay = (barangay, indicatorID) => {
     return barangay.organizational_indicators?.find(pp => pp.org_indicator_id === indicatorID) ?? null
 }
+
+// ✅ Sum helpers per municipality
+const getMunicipalityTotal = (municipality, getter) => {
+    return municipality.barangays?.reduce((sum, barangay) => {
+        return sum + (getter(barangay) ?? 0)
+    }, 0) ?? 0
+}
+
+const totals = (municipality) => ({
+    totalPuroks: getMunicipalityTotal(
+        municipality,
+        b => b.population?.total_puroks
+    ),
+    totalPuroксEngaged: getMunicipalityTotal(
+        municipality,
+        b => Number(b.organizational_indicators?.[11]?.value) || 0
+    ),
+    totalPKTeam: getMunicipalityTotal(
+        municipality,
+        b => b.team?.length
+    ),
+    totalTeamsWithKit: getMunicipalityTotal(
+        municipality,
+        b => Number(b.organizational_indicators?.[2]?.value) || 0
+    ),
+    totalMembers: getMunicipalityTotal(
+        municipality,
+        b => b.team?.[0]?.members?.length
+    ),
+    totalTrained: getMunicipalityTotal(
+        municipality,
+        b => b.team?.[0]?.members?.filter(m => m.pk_oriented)?.length
+    ),
+})
 
 const filteredMunicipalities = computed(() => {
     if (!selectedProvince.value) return []
@@ -122,9 +156,7 @@ const filteredMunicipalities = computed(() => {
 
                             <!-- Municipality Header Row -->
                             <tr>
-                                <td
-                                    class="px-4 py-2 bg-slate-50 border-y border-slate-100" colspan="7"
-                                >
+                                <td class="px-4 py-2 bg-slate-50 border-y border-slate-100" colspan="7">
                                     <div class="flex items-center gap-2">
                                         <div class="w-5 h-5 rounded-md bg-indigo-50 flex items-center justify-center shrink-0">
                                             <Icon icon="lucide:building-2" class="text-indigo-400 text-[10px]"/>
@@ -143,7 +175,6 @@ const filteredMunicipalities = computed(() => {
                                 :key="barangay.id"
                                 :class="['border-b border-slate-50 hover:bg-sky-50/20 transition-colors', index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30']"
                             >
-                                <!-- Barangay Name -->
                                 <td class="px-4 py-2.5 pl-8">
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-1 h-1 rounded-full bg-slate-300 shrink-0"/>
@@ -152,75 +183,88 @@ const filteredMunicipalities = computed(() => {
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.population">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.population.total_puroks }}
-                                            </span>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <span class="text-slate-200 text-[11px]">—</span>
-                                    </template>
+                                    <span v-if="barangay.population" class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.population.total_puroks }}
+                                    </span>
+                                    <span v-else class="text-slate-200 text-[11px]">—</span>
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.population">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.organizational_indicators[11]?.value ?? '-' }}
-                                            </span>
-                                        </div>
-                                    </template>
+                                    <span class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.organizational_indicators?.[11]?.value ?? '—' }}
+                                    </span>
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.organizational_indicators">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.team.length ?? '-' }}
-                                            </span>
-                                        </div>
-                                    </template>
+                                    <span class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.team?.length ?? '—' }}
+                                    </span>
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.population">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.organizational_indicators[2]?.value }}
-                                            </span>
-                                        </div>
-                                    </template>
+                                    <span class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.organizational_indicators?.[2]?.value ?? '—' }}
+                                    </span>
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.population">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.team[0]?.members.length }}
-                                            </span>
-                                        </div>
-                                    </template>
+                                    <span class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.team?.[0]?.members?.length ?? '—' }}
+                                    </span>
                                 </td>
 
                                 <td class="px-2 py-2.5 text-center">
-                                    <template v-if="barangay.population">
-                                        <div class="flex flex-col items-center leading-tight">
-                                            <span class="text-sky-700 font-semibold text-[11px]">
-                                                {{ barangay.team[0]?.members.filter(m => m.pk_oriented).length }}
-                                            </span>
-                                        </div>
-                                    </template>
+                                    <span class="text-sky-700 font-semibold text-[11px]">
+                                        {{ barangay.team?.[0]?.members?.filter(m => m.pk_oriented)?.length ?? '—' }}
+                                    </span>
                                 </td>
+                            </tr>
 
+                            <!-- ✅ Municipality Totals Row -->
+                            <tr class="border-b-2 border-slate-200 bg-indigo-50/40">
+                                <td class="px-4 py-2 pl-8">
+                                    <div class="flex items-center gap-1.5">
+                                        <Icon icon="lucide:sigma" class="text-indigo-400 text-[10px] shrink-0"/>
+                                        <span class="text-[11px] font-semibold text-indigo-600">Total</span>
+                                    </div>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalPuroks }}
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalPuroксEngaged }}
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalPKTeam }}
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalTeamsWithKit }}
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalMembers }}
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 text-center">
+                                    <span class="text-[11px] font-bold text-indigo-600">
+                                        {{ totals(municipality).totalTrained }}
+                                    </span>
+                                </td>
                             </tr>
 
                         </template>
 
                         <!-- Empty -->
                         <tr v-if="filteredMunicipalities?.length === 0">
-                            <td :colspan="props.ind.length + 1" class="py-20 text-center">
+                            <td colspan="7" class="py-20 text-center">
                                 <div class="flex flex-col items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                                         <Icon icon="lucide:search-x" class="text-slate-400"/>
@@ -233,7 +277,6 @@ const filteredMunicipalities = computed(() => {
                     </tbody>
                 </table>
             </div>
-
         </div>
 
     </main>
