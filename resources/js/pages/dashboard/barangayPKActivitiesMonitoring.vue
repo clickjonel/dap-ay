@@ -29,14 +29,18 @@ const getProgramCount = (barangay, programId) => {
         }, 0)
 }
 
-// ✅ Generic reducer for any barangay-level getter
 const getMunicipalityTotal = (municipality, getter) => {
     return municipality.barangays?.reduce((sum, barangay) => {
         return sum + (Number(getter(barangay)) || 0)
     }, 0) ?? 0
 }
 
-// ✅ Pre-computed totals object per municipality
+const totalLargePKClients = (activities) => {
+    return (activities ?? [])
+        .filter(act => act.type === 'large')
+        .reduce((sum, act) => sum + (Number(act.total_clients) || 0), 0)
+}
+
 const totals = (municipality) => ({
     pkActivities: getMunicipalityTotal(
         municipality,
@@ -46,9 +50,12 @@ const totals = (municipality) => ({
         municipality,
         b => b.large_pk_count
     ),
+    largePkTotalClients: getMunicipalityTotal(
+        municipality,
+        b => totalLargePKClients(b.pk_activities ?? [])
+    ),
 })
 
-// ✅ Per-program total across all barangays in a municipality
 const getMunicipalityProgramTotal = (municipality, programId) => {
     return getMunicipalityTotal(municipality, b => getProgramCount(b, programId))
 }
@@ -69,13 +76,6 @@ const filteredMunicipalities = computed(() => {
             m.barangays?.length > 0
         )
 })
-
-const totalLargePKClients = (activities) => {
-    return activities
-        .filter(act => act.type === 'large')
-        .reduce((sum, act) => sum + (Number(act.total_clients) || 0), 0)
-}
-
 </script>
 
 <template>
@@ -159,7 +159,7 @@ const totalLargePKClients = (activities) => {
                             <!-- Municipality Header Row -->
                             <tr>
                                 <td
-                                    :colspan="(props.programs?.length ?? 0) + 3"
+                                    :colspan="(props.programs?.length ?? 0) + 4"
                                     class="px-4 py-2 bg-slate-50 border-y border-slate-100"
                                 >
                                     <div class="flex items-center gap-2">
@@ -192,9 +192,13 @@ const totalLargePKClients = (activities) => {
                                 <td class="px-4 py-2.5 pl-8">
                                     <span class="text-slate-600 text-[11px]">{{ barangay.large_pk_count }}</span>
                                 </td>
-
                                 <td class="px-4 py-2.5 pl-8">
-                                    <span class="text-slate-600 text-[11px]">{{ totalLargePKClients(barangay.pk_activities) }}</span>
+                                    <span
+                                        class="text-[11px]"
+                                        :class="totalLargePKClients(barangay.pk_activities) > 0 ? 'text-emerald-600 font-medium' : 'text-slate-300'"
+                                    >
+                                        {{ totalLargePKClients(barangay.pk_activities) || '—' }}
+                                    </span>
                                 </td>
 
                                 <td v-for="program in props.programs" :key="program.id" class="px-2 py-2.5 text-center">
@@ -209,7 +213,7 @@ const totalLargePKClients = (activities) => {
                                 </td>
                             </tr>
 
-                            <!-- ✅ Municipality Totals Row -->
+                            <!-- Municipality Totals Row -->
                             <tr class="border-b-2 border-slate-200 bg-indigo-50/40">
                                 <td class="px-4 py-2 pl-8">
                                     <div class="flex items-center gap-1.5">
@@ -217,19 +221,21 @@ const totalLargePKClients = (activities) => {
                                         <span class="text-[11px] font-semibold text-indigo-600">Total</span>
                                     </div>
                                 </td>
-                                <!-- Static: Total PK Activities -->
                                 <td class="px-4 py-2 pl-8">
                                     <span class="text-[11px] font-bold text-indigo-600">
                                         {{ totals(municipality).pkActivities }}
                                     </span>
                                 </td>
-                                <!-- Static: Total Large PK Activities -->
                                 <td class="px-4 py-2 pl-8">
                                     <span class="text-[11px] font-bold text-indigo-600">
                                         {{ totals(municipality).largePkActivities }}
                                     </span>
                                 </td>
-                                <!-- Dynamic: Per-program totals -->
+                                <td class="px-4 py-2 pl-8">
+                                    <span class="text-[11px] font-bold text-emerald-600">
+                                        {{ totals(municipality).largePkTotalClients || '—' }}
+                                    </span>
+                                </td>
                                 <td
                                     v-for="program in props.programs"
                                     :key="program.id"
@@ -249,7 +255,7 @@ const totalLargePKClients = (activities) => {
 
                         <!-- Empty -->
                         <tr v-if="filteredMunicipalities?.length === 0">
-                            <td :colspan="(props.programs?.length ?? 0) + 3" class="py-20 text-center">
+                            <td :colspan="(props.programs?.length ?? 0) + 4" class="py-20 text-center">
                                 <div class="flex flex-col items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                                         <Icon icon="lucide:search-x" class="text-slate-400"/>
