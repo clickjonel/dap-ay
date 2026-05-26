@@ -69,6 +69,13 @@ const filteredMunicipalities = computed(() => {
             m.barangays?.length > 0
         )
 })
+
+const totalLargePKClients = (activities) => {
+    return activities
+        .filter(act => act.type === 'large')
+        .reduce((sum, act) => sum + (Number(act.total_clients) || 0), 0)
+}
+
 </script>
 
 <template>
@@ -133,6 +140,9 @@ const filteredMunicipalities = computed(() => {
                             <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
                                 Total Large PK Activities
                             </th>
+                            <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 w-44">
+                                Total Large PK Clients
+                            </th>
                             <th
                                 v-for="program in props.programs"
                                 :key="program.id"
@@ -181,6 +191,10 @@ const filteredMunicipalities = computed(() => {
                                 </td>
                                 <td class="px-4 py-2.5 pl-8">
                                     <span class="text-slate-600 text-[11px]">{{ barangay.large_pk_count }}</span>
+                                </td>
+
+                                <td class="px-4 py-2.5 pl-8">
+                                    <span class="text-slate-600 text-[11px]">{{ totalLargePKClients(barangay.pk_activities) }}</span>
                                 </td>
 
                                 <td v-for="program in props.programs" :key="program.id" class="px-2 py-2.5 text-center">
