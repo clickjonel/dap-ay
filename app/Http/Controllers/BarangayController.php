@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barangay;
+use App\Models\OrganizationalIndicator;
+use App\Models\Program;
+use App\Models\ProgramIndicator;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -97,7 +100,49 @@ class BarangayController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $barangay = Barangay::findOrFail($id)->load([
+            'pkProfile',
+            'organizationalIndicators.organizationalIndicator',
+            'indicatorTargets',
+            'geography',
+            'population',
+            'priorityPrograms'
+        ]);
+
+        $allIndicators = OrganizationalIndicator::all();
+
+        // map all indicators, merging existing barangay values if connected
+        $indicators = $allIndicators->map(function ($indicator) use ($barangay) {
+            $existing = $barangay->organizationalIndicators
+                ->firstWhere('org_indicator_id', $indicator->id);
+
+            return [
+                'id'          => $indicator->id,
+                'name'        => $indicator->indicator_name,
+                'value'       => $existing ? (int) $existing->value : null,
+            ];
+        });
+        $usedProgramIds = $barangay->priorityPrograms->pluck('program_id');
+        $programs = Program::whereNotIn('id', $usedProgramIds)->get();
+
+        $program_indicators = ProgramIndicator::with(['program'])->get()->map(function($ind) use ($barangay) {
+            $existing = $barangay->indicatorTargets->firstWhere('program_indicator_id', $ind->id);
+
+            return [
+                'id'     => $ind->id,
+                'program_id' => $ind->program?->id,
+                'name'   => $ind->indicator_name,
+                'target' => $existing?->target ?? null,
+                'served' => $existing?->served ?? null,
+            ];
+        });
+
+        return inertia('barangay/manageBarangay',[
+            'barangay' => $barangay,
+            'indicators' => $indicators,
+            'programs' => $programs,
+            'program_indicators' => $program_indicators
+        ]);
     }
 
     /**
@@ -114,22 +159,102 @@ class BarangayController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Barangay $barangay)
     {
-        $request->validate([
-            'psgc_code'       => 'nullable|string',
-            'name'            => 'required|string|max:255',
-            'province_id'     => 'required|exists:provinces,id',
-            'municipality_id' => 'required|exists:municipalities,id',
-            'mov_link' => 'nullable',
+        $validated = $request->validate([
+            'name'      => 'required|string',
+            'psgc_code' => 'nullable|string',
+            'mov_link'  => 'nullable|string',
+
+            'geography'           => 'required|array',
+            'geography.longitude' => 'nullable|numeric',
+            'geography.latitude'  => 'nullable|numeric',
+            'geography.is_gida'   => 'required|boolean',
+
+            'pk_profile'            => 'required|array',
+            'pk_profile.pk_status'  => 'required|string',
+            'pk_profile.pk_site'    => 'required|boolean',
+
+            'indicators'                   => 'required|array',
+            'indicators.*.org_indicator_id' => 'required|integer|exists:organizational_indicators,id',
+            'indicators.*.value'            => 'nullable|numeric',
+
+            'priority_programs'             => 'required|array',
+            'priority_programs.*.id'        => 'nullable|integer|exists:barangay_priority_programs,id',
+            'priority_programs.*.program_id' => 'required|integer|exists:programs,id',
+            'priority_programs.*.target'    => 'nullable|numeric',
+            'priority_programs.*.order'     => 'required|integer',
+
+            'indicator_targets'                          => 'required|array',
+            'indicator_targets.*.program_indicator_id'   => 'required|integer|exists:program_indicators,id',
+            'indicator_targets.*.program_id'             => 'required|integer|exists:programs,id',
+            'indicator_targets.*.target'                 => 'nullable|numeric',
+            'indicator_targets.*.served'                 => 'nullable|numeric',
         ]);
 
-        $barangay->update($request->only('psgc_code', 'name', 'province_id', 'municipality_id','mov_link'));
+        // Update barangay
+        $barangay->update([
+            'name'      => $validated['name'],
+            'psgc_code' => $validated['psgc_code'],
+            'mov_link'  => $validated['mov_link'],
+        ]);
 
-        // return redirect()->route('barangays')->with('success', 'Barangay updated successfully.');
+        // Update or create geography (one-to-one)
+        $barangay->geography()->updateOrCreate(
+            ['barangay_id' => $barangay->id],
+            $validated['geography']
+        );
+
+        // Update or create pk_profile (one-to-one)
+        $barangay->pkProfile()->updateOrCreate(
+            ['barangay_id' => $barangay->id],
+            $validated['pk_profile']
+        );
+
+        // Sync indicators — upsert by barangay_id + org_indicator_id
+        foreach ($validated['indicators'] as $ind) {
+            $barangay->organizationalIndicators()->updateOrCreate(
+                ['org_indicator_id' => $ind['org_indicator_id']],
+                ['value'            => $ind['value']]
+            );
+        }
+
+       // sync indicator targets
+        foreach ($validated['indicator_targets'] as $ind) {
+            $barangay->indicatorTargets()->updateOrCreate(
+                ['program_indicator_id' => $ind['program_indicator_id']],
+                [
+                    'program_id' => $ind['program_id'],
+                    'target'     => $ind['target'],
+                    'served'     => $ind['served'],
+                ]
+            );
+        }
+
+        // Priority programs — delete removed, upsert existing/new
+        $incomingIds = collect($validated['priority_programs'])
+            ->pluck('id')
+            ->filter()
+            ->values();
+
+        // Delete programs not in the incoming list
+        $barangay->priorityPrograms()
+            ->whereNotIn('id', $incomingIds)
+            ->delete();
+
+        // Upsert each program
+        foreach ($validated['priority_programs'] as $pp) {
+            $barangay->priorityPrograms()->updateOrCreate(
+                ['id' => $pp['id'] ?? 0],
+                [
+                    'program_id' => $pp['program_id'],
+                    'target'     => $pp['target'],
+                    'order'      => $pp['order'],
+                ]
+            );
+        }
+
+        return back();
     }
 
     /**

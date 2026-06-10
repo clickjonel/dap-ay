@@ -40,6 +40,11 @@ class Barangay extends Model
         return $this->hasMany(BarangayOrganizationalIndicator::class,'barangay_id');
     }
 
+    public function indicatorTargets()
+    {
+        return $this->hasMany(BarangayIndicatorTarget::class,'barangay_id');
+    }
+
     public function geography()
     {
         return $this->hasOne(BarangayGeography::class,'barangay_id');

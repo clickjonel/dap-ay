@@ -156,7 +156,7 @@
                                 <!-- edit barangay btn -->
                                 <button
                                     type="button"
-                                    @click="router.visit(`/barangays/${barangay.id}/edit`)"
+                                    @click="router.visit(`/barangays/${barangay.id}`)"
                                     class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
                                     title="Edit Barangay Details"
                                 >
@@ -164,7 +164,7 @@
                                 </button>
 
                                 <!-- barangay profile actions -->
-                                <button
+                                <!-- <button
                                     v-if="!barangay.pk_profile"
                                     type="button"
                                     @click="router.visit(`/barangay/pk-profile/create?barangay_id=${barangay.id}`)"
@@ -172,8 +172,8 @@
                                     title="Add Profile"
                                 >
                                     <Icon icon="hugeicons:user-add-01" class="text-sm" />
-                                </button>
-                                <button
+                                </button> -->
+                                <!-- <button
                                     v-else
                                     type="button"
                                     @click="router.visit(`/barangay/pk-profile/${barangay.pk_profile.id}/edit`)"
@@ -181,10 +181,10 @@
                                     title="Update Profile"
                                 >
                                     <Icon icon="hugeicons:user-edit-01" class="text-sm" />
-                                </button>
+                                </button> -->
 
                                 <!-- barangay indicator actions -->
-                                <button
+                                <!-- <button
                                     v-if="barangay.organizational_indicators.length === 0"
                                     type="button"
                                     @click="router.visit(`/barangay/organizational-indicator/create?barangay_id=${barangay.id}`)"
@@ -201,10 +201,10 @@
                                     title="Update Organizational Indicators"
                                 >
                                     <Icon icon="hugeicons:property-edit" class="text-sm" />
-                                </button>
+                                </button> -->
 
                                 <!-- barangay geography actions -->
-                                <button
+                                <!-- <button
                                     v-if="!barangay.geography"
                                     type="button"
                                     @click="router.visit(`/barangay/geography/create?barangay_id=${barangay.id}`)"
@@ -221,10 +221,10 @@
                                     title="Update Geography Details"
                                 >
                                     <Icon icon="hugeicons:maps-location-02" class="text-sm" />
-                                </button>
+                                </button> -->
 
                                 <!-- population actions -->
-                                <button
+                                <!-- <button
                                     v-if="!barangay.population"
                                     type="button"
                                     @click="router.visit(`/barangay/population/create?barangay_id=${barangay.id}`)"
@@ -241,10 +241,10 @@
                                     title="Update Population"
                                 >
                                     <Icon icon="hugeicons:user-group" class="text-sm" />
-                                </button>
+                                </button> -->
 
                                 <!-- targets actions -->
-                                <button
+                                <!-- <button
                                     v-if="!barangay.targets"
                                     type="button"
                                     class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
@@ -252,7 +252,7 @@
                                     @click="router.visit(`/barangay/priority-program?barangay_id=${barangay.id}`)"
                                 >
                                     <Icon icon="carbon:top-programs" class="text-sm" />
-                                </button>
+                                </button> -->
 
 
                                 <!-- delete -->

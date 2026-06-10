@@ -149,6 +149,4 @@ Route::middleware('auth')->group(function () {
     //announcement routes
     Route::resource('/announcements',AnnouncementController::class);
 
-
-
 });
