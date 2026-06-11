@@ -99,7 +99,7 @@
                     detail:   'Barangay has been updated successfully.',
                     life:     2000,
                 })
-                router.visit('/barangays')
+                //router.visit('/barangays')
             },
             onError:   (e) => {
                 console.log(e)

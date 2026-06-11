@@ -21,11 +21,6 @@ class BarangayController extends Controller
             ->teams()
             ->with([
                 'barangays:id',
-                'geography',
-                'pkProfile',
-                'organizationalIndicators',
-                'priorityPrograms',
-                'indicatorTargets'
             ])
             ->get()
             ->pluck('barangays')
