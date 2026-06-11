@@ -1,6 +1,6 @@
 <script setup>
     import Main from '@/layouts/main.vue'
-    import { ref, inject } from 'vue'
+    import { ref, inject, onMounted } from 'vue'
     import { router } from '@inertiajs/vue3'
     import { Icon } from '@iconify/vue'
     import { Dialog } from 'primevue'
@@ -20,6 +20,10 @@
     const search = ref(props.filters.search ?? '')
     const confirmDeleteBarangayDialog = ref(false)
     const selectedBarangay = ref(null)
+
+    onMounted(()=>{
+        console.log(props.barangays)
+    })
 
     function openConfirmDeleteReportDialog(barangay) {
         selectedBarangay.value = barangay
@@ -61,216 +65,43 @@
 </script>
 
 <template>
-    <div class="h-full flex flex-col gap-5">
+    <div class="h-full flex flex-col gap-4">
+        
+        <div class="w-full flex justify-between items-center">
+            <div class="w-full flex justify-between items-center">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Search</label>
+                    <input @input="onSearch" :value="search" type="text" class="w-full lg:w-[300px] border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-400 text-xs" placeholder="Input Keyword">
+                </div>
 
-        <!-- ── Page header ──────────────────────────────── -->
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-lg font-bold text-slate-800 leading-none">Barangays</h1>
-                <p class="text-xs text-slate-400 mt-1">Manage barangays and their data.</p>
-            </div>
-            <button
-                v-if="user.access_levels.access_level !== 2"
-                type="button"
-                @click="router.visit('/barangays/create')"
-                class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200"
-            >
-                <Icon icon="hugeicons:plus-sign" class="text-sm" />
-                New Barangay
-            </button>
-        </div>
+                <button @click="router.visit('/barangays/create')" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium hover:bg-emerald-900 transition-colors cursor-pointer">Add Barangay</button>
 
-        <!-- ── Filters ───────────────────────────────────── -->
-        <div class="flex items-center gap-3">
-            <div class="relative flex-1 max-w-xs">
-                <Icon icon="hugeicons:search-01" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" />
-                <input
-                    :value="search"
-                    @input="onSearch"
-                    type="text"
-                    placeholder="Search barangays..."
-                    class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
-                />
-            </div>
-            <div class="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
-                <Icon icon="hugeicons:list-view" class="text-sm" />
-                <span>{{ barangays.total ?? 0 }} barangays</span>
             </div>
         </div>
 
         <!-- ── Table ─────────────────────────────────────── -->
-        <div class="bg-white rounded-xl border border-slate-200 overflow-y-auto flex-1 flex flex-col">
-            <table class="w-full text-left">
-                <thead class="bg-slate-100 border-b border-slate-100 sticky top-0">
-                    <tr>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">PSGC Code</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Barangay</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-
-                    <!-- Empty state -->
-                    <tr v-if="!barangays.data || barangays.data.length === 0">
-                        <td colspan="5" class="px-5 py-16 text-center">
-                            <div class="flex flex-col items-center gap-2">
-                                <Icon icon="hugeicons:folder-02" class="text-3xl text-slate-300" />
-                                <p class="text-sm font-medium text-slate-400">No barangays found</p>
-                                <p class="text-xs text-slate-300">Try adjusting your search or add a new barangay.</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr
-                        v-for="barangay in barangays.data"
-                        :key="barangay.id"
-                        class="hover:bg-slate-50/70 transition-colors cursor-pointer"
-                    >
-                        <!-- PSGC Code -->
-                        <td class="px-5 py-3.5">
-                            <code class="text-[11px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-mono">
-                                {{ barangay.psgc_code ?? '—' }}
-                            </code>
-                        </td>
-
-                        <!-- Barangay Name -->
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
-                                    <Icon icon="hugeicons:map-pinpoint-01" class="text-sm text-indigo-500" />
-                                </div>
-                                <div class="flex flex-col min-w-0">
-                                    <span class="text-sm font-semibold text-slate-700 truncate">{{ barangay.name }}</span>
-                                    <div class="flex items-center gap-1 mt-0.5">
-                                        <span class="text-[10px] text-slate-400 truncate">{{ barangay.municipality?.name ?? '—' }}</span>
-                                        <span class="text-slate-300 text-[10px]">·</span>
-                                        <span class="text-[10px] text-slate-400 truncate">{{ barangay?.province?.name ?? '—' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="px-5 py-3.5" @click.stop>
-                            <div class="flex items-center justify-end gap-1">
-                                <!-- edit barangay btn -->
-                                <button
-                                    type="button"
-                                    @click="router.visit(`/barangays/${barangay.id}`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
-                                    title="Edit Barangay Details"
-                                >
-                                    <Icon icon="hugeicons:pencil-edit-02" class="text-sm cursor-pointer" />
-                                </button>
-
-                                <!-- barangay profile actions -->
-                                <!-- <button
-                                    v-if="!barangay.pk_profile"
-                                    type="button"
-                                    @click="router.visit(`/barangay/pk-profile/create?barangay_id=${barangay.id}`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
-                                    title="Add Profile"
-                                >
-                                    <Icon icon="hugeicons:user-add-01" class="text-sm" />
-                                </button> -->
-                                <!-- <button
-                                    v-else
-                                    type="button"
-                                    @click="router.visit(`/barangay/pk-profile/${barangay.pk_profile.id}/edit`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
-                                    title="Update Profile"
-                                >
-                                    <Icon icon="hugeicons:user-edit-01" class="text-sm" />
-                                </button> -->
-
-                                <!-- barangay indicator actions -->
-                                <!-- <button
-                                    v-if="barangay.organizational_indicators.length === 0"
-                                    type="button"
-                                    @click="router.visit(`/barangay/organizational-indicator/create?barangay_id=${barangay.id}`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
-                                    title="Add Organizational Indicators"
-                                >
-                                    <Icon icon="hugeicons:chart-increase" class="text-sm" />
-                                </button>
-                                <button
-                                    v-else
-                                    type="button"
-                                    @click="router.visit(`/barangay/organizational-indicator/${barangay.id}/edit`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
-                                    title="Update Organizational Indicators"
-                                >
-                                    <Icon icon="hugeicons:property-edit" class="text-sm" />
-                                </button> -->
-
-                                <!-- barangay geography actions -->
-                                <!-- <button
-                                    v-if="!barangay.geography"
-                                    type="button"
-                                    @click="router.visit(`/barangay/geography/create?barangay_id=${barangay.id}`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-sky-600 hover:bg-sky-50 transition-colors"
-                                    title="Add Geography Details"
-                                >
-                                    <Icon icon="hugeicons:maps-location-02" class="text-sm" />
-                                </button>
-                                <button
-                                    v-else
-                                    type="button"
-                                    @click="router.visit(`/barangay/geography/${barangay.geography.id}/edit`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-sky-600 hover:bg-sky-50 transition-colors"
-                                    title="Update Geography Details"
-                                >
-                                    <Icon icon="hugeicons:maps-location-02" class="text-sm" />
-                                </button> -->
-
-                                <!-- population actions -->
-                                <!-- <button
-                                    v-if="!barangay.population"
-                                    type="button"
-                                    @click="router.visit(`/barangay/population/create?barangay_id=${barangay.id}`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                    title="Add Population"
-                                >
-                                    <Icon icon="hugeicons:user-group" class="text-sm" />
-                                </button>
-                                <button
-                                    v-else
-                                    type="button"
-                                    @click="router.visit(`/barangay/population/${barangay.population.id}/edit`)"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                    title="Update Population"
-                                >
-                                    <Icon icon="hugeicons:user-group" class="text-sm" />
-                                </button> -->
-
-                                <!-- targets actions -->
-                                <!-- <button
-                                    v-if="!barangay.targets"
-                                    type="button"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                    title="Priority Programs"
-                                    @click="router.visit(`/barangay/priority-program?barangay_id=${barangay.id}`)"
-                                >
-                                    <Icon icon="carbon:top-programs" class="text-sm" />
-                                </button> -->
-
-
-                                <!-- delete -->
-                                <button
-                                    v-if="user.access_levels.access_level === 1 | user.access_levels.access_level === 3"
-                                    @click="openConfirmDeleteReportDialog(barangay)"
-                                    type="button"
-                                    class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                    title="Delete Barangay"
-                                >
-                                    <Icon icon="hugeicons:delete-02" class="text-sm" />
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
+        <div class="overflow-y-auto px-2 pb-2">
+            <div class="w-full grid grid-cols-12 divide-x divide-gray-400 text-xs font-semibold tracking-widest uppercase text-gray-600 bg-sky-100 border border-gray-400 sticky top-0">
+                <span class="col-span-2 p-2">PSGC Code</span>
+                <span class="col-span-3 p-2">Barangay</span>
+                <span class="col-span-3 p-2">Municipality</span>
+                <span class="col-span-2 p-2">Province</span>
+                <span class="col-span-2 p-2">Actions</span>
+            </div>
+            <div v-for="brgy in barangays.data" :key="brgy.id" class="w-full grid grid-cols-12 divide-x divide-gray-400 text-xs text-gray-600 border-b border-x border-gray-400 bg-white tracking-wide font-medium">
+                <span class="col-span-2 p-2">{{ brgy.psgc_code ?? '-'}}</span>
+                <span class="col-span-3 p-2">{{ brgy.name }}</span>
+                <span class="col-span-3 p-2">{{ brgy.municipality?.name }}</span>
+                <span class="col-span-2 p-2">{{ brgy.province?.name }}</span>
+                <span class="col-span-2 p-2">
+                    <button @click="router.visit(`/barangays/${brgy.id}`)" class="p-1 text-gray-400 hover:text-green-800 hover:bg-green-50 border border-transparent hover:border-green-200 transition-all" title="Edit Barangay">
+                        <Icon icon="boxicons:edit" class="text-base" />
+                    </button>
+                    <button @click="openConfirmDeleteReportDialog(brgy)" class="p-1 text-gray-400 hover:text-red-400 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all" title="Delete Barangay">
+                        <Icon icon="mdi:trash-can-outline" class="text-base" />
+                    </button>
+                </span>
+            </div>
 
             <!-- ── Pagination ─────────────────────────────── -->
             <div
@@ -324,7 +155,6 @@
                         Cancel
                     </button>
                     <button
-                        v-if="user.access_levels.access_level.in([1,3])"
                         type="button"
                         @click="deletebarangay"
                         class="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"

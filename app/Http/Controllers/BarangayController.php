@@ -19,7 +19,14 @@ class BarangayController extends Controller
     {
         $userBarangayIDs = $request->user()
             ->teams()
-            ->with('barangays:id')
+            ->with([
+                'barangays:id',
+                'geography',
+                'pkProfile',
+                'organizationalIndicators',
+                'priorityPrograms',
+                'indicatorTargets'
+            ])
             ->get()
             ->pluck('barangays')
             ->flatten()
@@ -55,7 +62,7 @@ class BarangayController extends Controller
         $paginated = $barangays
             ->with(['province', 'municipality', 'pkProfile', 'organizationalIndicators', 'geography', 'population'])
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate(15)
             ->withQueryString();
 
         return inertia('barangay/barangays', [

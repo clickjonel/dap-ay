@@ -234,7 +234,7 @@ function openGlossaryModal() {
                     </button>
                 </div>
             </header>
-            <main class="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-6">
+            <main class="flex-1 overflow-y-auto bg-slate-100 p-4">
                 <slot />
             </main>
         </div>

@@ -61,6 +61,7 @@ class DeleteController extends Controller
         $barangay->population()->delete();
         $barangay->priorityPrograms()->delete();
         $barangay->reports()->delete();
+        $barangay->indicatorTargets()->delete();
     
         $barangay->delete();
     }
