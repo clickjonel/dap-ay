@@ -173,6 +173,14 @@ class BarangayController extends Controller
             'geography.latitude'  => 'nullable|numeric',
             'geography.is_gida'   => 'required|boolean',
 
+            'population'          => 'required|array',
+            'population.total_population' => 'nullable|numeric',
+            'population.target_population'  => 'nullable|numeric',
+            'population.total_puroks' => 'nullable|numeric',
+            'population.target_puroks'  => 'nullable|numeric',
+            'population.total_households' => 'nullable|numeric',
+            'population.target_households'  => 'nullable|numeric',
+
             'pk_profile'            => 'required|array',
             'pk_profile.pk_status'  => 'required|string',
             'pk_profile.pk_site'    => 'required|boolean',
@@ -205,6 +213,12 @@ class BarangayController extends Controller
         $barangay->geography()->updateOrCreate(
             ['barangay_id' => $barangay->id],
             $validated['geography']
+        );
+
+        // Update or create population (one-to-one)
+        $barangay->population()->updateOrCreate(
+            ['barangay_id' => $barangay->id],
+            $validated['population']
         );
 
         // Update or create pk_profile (one-to-one)

@@ -23,6 +23,14 @@
             latitude:  props.barangay.geography?.latitude,
             is_gida:   props.barangay.geography?.is_gida,
         },
+        population: {
+            total_population: props.barangay.population?.total_population,
+            target_population: props.barangay.population?.target_population,
+            total_puroks: props.barangay.population?.total_puroks,
+            target_puroks: props.barangay.population?.target_puroks,
+            total_households: props.barangay.population?.total_households,
+            target_households: props.barangay.population?.target_households,
+        },
         pk_profile: {
             pk_status: props.barangay.pk_profile?.pk_status,
             pk_site:   props.barangay.pk_profile?.pk_site,
@@ -32,6 +40,11 @@
         priority_programs: [...(props.barangay.priority_programs ?? [])]
     })
 
+    
+    onMounted(()=>{
+        console.log(props.barangay)
+    })
+    
     const usedProgramIds = computed(() =>
         form.value.priority_programs.map(pp => pp.program_id)
     )
@@ -65,6 +78,15 @@
                 longitude: form.value.geography.longitude,
                 latitude:  form.value.geography.latitude,
                 is_gida:   form.value.geography.is_gida,
+            },
+
+            population: {
+                total_population: form.value.population?.total_population,
+                target_population: form.value.population?.target_population,
+                total_puroks: form.value.population?.total_puroks,
+                target_puroks: form.value.population?.target_puroks,
+                total_households: form.value.population?.total_households,
+                target_households: form.value.population?.target_households,
             },
 
             pk_profile: {
@@ -111,7 +133,9 @@
                 })
             },
         })
+
     }
+
 
 </script>
 
@@ -195,6 +219,61 @@
                                 <option :value="true">Yes — GIDA</option>
                                 <option :value="false">No — Non-GIDA</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Population -->
+            <div class="w-full flex flex-col md:flex-row">
+                <div class="md:w-56 shrink-0 md:border-r border-gray-100 px-4 md:px-6 py-4 md:py-5 bg-gray-50 md:bg-white border-b md:border-b-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-1 h-4 bg-emerald-500"></div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-gray-700">Population</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400 pl-3">Total and Target Populations</p>
+                </div>
+                <div class="w-full flex flex-col gap-2 px-4 md:px-6 py-4 md:py-5 bg-white">
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 text-xs">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Total Population</label>
+                            <input v-model="form.population.total_population" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Target Population</label>
+                            <input v-model="form.population.target_population" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
+                        </div>
+                    </div>
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 text-xs">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Total Puroks</label>
+                            <input v-model="form.population.total_puroks" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Target Puroks</label>
+                            <input v-model="form.population.target_puroks" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
+                        </div>
+                    </div>
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 text-xs">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Total Households</label>
+                            <input v-model="form.population.total_households" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Target Households</label>
+                            <input v-model="form.population.target_households" type="number"
+                                class="w-full border border-gray-200 bg-gray-50 outline-none px-3 py-2 text-gray-700 focus:bg-white focus:border-gray-400 transition-all placeholder:text-gray-300"
+                                placeholder="0.000000">
                         </div>
                     </div>
                 </div>
