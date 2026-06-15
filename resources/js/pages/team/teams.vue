@@ -116,7 +116,7 @@
         </div>
         <button
             type="button"
-            @click="openTeamModal('create')"
+            @click="router.visit('/teams/create')"
             class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shadow-indigo-200 flex-shrink-0"
         >
             <Icon icon="hugeicons:plus-sign" class="text-sm" />

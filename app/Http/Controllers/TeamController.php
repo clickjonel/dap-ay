@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangay;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -63,9 +64,30 @@ class TeamController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        
+        $user = $request->user()->load('accessLevels'); 
+        $barangays = Barangay::query()
+                        ->when($user->accessLevels->access_level === 2, function($query) use($user){
+                            $query->where('province_id',$user->accessLevels->pdoho_access_id);
+                        })
+                        ->get();
+        $users = User::query()
+                        ->when($user->accessLevels->access_level === 2, function($query) use($user){
+                            $query->whereHas('accessLevels', function($query) use ($user){
+                                $query->where('pdoho_access_id',$user->accessLevels->pdoho_id);
+                            });
+                        })
+                        ->whereHas('accessLevels', function($query) use ($user){
+                            $query->where('access_level',2);
+                        })
+                        ->orderBy('name','asc')
+                        ->get();
+
+        return inertia('team/createTeam',[
+            'barangays' => $barangays,
+            'users' => $users
+        ]);
     }
 
     /**
