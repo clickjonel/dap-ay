@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Barangay;
 use App\Models\Team;
+use App\Models\TeamBarangay;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,8 +21,9 @@ class TeamController extends Controller
     
         $teams = Team::query()
             ->with([
-                'members:id,user_id,team_id,role',
-                'barangays:id,name,province_id',
+                'members',
+                'barangays.municipality',
+                'barangays.province',
             ])
     
             ->when($userAccessLevel === 3, function ($query) use ($user) {
@@ -52,7 +55,7 @@ class TeamController extends Controller
             })
     
             ->orderBy('id', 'desc')
-            ->paginate(20)
+            ->cursorPaginate(20)
             ->withQueryString();
     
         return inertia('team/teams', [
@@ -68,11 +71,13 @@ class TeamController extends Controller
     {
         $user = $request->user()->load('accessLevels'); 
         $barangays = Barangay::query()
+                        ->with(['municipality','province'])
                         ->when($user->accessLevels->access_level === 2, function($query) use($user){
                             $query->where('province_id',$user->accessLevels->pdoho_access_id);
                         })
                         ->get();
         $users = User::query()
+                        ->select('id', 'name')
                         ->when($user->accessLevels->access_level === 2, function($query) use($user){
                             $query->whereHas('accessLevels', function($query) use ($user){
                                 $query->where('pdoho_access_id',$user->accessLevels->pdoho_id);
@@ -97,14 +102,42 @@ class TeamController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'is_active' => 'required|boolean',
             'pk_kit' => 'required|boolean',
-            'eo_link' => 'nullable',
+            'eo_link' => 'nullable|string',
+            'barangays' => 'required|array|min:1',
+            'members' => 'required|array|min:1',
+            'members.*.name' => 'required|string',
+            'members.*.role' => 'required|string',
+            'members.*.position' => 'required|string',
+            'members.*.user_id' => 'nullable|numeric',
+            'members.*.pk_oriented' => 'required|boolean',
         ]);
 
-        Team::create(array_merge($validated, [
+        $team = Team::create([
+            'name' => $validated['name'],
+            'is_active' => true,
+            'pk_kit' => $validated['pk_kit'],
+            'eo_link' => $validated['eo_link'],
             'created_by' => $request->user()->id,
-        ]));
+        ]);
+
+        foreach($validated['barangays'] as $brgy){
+            TeamBarangay::create([
+                'team_id' => $team->id, 
+                'barangay_id' => $brgy
+            ]);
+        }
+
+        foreach($validated['members'] as $member){
+            TeamMember::create([
+                'team_id' => $team->id,
+                'name' => $member['name'],
+                'user_id' => $member['user_id'],
+                'role' => $member['role'],
+                'position' => $member['position'],
+                'pk_oriented' => $member['pk_oriented'],
+            ]);
+        }
 
         return back();
     }
@@ -120,16 +153,36 @@ class TeamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Team $team)
+    public function edit(Team $team, Request $request)
     {
-        $team = $team->load([
-            'members',
+        $team->load([
+            'barangays:id,name',
+            'members.user:id,name'
         ]);
-        $users = User::get();
+        $user = $request->user()->load('accessLevels'); 
+        $barangays = Barangay::query()
+                        ->with(['municipality','province'])
+                        ->when($user->accessLevels->access_level === 2, function($query) use($user){
+                            $query->where('province_id',$user->accessLevels->pdoho_access_id);
+                        })
+                        ->get();
+        $users = User::query()
+                        ->select('id', 'name')
+                        ->when($user->accessLevels->access_level === 2, function($query) use($user){
+                            $query->whereHas('accessLevels', function($query) use ($user){
+                                $query->where('pdoho_access_id',$user->accessLevels->pdoho_id);
+                            });
+                        })
+                        ->whereHas('accessLevels', function($query) use ($user){
+                            $query->where('access_level',2);
+                        })
+                        ->orderBy('name','asc')
+                        ->get();
 
-        return inertia('team/updateTeam', [
-            'team' => $team,
-            'users' => $users
+        return inertia('team/manageTeam',[
+            'barangays' => $barangays,
+            'users' => $users,
+            'team' => $team
         ]);
     }
 
@@ -139,14 +192,50 @@ class TeamController extends Controller
     public function update(Request $request, Team $team)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'is_active' => 'required|boolean',
-            'pk_kit' => 'required|boolean',
-            'eo_link' => 'nullable',
+            'name'                  => 'required|string|max:255',
+            'pk_kit'                => 'required|boolean',
+            'eo_link'               => 'nullable|string',
+            'barangays'             => 'required|array|min:1',
+            'members'               => 'required|array|min:1',
+            'members.*.id'          => 'nullable|integer|exists:team_members,id',
+            'members.*.name'        => 'required|string',
+            'members.*.role'        => 'required|string',
+            'members.*.position'    => 'required|string',
+            'members.*.user_id'     => 'nullable|numeric',
+            'members.*.pk_oriented' => 'required|boolean',
         ]);
-
-        $team->update($validated);
-
+    
+        $team->update([
+            'name'    => $validated['name'],
+            'pk_kit'  => $validated['pk_kit'],
+            'eo_link' => $validated['eo_link'],
+        ]);
+    
+        // sync barangays — delete removed, insert new
+        $team->barangays()->sync($validated['barangays']);
+    
+        // delete members not in the incoming list
+        $incomingMemberIds = collect($validated['members'])
+            ->pluck('id')
+            ->filter()
+            ->values();
+    
+        $team->members()->whereNotIn('id', $incomingMemberIds)->delete();
+    
+        // upsert each member
+        foreach ($validated['members'] as $member) {
+            $team->members()->updateOrCreate(
+                ['id' => $member['id'] ?? 0],
+                [
+                    'name'        => $member['name'],
+                    'user_id'     => $member['user_id'],
+                    'role'        => $member['role'],
+                    'position'    => $member['position'],
+                    'pk_oriented' => $member['pk_oriented'],
+                ]
+            );
+        }
+    
         return back();
     }
 
