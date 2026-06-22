@@ -54,8 +54,8 @@ class ReportController extends Controller
                   ->orWhereHas('users',   fn($u) => $u->where('name', 'like', "%{$search}%"));
             });
         })
-        ->paginate(15)
-        ->withQueryString(); // preserves ?search= in pagination links
+        ->cursorPaginate(10)
+        ->withQueryString();
 
         return inertia('report/reports', [
             'reports' => $reports,

@@ -103,27 +103,31 @@
                 </span>
             </div>
 
-            <!-- ── Pagination ─────────────────────────────── -->
-            <div
-                v-if="barangays.last_page > 1"
-                class="flex items-center justify-between px-5 py-3 border-t border-slate-100 mt-auto"
-            >
-                <span class="text-xs text-slate-400">
-                    Showing {{ barangays.from }}–{{ barangays.to }} of {{ barangays.total }}
-                </span>
-                <div class="flex gap-1">
-                    <button
-                        v-for="link in barangays.links"
-                        :key="link.label"
-                        :disabled="!link.url || link.active"
-                        @click="goToPage(link.url)"
-                        class="px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                        :class="link.active
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-                            : 'border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50'"
-                        v-html="link.label"
-                    />
-                </div>
+        </div>
+
+        <!-- ── Pagination ─────────────────────────────── -->
+        <div class="w-full flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-white shrink-0">
+
+            <span class="text-xs text-slate-400">
+                Showing {{ barangays.length }} Records Per Page
+            </span>
+
+            <div class="flex items-center gap-1.5">
+                <button
+                    @click="goToPage(barangays.prev_page_url)"
+                    :disabled="!barangays.prev_page_url"
+                    class="h-8 p-2.5 flex items-center gap-1 text-sm shadow-md text-slate-900 border border-slate-400 transition-all disabled:opacity-30 cursor-pointer hover:bg-sky-400 hover:text-white disabled:cursor-not-allowed"
+                >
+                    <Icon icon="lucide:chevron-left" class="text-sm"/>
+                    
+                </button>
+                <button
+                    @click="goToPage(barangays.next_page_url)"
+                    :disabled="!barangays.next_page_url"
+                    class="h-8 p-2.5 flex items-center gap-1 text-sm shadow-md text-slate-900 border border-slate-400 transition-all disabled:opacity-30 cursor-pointer hover:bg-sky-400 hover:text-white disabled:cursor-not-allowed"
+                >
+                    <Icon icon="lucide:chevron-right" class="text-sm"/>
+                </button>
             </div>
 
         </div>

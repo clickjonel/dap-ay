@@ -90,7 +90,11 @@
             <div v-for="team in teams.data" :key="team.id" class="w-full grid grid-cols-12 divide-x divide-gray-400 text-xs text-gray-600 border-b border-x border-gray-400 bg-white tracking-wide font-medium">
                 <span class="col-span-2 p-2 uppercase">{{ team.name}}</span>
                 <span class="col-span-2 p-2 uppercase">{{ team.pk_kit ? 'Issued' : 'None' }}</span>
-                <span class="col-span-2 p-2 uppercase break-words">{{ team.eo_link ?? '-' }}</span>
+                <span class="col-span-2 p-2 uppercase break-words">
+                    <a v-if="team.eo_link" :href="team.eo_link" target="_blank" rel="noopener noreferrer" class="text-blue-600 cursor-pointer hover:underline">
+                        View
+                    </a>
+                </span>
                 <span class="col-span-2 p-2 uppercase"> {{ team.members.length > 0 ? `${team.members.length} Members` : '' }} </span>
                 <span class="col-span-2 p-2 uppercase"> {{ team.barangays.length > 0 ? `${team.barangays.length} Barangays` : '' }} </span>
                 <span class="col-span-2 p-2">
