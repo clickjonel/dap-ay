@@ -38,7 +38,7 @@ const userMenuItems = [
 const logout = () => router.post('/logout');
 
 // ── Announcement ───────────────────────────────────────
-const showAnnouncement = ref(false);
+const showAnnouncement = ref(true);
 
 // ── Glossary Modal ─────────────────────────────────────
 const glossaryModalVisible = ref(false);
