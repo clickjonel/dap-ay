@@ -170,7 +170,7 @@ class TeamController extends Controller
                         ->select('id', 'name')
                         ->when($user->accessLevels->access_level === 2, function($query) use($user){
                             $query->whereHas('accessLevels', function($query) use ($user){
-                                $query->where('pdoho_access_id',$user->accessLevels->pdoho_id);
+                                $query->where('pdoho_access_id',$user->accessLevels->pdoho_access_id);
                             });
                         })
                         ->whereHas('accessLevels', function($query) use ($user){
