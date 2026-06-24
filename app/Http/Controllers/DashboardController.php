@@ -291,7 +291,7 @@ class DashboardController extends Controller
 
             $provinces = Province::query()
                 ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                ->when($access_level === 2, fn($q) =>
+                ->when($access_level === 2 || $access_level === 3, fn($q) =>
                     $q->where('id', $accessLevels->pdoho_access_id)
                 )
                 ->with([
@@ -326,7 +326,7 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
@@ -360,7 +360,7 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
@@ -395,7 +395,7 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
@@ -415,7 +415,7 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
@@ -436,7 +436,7 @@ class DashboardController extends Controller
 
         $provinces = Province::query()
                         ->when($access_level === 4, fn($q) => $q->where('id', $province_id))
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
@@ -487,7 +487,7 @@ class DashboardController extends Controller
                         ->when($access_level === 4, fn($q) =>
                             $q->where('id', $province_id)
                         )
-                        ->when($access_level === 2, fn($q) =>
+                        ->when($access_level === 2 || $access_level === 3, fn($q) =>
                             $q->where('id', $accessLevels->pdoho_access_id)
                         )
                         ->with([
